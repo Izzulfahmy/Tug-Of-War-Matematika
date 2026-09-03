@@ -104,7 +104,7 @@
       border-radius: 24px;
       padding: 2rem 1rem;
       display: flex;
-      flex-direction: column; /* Menyusun logo di atas dan teks di bawah */
+      flex-direction: column; /* Logo di atas, teks di bawah */
       align-items: center;
       justify-content: center;
       gap: 1.25rem;
@@ -155,7 +155,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.5rem; /* Emoji/Logo presisi */
+      font-size: 2.5rem;
       line-height: 1;
     }
 
@@ -188,14 +188,14 @@
        =================================================== */
     @media (max-width: 768px) {
       .menu-container {
-        grid-template-columns: 1fr; /* Jadi 1 kolom vertikal saat di HP */
+        grid-template-columns: 1fr; /* Become 1 column on Mobile */
         max-width: 380px;
         gap: 1.2rem;
       }
 
       .menu-card {
         padding: 1.5rem 1rem;
-        flex-direction: row; /* Kembali menyamping saat layar HP sempit */
+        flex-direction: row;
         justify-content: flex-start;
         text-align: left;
       }
@@ -253,6 +253,55 @@
   <footer class="footer-text">
     Buku Siswa Matematika Kelas III SD/MI &copy; Kemendikbudristek
   </footer>
+
+  <!-- SCRIPT AUDIO SYNTHESIZER (OPSI 1) -->
+  <script>
+    // Fungsi untuk memutar suara 'click/pop' interaktif menggunakan Web Audio API
+    function playClickSound() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      
+      const audioCtx = new AudioContext();
+      
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      // Mengatur jenis gelombang dan frekuensi nada (600Hz ke 1200Hz)
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+
+      // Pengaturan volume yang memudar secara instan
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.05);
+    }
+
+    // Menghubungkan fungsi audio ke setiap tombol menu
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuCards = document.querySelectorAll('.menu-card');
+
+      menuCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+          playClickSound();
+          
+          // Memberikan sedikit jeda (150ms) agar efek suara klik terdengar sebelum pindah halaman
+          const targetUrl = card.getAttribute('href');
+          if (targetUrl) {
+            e.preventDefault();
+            setTimeout(() => {
+              window.location.href = targetUrl;
+            }, 150);
+          }
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>
