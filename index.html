@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Media Pembelajaran Matematika - Perkalian Kelas 3</title>
-  <!-- Google Fonts: Fredoka & Nunito untuk tampilan ramah anak & ceria -->
+  <!-- Google Fonts: Fredoka & Nunito -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
   
   <style>
     /* ===================================================
-       1. RESET & VARIABLES
+       1. RESET & BASE STYLES
        =================================================== */
     * {
       box-sizing: border-box;
@@ -24,7 +24,7 @@
       width: 100vw;
       min-height: 100vh;
       font-family: 'Nunito', sans-serif;
-      /* Background Ceria dengan Pattern Bulat Halus */
+      /* Background Polkadot Ceria */
       background-color: #e0f2fe;
       background-image: radial-gradient(#38bdf8 1.5px, transparent 1.5px), radial-gradient(#38bdf8 1.5px, #e0f2fe 1.5px);
       background-size: 60px 60px;
@@ -34,7 +34,7 @@
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      padding: 1.5rem 1rem;
+      padding: 2rem 1rem;
       overflow-x: hidden;
     }
 
@@ -45,7 +45,7 @@
       text-align: center;
       max-width: 800px;
       width: 100%;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     .badge-top {
@@ -61,7 +61,7 @@
       border-radius: 50px;
       border: 3px solid #38bdf8;
       box-shadow: 0 4px 0 #0284c7;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.8rem;
     }
 
     .main-title {
@@ -71,7 +71,7 @@
       color: #0284c7;
       text-shadow: 3px 3px 0px #ffffff, 5px 5px 0px #bae6fd;
       line-height: 1.2;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.4rem;
       letter-spacing: 0.5px;
     }
 
@@ -87,41 +87,22 @@
     }
 
     /* ===================================================
-       3. PETUNJUK
-       =================================================== */
-    .instruction-box {
-      background-color: #fef08a;
-      border: 3px solid #f59e0b;
-      box-shadow: 0 5px 0 #d97706;
-      border-radius: 20px;
-      padding: 0.6rem 1.5rem;
-      margin: 1rem 0;
-      max-width: 550px;
-      width: 100%;
-      text-align: center;
-      font-family: 'Fredoka', sans-serif;
-      font-size: clamp(0.95rem, 2vw, 1.15rem);
-      font-weight: 600;
-      color: #78350f;
-    }
-
-    /* ===================================================
-       4. GRID 4 TOMBOL UTAMA (DESAIN KARTU 3D)
+       3. MENU CONTAINER (3 TOMBOL UTAMA)
        =================================================== */
     .menu-container {
       width: 100%;
-      max-width: 900px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      max-width: 650px;
+      display: flex;
+      flex-direction: column;
       gap: 1.25rem;
       margin: auto 0;
-      padding: 0.5rem 0;
+      padding: 1rem 0;
     }
 
     .menu-card {
       text-decoration: none;
       border-radius: 24px;
-      padding: 1.25rem 1.5rem;
+      padding: 1.2rem 1.75rem;
       display: flex;
       align-items: center;
       gap: 1.25rem;
@@ -132,7 +113,7 @@
       transition: all 0.15s ease-in-out;
     }
 
-    /* Efek Menekan Tombol 3D */
+    /* Efek Tekan Tombol 3D */
     .menu-card:hover {
       transform: translateY(-3px);
     }
@@ -142,52 +123,38 @@
       box-shadow: 0 1px 0 !important;
     }
 
-    /* Variasi Warna & Shadow 3D */
-    .card-1 {
+    /* Warna Tombol & Shadow 3D Presisi */
+    .card-materi {
       background-color: #10b981;
       border: 4px solid #047857;
       box-shadow: 0 8px 0 #047857;
     }
 
-    .card-2 {
-      background-color: #0284c7;
-      border: 4px solid #0369a1;
-      box-shadow: 0 8px 0 #0369a1;
-    }
-
-    .card-3 {
+    .card-game {
       background-color: #f59e0b;
       border: 4px solid #b45309;
       box-shadow: 0 8px 0 #b45309;
     }
 
-    .card-4 {
-      background-color: #f43f5e;
-      border: 4px solid #be123c;
-      box-shadow: 0 8px 0 #be123c;
+    .card-setting {
+      background-color: #0284c7;
+      border: 4px solid #0369a1;
+      box-shadow: 0 8px 0 #0369a1;
     }
 
-    /* WADAH IKON (MENCEGAH IKON MORAT-MARIT) */
+    /* WADAH IKON (DIJAMIN TIDAK BERANTAKAN/Aneh) */
     .card-icon-wrapper {
       width: 65px;
       height: 65px;
       background-color: rgba(255, 255, 255, 0.25);
-      border: 3px solid rgba(255, 255, 255, 0.5);
+      border: 3px solid rgba(255, 255, 255, 0.6);
       border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0; /* Mencegah ikon tertekan */
-    }
-
-    .card-icon-wrapper svg {
-      width: 38px;
-      height: 38px;
-      fill: none;
-      stroke: #ffffff;
-      stroke-width: 2.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      flex-shrink: 0;
+      font-size: 2.2rem; /* Menggunakan font/emoji beresolusi tinggi murni */
+      line-height: 1;
     }
 
     /* KONTEN TEKS DALAM KARTU */
@@ -200,7 +167,7 @@
 
     .card-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+      font-size: clamp(1.25rem, 2.5vw, 1.55rem);
       font-weight: 600;
       line-height: 1.2;
       color: #ffffff;
@@ -208,14 +175,14 @@
     }
 
     .card-description {
-      font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
       font-weight: 700;
       color: rgba(255, 255, 255, 0.95);
       line-height: 1.3;
     }
 
     /* ===================================================
-       5. FOOTER
+       4. FOOTER
        =================================================== */
     .footer-text {
       margin-top: 1rem;
@@ -229,15 +196,14 @@
     }
 
     /* ===================================================
-       6. RESPONSIF MOBILE (LAYOUT HP)
+       5. RESPONSIF MOBILE
        =================================================== */
     @media (max-width: 640px) {
       body {
-        padding: 1rem 0.8rem;
+        padding: 1.2rem 0.8rem;
       }
 
       .menu-container {
-        grid-template-columns: 1fr; /* Jadi 1 kolom vertikal di HP */
         gap: 1rem;
       }
 
@@ -246,20 +212,15 @@
         border-radius: 20px;
       }
 
-      .card-1 { box-shadow: 0 6px 0 #047857; }
-      .card-2 { box-shadow: 0 6px 0 #0369a1; }
-      .card-3 { box-shadow: 0 6px 0 #b45309; }
-      .card-4 { box-shadow: 0 6px 0 #be123c; }
+      .card-materi { box-shadow: 0 6px 0 #047857; }
+      .card-game { box-shadow: 0 6px 0 #b45309; }
+      .card-setting { box-shadow: 0 6px 0 #0369a1; }
 
       .card-icon-wrapper {
         width: 55px;
         height: 55px;
         border-radius: 16px;
-      }
-
-      .card-icon-wrapper svg {
-        width: 30px;
-        height: 30px;
+        font-size: 1.8rem;
       }
     }
   </style>
@@ -275,74 +236,39 @@
     <div class="subtitle">Perkalian Bilangan Cacah sampai 100</div>
   </header>
 
-  <!-- Kotak Petunjuk -->
-  <div class="instruction-box">
-    🎯 Pilih menu pembelajaran di bawah ini:
-  </div>
-
-  <!-- Grid 4 Tombol Menu Utama -->
+  <!-- Container 3 Tombol Utama -->
   <main class="menu-container">
     
-    <!-- Tombol 1: Konsep Perkalian -->
-    <a href="konsep.html" class="menu-card card-1">
+    <!-- Tombol 1: Materi -->
+    <a href="materi.html" class="menu-card card-materi">
       <div class="card-icon-wrapper">
-        <svg viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M12 2a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4z"></path>
-          <path d="M12 14a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4z"></path>
-          <path d="M14 12a4 4 0 0 0 4-4 4 4 0 0 0-4-4 4 4 0 0 0-4 4 4 4 0 0 0 4 4z"></path>
-          <path d="M2 12a4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4 4 4 0 0 0-4 4z"></path>
-        </svg>
+        📖
       </div>
       <div class="card-content">
-        <h2 class="card-title">Konsep Perkalian</h2>
-        <p class="card-description">Penjumlahan Berulang (Halaman 58)</p>
+        <h2 class="card-title">Materi Pembelajaran</h2>
+        <p class="card-description">Konsep Perkalian & Sifat Komutatif (Halaman 58–60)</p>
       </div>
     </a>
 
-    <!-- Tombol 2: Sifat Komutatif -->
-    <a href="komutatif.html" class="menu-card card-2">
+    <!-- Tombol 2: Permainan Tug Of War -->
+    <a href="tug-of-war.html" class="menu-card card-game">
       <div class="card-icon-wrapper">
-        <svg viewBox="0 0 24 24">
-          <path d="M16 3l4 4-4 4"></path>
-          <path d="M20 7H4"></path>
-          <path d="M8 21l-4-4 4-4"></path>
-          <path d="M4 17h16"></path>
-        </svg>
+        🪢
       </div>
       <div class="card-content">
-        <h2 class="card-title">Sifat Komutatif</h2>
-        <p class="card-description">Sifat Pertukaran Perkalian (Halaman 59)</p>
+        <h2 class="card-title">Permainan Tug Of War</h2>
+        <p class="card-description">Adu Ketangkasan Perkalian Lintang Tarik Tambang</p>
       </div>
     </a>
 
-    <!-- Tombol 3: Aktivitas Praktikum -->
-    <a href="praktikum.html" class="menu-card card-3">
+    <!-- Tombol 3: Pengaturan -->
+    <a href="pengaturan.html" class="menu-card card-setting">
       <div class="card-icon-wrapper">
-        <svg viewBox="0 0 24 24">
-          <path d="M6 3h12l1 7a6 6 0 0 1-12 0L6 3z"></path>
-          <circle cx="9" cy="17" r="1.5" fill="#ffffff"></circle>
-          <circle cx="15" cy="17" r="1.5" fill="#ffffff"></circle>
-          <circle cx="12" cy="19.5" r="1.5" fill="#ffffff"></circle>
-        </svg>
+        ⚙️
       </div>
       <div class="card-content">
-        <h2 class="card-title">Aktivitas Praktikum</h2>
-        <p class="card-description">Simulasi Perkalian Benda (Halaman 60)</p>
-      </div>
-    </a>
-
-    <!-- Tombol 4: Latihan Soal -->
-    <a href="latihan.html" class="menu-card card-4">
-      <div class="card-icon-wrapper">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 20h9"></path>
-          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-        </svg>
-      </div>
-      <div class="card-content">
-        <h2 class="card-title">Latihan Soal</h2>
-        <p class="card-description">Soal Latihan & Evaluasi (Halaman 61–63)</p>
+        <h2 class="card-title">Pengaturan</h2>
+        <p class="card-description">Pengaturan Suara, Musik, & Informasi Aplikasi</p>
       </div>
     </a>
 
