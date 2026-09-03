@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tarik Tambang Perkalian - Interaktiv-ta'lim</title>
 
-  <!-- Google Fonts: Nunito & Fredoka -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     /* =====================================================
-       DESIGN TOKENS (Interaktiv-ta'lim Design System)
+       DESIGN TOKENS (Interaktiv-ta'lim)
     ===================================================== */
     :root {
       --color-primary: #0284C5;
@@ -21,9 +20,7 @@
       --color-neutral: #F8FAFC;
       --color-surface: #FFFFFF;
       --color-on-surface: #0F172A;
-      --color-on-surface-muted: #64748B;
       --color-border: #E5E7EB;
-      --color-success: #22C55E;
       --color-error: #EF4444;
 
       --radius-md: 8px;
@@ -124,7 +121,7 @@
     }
 
     /* =====================================================
-       MAIN GAME ARENA (GRID LAYOUT MATHTUG STYLE)
+       GAME ARENA LAYOUT
     ===================================================== */
     .game-arena {
       width: 100%;
@@ -139,7 +136,7 @@
     }
 
     /* =====================================================
-       KEYPAD & SOAL PLAYER CARD (KIRI & KANAN)
+       PLAYER CARD & KEYPAD
     ===================================================== */
     .player-card {
       background-color: var(--color-surface);
@@ -172,7 +169,6 @@
       font-family: var(--font-display);
       font-size: 20px;
       font-weight: 700;
-      letter-spacing: 0.5px;
     }
 
     .question-display {
@@ -182,7 +178,6 @@
       margin: 10px 0;
     }
 
-    /* Output Display Box */
     .answer-box {
       width: 85%;
       height: 46px;
@@ -198,7 +193,6 @@
       margin-bottom: 12px;
     }
 
-    /* Keypad Grid 3x4 */
     .keypad-grid {
       width: 85%;
       display: grid;
@@ -250,7 +244,7 @@
     }
 
     /* =====================================================
-       ARENA TENGAH (STAGE & CHARACTERS)
+       STAGE PERTANDINGAN DENGAN GAMBAR GIF
     ===================================================== */
     .tug-stage {
       width: 100%;
@@ -271,10 +265,9 @@
       opacity: 0.6;
     }
 
-    /* Tali Wrapper */
     .rope-container {
       width: 100%;
-      height: 200px;
+      height: 220px;
       position: relative;
       display: flex;
       align-items: center;
@@ -282,7 +275,7 @@
     }
 
     .rope-line {
-      width: 90%;
+      width: 88%;
       height: 12px;
       background: repeating-linear-gradient(45deg, var(--color-tertiary) 0px, var(--color-tertiary) 8px, #D97706 8px, #D97706 14px);
       border-radius: var(--radius-full);
@@ -303,47 +296,27 @@
       border-radius: 3px;
     }
 
-    /* TEAM TIM BIRU (KIRI) - 2 KARAKTER SEJAJAR */
-    .team-left-group {
+    /* WADAH PENGGUNAAN GAMBAR GIF KARAKTER */
+    .gif-character {
       position: absolute;
-      left: 5%;
-      bottom: 25px;
-      display: flex;
-      gap: -10px;
+      height: 140px;
+      object-fit: contain;
       z-index: 4;
+      bottom: 30px;
     }
 
-    /* TEAM TIM MERAH (KANAN) - 2 KARAKTER SEJAJAR */
-    .team-right-group {
-      position: absolute;
-      right: 5%;
-      bottom: 25px;
-      display: flex;
-      gap: -10px;
-      z-index: 4;
-      transform: scaleX(-1);
+    .gif-left {
+      left: 8%;
     }
 
-    .char-svg {
-      width: 110px;
-      height: 130px;
-      animation: pull-anim 0.8s infinite alternate ease-in-out;
+    .gif-right {
+      right: 8%;
+      transform: scaleX(-1); /* Membalik posisi GIF untuk tim kanan */
     }
 
-    @keyframes pull-anim {
-      0% { transform: rotate(0deg) translateX(0); }
-      100% { transform: rotate(-4deg) translateX(-4px); }
-    }
-
-    /* =====================================================
-       RESPONSIF MOBILE
-    ===================================================== */
     @media (max-width: 900px) {
       body { overflow-y: auto; height: auto; }
-      .game-arena {
-        grid-template-columns: 1fr;
-        height: auto;
-      }
+      .game-arena { grid-template-columns: 1fr; height: auto; }
       .tug-stage { height: 250px; }
     }
   </style>
@@ -351,11 +324,9 @@
 
 <body>
 
-  <!-- TIRAI OPENING -->
   <div class="curtain curtain-left"></div>
   <div class="curtain curtain-right"></div>
 
-  <!-- HEADER NAVIGASI -->
   <header>
     <a href="index.html" class="btn-back">
       <span>⬅️</span> Kembali
@@ -364,10 +335,8 @@
     <div style="width: 100px;"></div>
   </header>
 
-  <!-- ARENA GAME UTAMA -->
   <main class="game-arena">
 
-    <!-- CARD PLAYER 1 (TIM BIRU - KIRI) -->
     <section class="player-card">
       <div class="card-header-blue">
         <h2 class="player-name">TIM BIRU</h2>
@@ -375,7 +344,6 @@
       <div class="question-display" id="q-left">6 × 4 = ?</div>
       <div class="answer-box" id="ans-left"></div>
 
-      <!-- KEYPAD INPUT -->
       <div class="keypad-grid">
         <button class="key-btn" onclick="pressKey('left', '1')">1</button>
         <button class="key-btn" onclick="pressKey('left', '2')">2</button>
@@ -392,64 +360,20 @@
       </div>
     </section>
 
-    <!-- ARENA ARENA TENGAH (STAGE PERTANDINGAN) -->
     <section class="tug-stage">
       <div class="center-divider"></div>
 
       <div class="rope-container">
-        <!-- TALI TAMBANG -->
         <div class="rope-line">
           <div class="rope-marker" id="marker"></div>
         </div>
 
-        <!-- TIM BIRU (KIRI) - 2 PEMAIN SEJAJAR -->
-        <div class="team-left-group">
-          <!-- Karakter 1 -->
-          <svg class="char-svg" viewBox="0 0 100 120">
-            <ellipse cx="50" cy="115" rx="35" ry="5" fill="rgba(0,0,0,0.15)"/>
-            <path d="M 30 70 L 15 110 M 60 70 L 75 110" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
-            <path d="M 25 45 L 55 45 L 50 80 L 20 80 Z" fill="#0284C5"/>
-            <circle cx="40" cy="25" r="16" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
-            <path d="M 30 50 L 70 65" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
-            <circle cx="70" cy="65" r="5" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
-          </svg>
-          <!-- Karakter 2 -->
-          <svg class="char-svg" viewBox="0 0 100 120" style="margin-left: -35px;">
-            <ellipse cx="50" cy="115" rx="35" ry="5" fill="rgba(0,0,0,0.15)"/>
-            <path d="M 30 70 L 15 110 M 60 70 L 75 110" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
-            <path d="M 25 45 L 55 45 L 50 80 L 20 80 Z" fill="#60A5FA"/>
-            <circle cx="40" cy="25" r="16" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
-            <path d="M 30 50 L 70 65" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
-            <circle cx="70" cy="65" r="5" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
-          </svg>
-        </div>
+        <img src="player-pull.gif" alt="Pemain Kiri" class="gif-character gif-left" />
 
-        <!-- TIM MERAH (KANAN) - 2 PEMAIN SEJAJAR -->
-        <div class="team-right-group">
-          <!-- Karakter 1 -->
-          <svg class="char-svg" viewBox="0 0 100 120">
-            <ellipse cx="50" cy="115" rx="35" ry="5" fill="rgba(0,0,0,0.15)"/>
-            <path d="M 30 70 L 15 110 M 60 70 L 75 110" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
-            <path d="M 25 45 L 55 45 L 50 80 L 20 80 Z" fill="#EF4444"/>
-            <circle cx="40" cy="25" r="16" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
-            <path d="M 30 50 L 70 65" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
-            <circle cx="70" cy="65" r="5" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
-          </svg>
-          <!-- Karakter 2 -->
-          <svg class="char-svg" viewBox="0 0 100 120" style="margin-left: -35px;">
-            <ellipse cx="50" cy="115" rx="35" ry="5" fill="rgba(0,0,0,0.15)"/>
-            <path d="M 30 70 L 15 110 M 60 70 L 75 110" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
-            <path d="M 25 45 L 55 45 L 50 80 L 20 80 Z" fill="#F43F5E"/>
-            <circle cx="40" cy="25" r="16" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
-            <path d="M 30 50 L 70 65" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
-            <circle cx="70" cy="65" r="5" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
-          </svg>
-        </div>
-
+        <img src="player-pull.gif" alt="Pemain Kanan" class="gif-character gif-right" />
       </div>
     </section>
 
-    <!-- CARD PLAYER 2 (TIM MERAH - KANAN) -->
     <section class="player-card">
       <div class="card-header-red">
         <h2 class="player-name">TIM MERAH</h2>
@@ -457,7 +381,6 @@
       <div class="question-display" id="q-right">7 × 5 = ?</div>
       <div class="answer-box" id="ans-right"></div>
 
-      <!-- KEYPAD INPUT -->
       <div class="keypad-grid">
         <button class="key-btn" onclick="pressKey('right', '1')">1</button>
         <button class="key-btn" onclick="pressKey('right', '2')">2</button>
@@ -476,7 +399,6 @@
 
   </main>
 
-  <!-- LOGIKA PEMAIN & KEYPAD JS -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
@@ -492,7 +414,6 @@
         const box = document.getElementById('ans-left');
         if (val === 'C') inputLeft = "";
         else if (val === 'OK') {
-          // Logika Cek Jawaban Tim Kiri
           if (inputLeft === "24") {
             alert("Tim Biru Benar!");
             inputLeft = "";
@@ -507,7 +428,6 @@
         const box = document.getElementById('ans-right');
         if (val === 'C') inputRight = "";
         else if (val === 'OK') {
-          // Logika Cek Jawaban Tim Kanan
           if (inputRight === "35") {
             alert("Tim Merah Benar!");
             inputRight = "";
