@@ -7,7 +7,7 @@
   <!-- Google Fonts: Fredoka & Nunito -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   
   <style>
     /* ===================================================
@@ -24,11 +24,11 @@
       width: 100vw;
       min-height: 100vh;
       font-family: 'Nunito', sans-serif;
-      /* Background Polkadot Ceria */
+      /* Background Polkadot Ceria & Fresh */
       background-color: #e0f2fe;
-      background-image: radial-gradient(#38bdf8 1.5px, transparent 1.5px), radial-gradient(#38bdf8 1.5px, #e0f2fe 1.5px);
-      background-size: 60px 60px;
-      background-position: 0 0, 30px 30px;
+      background-image: radial-gradient(#38bdf8 2px, transparent 2px), radial-gradient(#38bdf8 2px, #e0f2fe 2px);
+      background-size: 50px 50px;
+      background-position: 0 0, 25px 25px;
       color: #1e293b;
       display: flex;
       flex-direction: column;
@@ -56,44 +56,44 @@
       color: #0284c7;
       font-family: 'Fredoka', sans-serif;
       font-weight: 600;
-      font-size: clamp(0.85rem, 2vw, 1.05rem);
-      padding: 0.4rem 1.2rem;
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      padding: 0.5rem 1.4rem;
       border-radius: 50px;
-      border: 3px solid #38bdf8;
-      box-shadow: 0 4px 0 #0284c7;
+      border: 3.5px solid #38bdf8;
+      box-shadow: 0 5px 0 #0284c7;
       margin-bottom: 0.8rem;
     }
 
     .main-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+      font-size: clamp(2rem, 5vw, 3rem);
       font-weight: 700;
       color: #0284c7;
-      text-shadow: 3px 3px 0px #ffffff, 5px 5px 0px #bae6fd;
+      text-shadow: 3px 3px 0px #ffffff, 6px 6px 0px #bae6fd;
       line-height: 1.2;
       margin-bottom: 0.4rem;
       letter-spacing: 0.5px;
     }
 
     .subtitle {
-      font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+      font-size: clamp(1rem, 2.3vw, 1.25rem);
       font-weight: 800;
       color: #0369a1;
       background-color: #ffffff;
       display: inline-block;
-      padding: 0.4rem 1.2rem;
-      border-radius: 16px;
-      border: 2px dashed #0284c7;
+      padding: 0.45rem 1.4rem;
+      border-radius: 20px;
+      border: 3px dashed #0284c7;
     }
 
     /* ===================================================
-       3. MENU CONTAINER (GRID 3 KOLOM BERJAJAR)
+       3. MENU CONTAINER (3 TOMBOL SUPER CERIA 3D)
        =================================================== */
     .menu-container {
       width: 100%;
-      max-width: 900px;
+      max-width: 920px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3 Kolom Berjajar */
+      grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
       margin: auto 0;
       padding: 1rem 0;
@@ -101,10 +101,10 @@
 
     .menu-card {
       text-decoration: none;
-      border-radius: 24px;
-      padding: 2rem 1rem;
+      border-radius: 30px;
+      padding: 2.2rem 1.2rem 1.8rem 1.2rem;
       display: flex;
-      flex-direction: column; /* Logo di atas, teks di bawah */
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 1.25rem;
@@ -112,61 +112,84 @@
       cursor: pointer;
       user-select: none;
       position: relative;
-      transition: all 0.15s ease-in-out;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       text-align: center;
+      overflow: hidden;
     }
 
-    /* Efek Tekan Tombol 3D */
+    /* Efek Kilatan/Shine pada Tombol */
+    .menu-card::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 12px;
+      right: 12px;
+      height: 35%;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.05));
+      border-radius: 20px 20px 100px 100px;
+      pointer-events: none;
+    }
+
+    /* Animation Bouncy saat Kursor Hover */
     .menu-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-8px) scale(1.03);
     }
 
     .menu-card:active {
-      transform: translateY(4px) !important;
-      box-shadow: 0 1px 0 !important;
+      transform: translateY(4px) scale(0.98) !important;
+      box-shadow: 0 2px 0 !important;
     }
 
-    /* Warna Tombol & Shadow 3D Presisi */
+    /* VARIASI WARNA CERIA DENGAN GRADASI 3D */
     .card-materi {
-      background-color: #10b981;
-      border: 4px solid #047857;
-      box-shadow: 0 8px 0 #047857;
+      background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
+      border: 4px solid #059669;
+      box-shadow: 0 10px 0 #047857, 0 15px 20px rgba(16, 185, 129, 0.3);
     }
 
     .card-game {
-      background-color: #f59e0b;
-      border: 4px solid #b45309;
-      box-shadow: 0 8px 0 #b45309;
+      background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+      border: 4px solid #d97706;
+      box-shadow: 0 10px 0 #b45309, 0 15px 20px rgba(245, 158, 11, 0.3);
     }
 
     .card-setting {
-      background-color: #0284c7;
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
       border: 4px solid #0369a1;
-      box-shadow: 0 8px 0 #0369a1;
+      box-shadow: 0 10px 0 #075985, 0 15px 20px rgba(2, 132, 199, 0.3);
     }
 
-    /* WADAH LOGO/IKON DI ATAS */
+    /* WADAH LOGO BULAT BERGAYA KARTUN */
     .card-icon-wrapper {
-      width: 75px;
-      height: 75px;
-      background-color: rgba(255, 255, 255, 0.25);
-      border: 3px solid rgba(255, 255, 255, 0.6);
-      border-radius: 22px;
+      width: 85px;
+      height: 85px;
+      background-color: #ffffff;
+      border: 4px solid rgba(255, 255, 255, 0.9);
+      box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.1), 0 6px 12px rgba(0, 0, 0, 0.15);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       line-height: 1;
+      z-index: 2;
+      transition: transform 0.2s ease;
+    }
+
+    .menu-card:hover .card-icon-wrapper {
+      transform: rotate(8deg) scale(1.1);
     }
 
     /* JUDUL MENU */
     .card-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1.2rem, 2vw, 1.5rem);
-      font-weight: 600;
-      line-height: 1.2;
+      font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+      font-weight: 700;
+      line-height: 1.25;
       color: #ffffff;
-      text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.15);
+      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+      z-index: 2;
+      letter-spacing: 0.5px;
     }
 
     /* ===================================================
@@ -174,13 +197,15 @@
        =================================================== */
     .footer-text {
       margin-top: 1rem;
-      font-size: 0.85rem;
-      font-weight: 700;
+      font-size: 0.9rem;
+      font-weight: 800;
       color: #0369a1;
       text-align: center;
-      background-color: rgba(255, 255, 255, 0.6);
-      padding: 0.4rem 1rem;
+      background-color: #ffffff;
+      padding: 0.5rem 1.2rem;
       border-radius: 20px;
+      border: 2px solid #bae6fd;
+      box-shadow: 0 4px 0 #bae6fd;
     }
 
     /* ===================================================
@@ -188,23 +213,31 @@
        =================================================== */
     @media (max-width: 768px) {
       .menu-container {
-        grid-template-columns: 1fr; /* Become 1 column on Mobile */
+        grid-template-columns: 1fr;
         max-width: 380px;
-        gap: 1.2rem;
+        gap: 1.3rem;
       }
 
       .menu-card {
-        padding: 1.5rem 1rem;
+        padding: 1.2rem 1.5rem;
         flex-direction: row;
         justify-content: flex-start;
         text-align: left;
+        border-radius: 24px;
       }
 
+      .menu-card::before {
+        display: none;
+      }
+
+      .card-materi { box-shadow: 0 7px 0 #047857; }
+      .card-game { box-shadow: 0 7px 0 #b45309; }
+      .card-setting { box-shadow: 0 7px 0 #075985; }
+
       .card-icon-wrapper {
-        width: 60px;
-        height: 60px;
-        font-size: 2rem;
-        border-radius: 18px;
+        width: 65px;
+        height: 65px;
+        font-size: 2.2rem;
       }
     }
   </style>
@@ -231,8 +264,8 @@
       <h2 class="card-title">Materi Pembelajaran</h2>
     </a>
 
-    <!-- Tombol 2: Permainan Tug Of War -->
-    <a href="tug-of-war.html" class="menu-card card-game">
+    <!-- Tombol 2: Permainan Tug Of War (Link ke tugofwar.html) -->
+    <a href="tugofwar.html" class="menu-card card-game">
       <div class="card-icon-wrapper">
         🪢
       </div>
@@ -254,9 +287,8 @@
     Buku Siswa Matematika Kelas III SD/MI &copy; Kemendikbudristek
   </footer>
 
-  <!-- SCRIPT AUDIO SYNTHESIZER (OPSI 1) -->
+  <!-- SCRIPT AUDIO SYNTHESIZER -->
   <script>
-    // Fungsi untuk memutar suara 'click/pop' interaktif menggunakan Web Audio API
     function playClickSound() {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
@@ -266,12 +298,10 @@
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
 
-      // Mengatur jenis gelombang dan frekuensi nada (600Hz ke 1200Hz)
       osc.type = 'sine';
       osc.frequency.setValueAtTime(600, audioCtx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
 
-      // Pengaturan volume yang memudar secara instan
       gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
 
@@ -282,7 +312,6 @@
       osc.stop(audioCtx.currentTime + 0.05);
     }
 
-    // Menghubungkan fungsi audio ke setiap tombol menu
     document.addEventListener('DOMContentLoaded', () => {
       const menuCards = document.querySelectorAll('.menu-card');
 
@@ -290,7 +319,6 @@
         card.addEventListener('click', (e) => {
           playClickSound();
           
-          // Memberikan sedikit jeda (150ms) agar efek suara klik terdengar sebelum pindah halaman
           const targetUrl = card.getAttribute('href');
           if (targetUrl) {
             e.preventDefault();
