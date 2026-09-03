@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tarik Tambang - Interaktiv-ta'lim</title>
+  <title>Tarik Tambang Perkalian - Interaktiv-ta'lim</title>
 
-  <!-- Google Fonts: Nunito & Fredoka (sesuai Design System) -->
+  <!-- Google Fonts: Nunito & Fredoka -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     /* =====================================================
-       DESIGN TOKENS (Adaptasi intertalim.uz-design.md)
+       DESIGN TOKENS (Interaktiv-ta'lim Design System)
     ===================================================== */
     :root {
-      /* Colors */
       --color-primary: #0284C5;
-      --color-primary-hover: #60A5FA;
       --color-secondary: #60A5FA;
       --color-tertiary: #F59E0B;
       --color-neutral: #F8FAFC;
@@ -28,21 +26,15 @@
       --color-success: #22C55E;
       --color-error: #EF4444;
 
-      /* Radii */
-      --radius-sm: 4px;
       --radius-md: 8px;
       --radius-lg: 16px;
       --radius-xl: 24px;
       --radius-full: 9999px;
 
-      /* Typography */
       --font-main: 'Nunito', sans-serif;
       --font-display: 'Fredoka', 'Nunito', sans-serif;
     }
 
-    /* =====================================================
-       RESET & BASE STYLES
-    ===================================================== */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -50,21 +42,11 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-    }
-
     body {
       width: 100vw;
       height: 100vh;
       font-family: var(--font-main);
       background-color: var(--color-neutral);
-      background-image: 
-        radial-gradient(var(--color-secondary) 1.5px, transparent 1.5px), 
-        radial-gradient(var(--color-secondary) 1.5px, var(--color-neutral) 1.5px);
-      background-size: 60px 60px;
-      background-position: 0 0, 30px 30px;
       color: var(--color-on-surface);
       overflow: hidden;
       display: flex;
@@ -75,7 +57,7 @@
     }
 
     /* =====================================================
-       TIRAI OPENING (Soft & Bright Accent)
+       TIRAI OPENING
     ===================================================== */
     .curtain {
       position: fixed;
@@ -88,50 +70,36 @@
       box-shadow: inset 0 0 50px rgba(15, 23, 42, 0.25);
     }
 
-    .curtain-left {
-      left: 0;
-      border-right: 8px solid #B91C1C;
-    }
+    .curtain-left { left: 0; border-right: 8px solid #B91C1C; }
+    .curtain-right { right: 0; border-left: 8px solid #B91C1C; }
 
-    .curtain-right {
-      right: 0;
-      border-left: 8px solid #B91C1C;
-    }
-
-    .curtain-open .curtain-left {
-      transform: translateX(-100%);
-    }
-
-    .curtain-open .curtain-right {
-      transform: translateX(100%);
-    }
+    .curtain-open .curtain-left { transform: translateX(-100%); }
+    .curtain-open .curtain-right { transform: translateX(100%); }
 
     /* =====================================================
-       HEADER & NAVIGATION (Adaptasi Interaktiv-ta'lim)
+       HEADER
     ===================================================== */
     header {
       width: 100%;
-      max-width: 1000px;
-      padding: 1.5rem 1rem;
+      max-width: 1200px;
+      padding: 0.8rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 10;
     }
 
-    /* Primary Back Button Adaptation */
     .btn-back {
       text-decoration: none;
       background-color: var(--color-surface);
       color: var(--color-primary);
       font-family: var(--font-main);
       font-weight: 700;
-      font-size: 16px; /* label-md */
-      line-height: 22px;
-      padding: 12px 24px;
+      font-size: 15px;
+      padding: 8px 20px;
       border-radius: var(--radius-lg);
       border: 2px solid var(--color-border);
-      box-shadow: 0 4px 12px rgba(2, 132, 197, 0.12);
+      box-shadow: 0 4px 10px rgba(2, 132, 197, 0.12);
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
@@ -142,231 +110,241 @@
       background-color: var(--color-primary);
       color: var(--color-surface);
       border-color: var(--color-primary);
-      transform: translateY(-2px);
     }
 
     .game-title {
       font-family: var(--font-display);
-      font-size: 26px; /* headline-sm */
+      font-size: 22px;
       font-weight: 700;
       color: var(--color-primary);
       background-color: var(--color-surface);
-      padding: 8px 24px;
+      padding: 6px 20px;
       border-radius: var(--radius-full);
       border: 2px solid var(--color-border);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
 
     /* =====================================================
-       ARENA TARIK TAMBANG
+       MAIN GAME ARENA (GRID LAYOUT MATHTUG STYLE)
     ===================================================== */
-    .arena-container {
+    .game-arena {
       width: 100%;
-      max-width: 950px;
-      height: 58vh;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      max-width: 1250px;
+      height: calc(100vh - 80px);
+      display: grid;
+      grid-template-columns: 320px 1fr 320px;
+      gap: 1.5rem;
+      padding: 0 1.5rem 1rem 1.5rem;
       align-items: center;
       z-index: 5;
     }
 
-    .scoreboard {
+    /* =====================================================
+       KEYPAD & SOAL PLAYER CARD (KIRI & KANAN)
+    ===================================================== */
+    .player-card {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl);
+      border: 2px solid var(--color-border);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
       display: flex;
-      gap: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    /* Chip Adaptasi Design System */
-    .team-badge {
-      font-family: var(--font-main);
-      font-weight: 700;
-      font-size: 16px; /* label-md */
-      padding: 8px 20px;
-      border-radius: var(--radius-full);
-      color: var(--color-surface);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
     }
 
-    .team-red {
-      background-color: var(--color-error);
-    }
-
-    .team-blue {
-      background-color: var(--color-primary);
-    }
-
-    .stage {
+    .card-header-blue {
       width: 100%;
-      height: 240px;
-      position: relative;
+      background-color: var(--color-primary);
+      color: var(--color-surface);
+      padding: 12px;
+      text-align: center;
+    }
+
+    .card-header-red {
+      width: 100%;
+      background-color: var(--color-error);
+      color: var(--color-surface);
+      padding: 12px;
+      text-align: center;
+    }
+
+    .player-name {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .question-display {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      margin: 10px 0;
+    }
+
+    /* Output Display Box */
+    .answer-box {
+      width: 85%;
+      height: 46px;
+      background-color: var(--color-neutral);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: var(--color-on-surface);
+      margin-bottom: 12px;
     }
 
-    .ground-shadow {
-      position: absolute;
-      bottom: 5px;
-      left: 7%;
-      right: 7%;
-      height: 24px;
-      border-radius: var(--radius-full);
-      background: rgba(100, 116, 139, 0.15);
-      filter: blur(4px);
-      z-index: 0;
+    /* Keypad Grid 3x4 */
+    .keypad-grid {
+      width: 85%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding-bottom: 16px;
     }
 
-    .center-line {
-      position: absolute;
-      bottom: 0;
-      width: 6px;
-      height: 100%;
-      background: repeating-linear-gradient(0deg, var(--color-primary), var(--color-primary) 12px, transparent 12px, transparent 24px);
-      z-index: 1;
-      opacity: 0.4;
+    .key-btn {
+      height: 44px;
+      background-color: var(--color-neutral);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.1s ease;
+      box-shadow: 0 3px 0 var(--color-border);
+    }
+
+    .key-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 var(--color-border);
+    }
+
+    .key-clear {
+      background-color: #FFE4E6;
+      color: var(--color-error);
+      border-color: #FECDD3;
+    }
+
+    .key-submit-blue {
+      background-color: var(--color-primary);
+      color: var(--color-surface);
+      border-color: #0369A1;
+      box-shadow: 0 3px 0 #0369A1;
+    }
+
+    .key-submit-red {
+      background-color: var(--color-error);
+      color: var(--color-surface);
+      border-color: #B91C1C;
+      box-shadow: 0 3px 0 #B91C1C;
     }
 
     /* =====================================================
-       TALI TAMBANG & PITA
+       ARENA TENGAH (STAGE & CHARACTERS)
     ===================================================== */
-    .rope-wrapper {
-      position: absolute;
-      width: 82%;
+    .tug-stage {
+      width: 100%;
       height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .center-divider {
+      position: absolute;
+      top: 10%;
+      bottom: 10%;
+      width: 4px;
+      background: repeating-linear-gradient(0deg, var(--color-tertiary), var(--color-tertiary) 10px, transparent 10px, transparent 20px);
+      opacity: 0.6;
+    }
+
+    /* Tali Wrapper */
+    .rope-container {
+      width: 100%;
+      height: 200px;
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.3s ease-out;
-      z-index: 3;
     }
 
-    .rope {
-      width: 100%;
-      height: 16px;
-      background: repeating-linear-gradient(45deg, var(--color-tertiary) 0px, var(--color-tertiary) 10px, #D97706 10px, #D97706 16px, #B45309 16px, #B45309 24px);
+    .rope-line {
+      width: 90%;
+      height: 12px;
+      background: repeating-linear-gradient(45deg, var(--color-tertiary) 0px, var(--color-tertiary) 8px, #D97706 8px, #D97706 14px);
       border-radius: var(--radius-full);
-      border: 2px solid #7C2D12;
-      box-shadow: 0 4px 6px rgba(15, 23, 42, 0.15);
+      border: 1.5px solid #7C2D12;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       position: relative;
     }
 
-    .rope-ribbon {
+    .rope-marker {
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      width: 18px;
-      height: 38px;
+      width: 14px;
+      height: 30px;
       background-color: var(--color-error);
-      border-radius: var(--radius-sm);
       border: 2px solid var(--color-surface);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+
+    /* TEAM TIM BIRU (KIRI) - 2 KARAKTER SEJAJAR */
+    .team-left-group {
+      position: absolute;
+      left: 5%;
+      bottom: 25px;
+      display: flex;
+      gap: -10px;
       z-index: 4;
     }
 
-    .rope-ribbon::after {
-      content: "";
+    /* TEAM TIM MERAH (KANAN) - 2 KARAKTER SEJAJAR */
+    .team-right-group {
       position: absolute;
-      bottom: -9px;
-      left: 1px;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-top: 10px solid var(--color-error);
-    }
-
-    /* =====================================================
-       KARAKTER STYLING (PRESISI DENGAN DESIGN SYSTEM)
-    ===================================================== */
-    .character {
-      position: absolute;
-      bottom: 20px;
-      width: 170px;
-      height: 200px;
-      z-index: 5;
-      transform-origin: 50% 90%;
-    }
-
-    .character-left {
-      left: 6%;
-      animation: character-pull-left 0.8s infinite alternate ease-in-out;
-    }
-
-    .character-right {
-      right: 6%;
-      animation: character-pull-right 0.8s infinite alternate ease-in-out;
-    }
-
-    @keyframes character-pull-left {
-      0% { transform: rotate(-1deg) translateX(0); }
-      100% { transform: rotate(-5deg) translateX(-6px); }
-    }
-
-    @keyframes character-pull-right {
-      0% { transform: scaleX(-1) rotate(-1deg) translateX(0); }
-      100% { transform: scaleX(-1) rotate(-5deg) translateX(-6px); }
-    }
-
-    .character svg {
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-    }
-
-    .skin { fill: #FDE047; stroke: var(--color-on-surface); stroke-width: 2.5; stroke-linejoin: round; }
-    .hair { fill: #475569; stroke: #1E293B; stroke-width: 2.5; }
-    .eye { fill: var(--color-on-surface); }
-    .shirt-red { fill: var(--color-error); stroke: #B91C1C; stroke-width: 3; }
-    .shirt-blue { fill: var(--color-primary); stroke: #0369A1; stroke-width: 3; }
-    .shorts { fill: #334155; stroke: #1E293B; stroke-width: 3; }
-    .shoe { fill: var(--color-surface); stroke: #1E293B; stroke-width: 3; }
-    .sock { fill: var(--color-neutral); stroke: #64748B; stroke-width: 2; }
-    .arm-stroke { fill: none; stroke: #FDE047; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
-    .arm-outline { fill: none; stroke: var(--color-on-surface); stroke-width: 18; stroke-linecap: round; stroke-linejoin: round; }
-    .hand-fist { fill: #FDE047; stroke: var(--color-on-surface); stroke-width: 2.5; }
-    .sweat { fill: var(--color-secondary); stroke: var(--color-primary); stroke-width: 1.5; opacity: 0.9; }
-
-    /* =====================================================
-       CARD AREA (Adaptasi Token Card & Typography)
-    ===================================================== */
-    .control-area {
-      width: 100%;
-      max-width: 800px;
-      background-color: var(--color-surface);
-      padding: 2rem;
-      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-      border-top: 2px solid var(--color-border);
-      border-left: 2px solid var(--color-border);
-      border-right: 2px solid var(--color-border);
-      box-shadow: 0 -10px 25px rgba(15, 23, 42, 0.05);
+      right: 5%;
+      bottom: 25px;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      z-index: 10;
+      gap: -10px;
+      z-index: 4;
+      transform: scaleX(-1);
     }
 
-    .question-box {
-      font-family: var(--font-display);
-      font-size: 26px; /* headline-sm */
-      font-weight: 700;
-      color: var(--color-on-surface);
-      text-align: center;
+    .char-svg {
+      width: 110px;
+      height: 130px;
+      animation: pull-anim 0.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes pull-anim {
+      0% { transform: rotate(0deg) translateX(0); }
+      100% { transform: rotate(-4deg) translateX(-4px); }
     }
 
     /* =====================================================
        RESPONSIF MOBILE
     ===================================================== */
-    @media (max-width: 600px) {
-      .character { width: 125px; height: 155px; bottom: 18px; }
-      .character-left { left: -1%; }
-      .character-right { right: -1%; }
-      .rope-wrapper { width: 88%; }
-      .control-area { padding: 1.25rem; }
+    @media (max-width: 900px) {
+      body { overflow-y: auto; height: auto; }
+      .game-arena {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .tug-stage { height: 250px; }
     }
   </style>
 </head>
@@ -382,157 +360,164 @@
     <a href="index.html" class="btn-back">
       <span>⬅️</span> Kembali
     </a>
-    <h1 class="game-title">Tarik Tambang</h1>
+    <h1 class="game-title">Tarik Tambang Perkalian</h1>
     <div style="width: 100px;"></div>
   </header>
 
-  <!-- ARENA PERTANDINGAN -->
-  <main class="arena-container">
-    <div class="scoreboard">
-      <div class="team-badge team-red">🔴 Tim Merah</div>
-      <div class="team-badge team-blue">🔵 Tim Biru</div>
-    </div>
+  <!-- ARENA GAME UTAMA -->
+  <main class="game-arena">
 
-    <div class="stage">
-      <div class="ground-shadow"></div>
-      <div class="center-line"></div>
+    <!-- CARD PLAYER 1 (TIM BIRU - KIRI) -->
+    <section class="player-card">
+      <div class="card-header-blue">
+        <h2 class="player-name">TIM BIRU</h2>
+      </div>
+      <div class="question-display" id="q-left">6 × 4 = ?</div>
+      <div class="answer-box" id="ans-left"></div>
 
-      <!-- TALI TAMBANG -->
-      <div class="rope-wrapper" id="ropeWrapper">
-        <div class="rope">
-          <div class="rope-ribbon"></div>
+      <!-- KEYPAD INPUT -->
+      <div class="keypad-grid">
+        <button class="key-btn" onclick="pressKey('left', '1')">1</button>
+        <button class="key-btn" onclick="pressKey('left', '2')">2</button>
+        <button class="key-btn" onclick="pressKey('left', '3')">3</button>
+        <button class="key-btn" onclick="pressKey('left', '4')">4</button>
+        <button class="key-btn" onclick="pressKey('left', '5')">5</button>
+        <button class="key-btn" onclick="pressKey('left', '6')">6</button>
+        <button class="key-btn" onclick="pressKey('left', '7')">7</button>
+        <button class="key-btn" onclick="pressKey('left', '8')">8</button>
+        <button class="key-btn" onclick="pressKey('left', '9')">9</button>
+        <button class="key-btn key-clear" onclick="pressKey('left', 'C')">C</button>
+        <button class="key-btn" onclick="pressKey('left', '0')">0</button>
+        <button class="key-btn key-submit-blue" onclick="pressKey('left', 'OK')">OK</button>
+      </div>
+    </section>
+
+    <!-- ARENA ARENA TENGAH (STAGE PERTANDINGAN) -->
+    <section class="tug-stage">
+      <div class="center-divider"></div>
+
+      <div class="rope-container">
+        <!-- TALI TAMBANG -->
+        <div class="rope-line">
+          <div class="rope-marker" id="marker"></div>
         </div>
+
+        <!-- TIM BIRU (KIRI) - 2 PEMAIN SEJAJAR -->
+        <div class="team-left-group">
+          <!-- Karakter 1 -->
+          <svg class="char-svg" viewBox="0 0 100 120">
+            <ellipse cx="50" cy="115" rx="35" ry="5" fill="rgba(0,0,0,0.15)"/>
+            <path d="M 30 70 L 15 110 M 60 70 L 75 110" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 25 45 L 55 45 L 50 80 L 20 80 Z" fill="#0284C5"/>
+            <circle cx="40" cy="25" r="16" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
+            <path d="M 30 50 L 70 65" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="70" cy="65" r="5" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
+          </svg>
+          <!-- Karakter 2 -->
+          <svg class="char-svg" viewBox="0 0 100 120" style="margin-left: -35px;">
+            <ellipse cx="50" cy="115" rx="35" ry="5" fill="rgba(0,0,0,0.15)"/>
+            <path d="M 30 70 L 15 110 M 60 70 L 75 110" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 25 45 L 55 45 L 50 80 L 20 80 Z" fill="#60A5FA"/>
+            <circle cx="40" cy="25" r="16" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
+            <path d="M 30 50 L 70 65" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="70" cy="65" r="5" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
+          </svg>
+        </div>
+
+        <!-- TIM MERAH (KANAN) - 2 PEMAIN SEJAJAR -->
+        <div class="team-right-group">
+          <!-- Karakter 1 -->
+          <svg class="char-svg" viewBox="0 0 100 120">
+            <ellipse cx="50" cy="115" rx="35" ry="5" fill="rgba(0,0,0,0.15)"/>
+            <path d="M 30 70 L 15 110 M 60 70 L 75 110" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 25 45 L 55 45 L 50 80 L 20 80 Z" fill="#EF4444"/>
+            <circle cx="40" cy="25" r="16" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
+            <path d="M 30 50 L 70 65" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="70" cy="65" r="5" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
+          </svg>
+          <!-- Karakter 2 -->
+          <svg class="char-svg" viewBox="0 0 100 120" style="margin-left: -35px;">
+            <ellipse cx="50" cy="115" rx="35" ry="5" fill="rgba(0,0,0,0.15)"/>
+            <path d="M 30 70 L 15 110 M 60 70 L 75 110" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 25 45 L 55 45 L 50 80 L 20 80 Z" fill="#F43F5E"/>
+            <circle cx="40" cy="25" r="16" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
+            <path d="M 30 50 L 70 65" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="70" cy="65" r="5" fill="#FDE047" stroke="#0F172A" stroke-width="2"/>
+          </svg>
+        </div>
+
       </div>
+    </section>
 
-      <!-- KARAKTER KIRI (TIM MERAH) -->
-      <div class="character character-left">
-        <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="90" cy="192" rx="60" ry="6" fill="rgba(15, 23, 42, 0.12)"/>
-
-          <!-- KAKI BELAKANG -->
-          <path d="M 65 130 L 40 160 L 25 185" class="arm-outline" stroke-width="20"/>
-          <path d="M 65 130 L 40 160 L 25 185" stroke="#334155" stroke-width="14" stroke-linecap="round" fill="none"/>
-          <path d="M 23 180 L 32 173 L 38 185 L 23 189 Z" class="sock"/>
-          <path d="M 12 188 C 12 182 25 180 35 183 L 38 193 L 12 193 Z" class="shoe"/>
-
-          <!-- KAKI DEPAN -->
-          <path d="M 95 130 L 120 160 L 140 185" class="arm-outline" stroke-width="20"/>
-          <path d="M 95 130 L 120 160 L 140 185" stroke="#334155" stroke-width="14" stroke-linecap="round" fill="none"/>
-          <path d="M 135 180 L 126 173 L 120 185 L 135 189 Z" class="sock"/>
-          <path d="M 115 188 C 115 182 135 180 148 183 L 148 193 L 115 193 Z" class="shoe"/>
-
-          <!-- CELANA -->
-          <path d="M 52 110 C 65 105 88 105 108 110 L 115 135 L 88 142 L 78 128 L 68 142 L 48 135 Z" class="shorts"/>
-
-          <!-- BADAN -->
-          <path d="M 48 60 C 62 52 92 52 108 62 C 112 80 108 102 102 115 C 85 120 62 118 48 112 C 42 90 44 72 48 60 Z" class="shirt-red"/>
-
-          <!-- NOMOR PUNGGUNG -->
-          <circle cx="78" cy="85" r="12" fill="#FFFFFF"/>
-          <text x="78" y="90" text-anchor="middle" font-family="Fredoka" font-size="13" font-weight="700" fill="#EF4444">1</text>
-
-          <!-- KEPALA & EKSPRESI -->
-          <ellipse cx="68" cy="38" rx="28" ry="28" class="skin"/>
-          <path d="M 42 32 C 42 12 58 4 72 6 C 88 8 98 22 92 38 C 85 30 78 22 68 22 C 58 22 48 28 42 32 Z" class="hair"/>
-          <path d="M 54 36 Q 60 32 64 36" stroke="#0F172A" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <path d="M 76 36 Q 82 32 86 36" stroke="#0F172A" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <ellipse cx="60" cy="42" rx="3" ry="4" class="eye"/>
-          <ellipse cx="80" cy="42" rx="3" ry="4" class="eye"/>
-          <path d="M 62 52 Q 70 58 78 51" stroke="#7F1D1D" stroke-width="3" fill="none" stroke-linecap="round"/>
-
-          <!-- LENGAN MENGENGGAM TALI (y=100) -->
-          <path d="M 60 68 L 85 85 L 120 100" class="arm-outline"/>
-          <path d="M 60 68 L 85 85 L 120 100" class="arm-stroke"/>
-          <path d="M 85 70 L 110 85 L 145 100" class="arm-outline"/>
-          <path d="M 85 70 L 110 85 L 145 100" class="arm-stroke"/>
-
-          <circle cx="120" cy="100" r="9" class="hand-fist"/>
-          <circle cx="145" cy="100" r="9" class="hand-fist"/>
-
-          <path d="M 98 32 C 102 38 101 42 98 44 C 95 42 95 38 98 32 Z" class="sweat"/>
-        </svg>
+    <!-- CARD PLAYER 2 (TIM MERAH - KANAN) -->
+    <section class="player-card">
+      <div class="card-header-red">
+        <h2 class="player-name">TIM MERAH</h2>
       </div>
+      <div class="question-display" id="q-right">7 × 5 = ?</div>
+      <div class="answer-box" id="ans-right"></div>
 
-      <!-- KARAKTER KANAN (TIM BIRU) -->
-      <div class="character character-right">
-        <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="90" cy="192" rx="60" ry="6" fill="rgba(15, 23, 42, 0.12)"/>
-
-          <path d="M 65 130 L 40 160 L 25 185" class="arm-outline" stroke-width="20"/>
-          <path d="M 65 130 L 40 160 L 25 185" stroke="#334155" stroke-width="14" stroke-linecap="round" fill="none"/>
-          <path d="M 23 180 L 32 173 L 38 185 L 23 189 Z" class="sock"/>
-          <path d="M 12 188 C 12 182 25 180 35 183 L 38 193 L 12 193 Z" class="shoe"/>
-
-          <path d="M 95 130 L 120 160 L 140 185" class="arm-outline" stroke-width="20"/>
-          <path d="M 95 130 L 120 160 L 140 185" stroke="#334155" stroke-width="14" stroke-linecap="round" fill="none"/>
-          <path d="M 135 180 L 126 173 L 120 185 L 135 189 Z" class="sock"/>
-          <path d="M 115 188 C 115 182 135 180 148 183 L 148 193 L 115 193 Z" class="shoe"/>
-
-          <path d="M 52 110 C 65 105 88 105 108 110 L 115 135 L 88 142 L 78 128 L 68 142 L 48 135 Z" class="shorts"/>
-
-          <path d="M 48 60 C 62 52 92 52 108 62 C 112 80 108 102 102 115 C 85 120 62 118 48 112 C 42 90 44 72 48 60 Z" class="shirt-blue"/>
-
-          <circle cx="78" cy="85" r="12" fill="#FFFFFF"/>
-          <text x="78" y="90" text-anchor="middle" font-family="Fredoka" font-size="13" font-weight="700" fill="#0284C5">2</text>
-
-          <ellipse cx="68" cy="38" rx="28" ry="28" class="skin"/>
-          <path d="M 42 32 C 42 12 58 4 72 6 C 88 8 98 22 92 38 C 85 30 78 22 68 22 C 58 22 48 28 42 32 Z" class="hair"/>
-          <path d="M 54 36 Q 60 32 64 36" stroke="#0F172A" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <path d="M 76 36 Q 82 32 86 36" stroke="#0F172A" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <ellipse cx="60" cy="42" rx="3" ry="4" class="eye"/>
-          <ellipse cx="80" cy="42" rx="3" ry="4" class="eye"/>
-          <path d="M 62 52 Q 70 58 78 51" stroke="#7F1D1D" stroke-width="3" fill="none" stroke-linecap="round"/>
-
-          <path d="M 60 68 L 85 85 L 120 100" class="arm-outline"/>
-          <path d="M 60 68 L 85 85 L 120 100" class="arm-stroke"/>
-          <path d="M 85 70 L 110 85 L 145 100" class="arm-outline"/>
-          <path d="M 85 70 L 110 85 L 145 100" class="arm-stroke"/>
-
-          <circle cx="120" cy="100" r="9" class="hand-fist"/>
-          <circle cx="145" cy="100" r="9" class="hand-fist"/>
-
-          <path d="M 98 32 C 102 38 101 42 98 44 C 95 42 95 38 98 32 Z" class="sweat"/>
-        </svg>
+      <!-- KEYPAD INPUT -->
+      <div class="keypad-grid">
+        <button class="key-btn" onclick="pressKey('right', '1')">1</button>
+        <button class="key-btn" onclick="pressKey('right', '2')">2</button>
+        <button class="key-btn" onclick="pressKey('right', '3')">3</button>
+        <button class="key-btn" onclick="pressKey('right', '4')">4</button>
+        <button class="key-btn" onclick="pressKey('right', '5')">5</button>
+        <button class="key-btn" onclick="pressKey('right', '6')">6</button>
+        <button class="key-btn" onclick="pressKey('right', '7')">7</button>
+        <button class="key-btn" onclick="pressKey('right', '8')">8</button>
+        <button class="key-btn" onclick="pressKey('right', '9')">9</button>
+        <button class="key-btn key-clear" onclick="pressKey('right', 'C')">C</button>
+        <button class="key-btn" onclick="pressKey('right', '0')">0</button>
+        <button class="key-btn key-submit-red" onclick="pressKey('right', 'OK')">OK</button>
       </div>
-    </div>
+    </section>
+
   </main>
 
-  <!-- KONTROL & AREA SOAL -->
-  <section class="control-area">
-    <div class="question-box">Siap Bertanding! 🚀</div>
-  </section>
-
-  <!-- SCRIPT -->
+  <!-- LOGIKA PEMAIN & KEYPAD JS -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         document.body.classList.add("curtain-open");
-        playWhistleSound();
       }, 200);
     });
 
-    function playWhistleSound() {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContext) return;
-      try {
-        const audioCtx = new AudioContext();
-        const oscillator = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+    let inputLeft = "";
+    let inputRight = "";
 
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(1800, audioCtx.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(2500, audioCtx.currentTime + 0.15);
-
-        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
-
-        oscillator.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.35);
-      } catch (error) {
-        console.log("Audio tidak dapat diputar:", error);
+    function pressKey(side, val) {
+      if (side === 'left') {
+        const box = document.getElementById('ans-left');
+        if (val === 'C') inputLeft = "";
+        else if (val === 'OK') {
+          // Logika Cek Jawaban Tim Kiri
+          if (inputLeft === "24") {
+            alert("Tim Biru Benar!");
+            inputLeft = "";
+          } else {
+            inputLeft = "";
+          }
+        } else {
+          if (inputLeft.length < 3) inputLeft += val;
+        }
+        box.innerText = inputLeft;
+      } else {
+        const box = document.getElementById('ans-right');
+        if (val === 'C') inputRight = "";
+        else if (val === 'OK') {
+          // Logika Cek Jawaban Tim Kanan
+          if (inputRight === "35") {
+            alert("Tim Merah Benar!");
+            inputRight = "";
+          } else {
+            inputRight = "";
+          }
+        } else {
+          if (inputRight.length < 3) inputRight += val;
+        }
+        box.innerText = inputRight;
       }
     }
   </script>
