@@ -17,13 +17,14 @@
       --color-primary: #0284C5;
       --color-secondary: #60A5FA;
       --color-tertiary: #F59E0B;
-      --color-neutral: #F8FAFC;
+      /* Background Disamakan Dengan Latar GIF Canvas */
+      --color-bg-canvas: #EDEDED; 
       --color-surface: #FFFFFF;
       --color-on-surface: #0F172A;
-      --color-border: #E5E7EB;
+      --color-border: #CBD5E1;
       --color-error: #EF4444;
 
-      --radius-md: 8px;
+      --radius-md: 10px;
       --radius-lg: 16px;
       --radius-xl: 24px;
       --radius-full: 9999px;
@@ -43,7 +44,8 @@
       width: 100vw;
       height: 100vh;
       font-family: var(--font-main);
-      background-color: var(--color-neutral);
+      /* Menyelaraskan Latar Belakang Web Dengan Background GIF */
+      background-color: var(--color-bg-canvas);
       color: var(--color-on-surface);
       overflow: hidden;
       display: flex;
@@ -83,7 +85,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 10;
+      z-index: 20;
     }
 
     .btn-back {
@@ -121,7 +123,7 @@
     }
 
     /* =====================================================
-       GAME ARENA LAYOUT
+       GAME ARENA LAYOUT (KEYPAD FRONT, GIF BACK)
     ===================================================== */
     .game-arena {
       width: 100%;
@@ -132,11 +134,11 @@
       gap: 1.5rem;
       padding: 0 1.5rem 1rem 1.5rem;
       align-items: center;
-      z-index: 5;
+      position: relative;
     }
 
     /* =====================================================
-       PLAYER CARD & KEYPAD
+       PLAYER CARD & KEYPAD (Z-INDEX TINGGI = DI DEPAN GIF)
     ===================================================== */
     .player-card {
       background-color: var(--color-surface);
@@ -147,41 +149,55 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      z-index: 10; /* Berada di depan GIF */
     }
 
     .card-header-blue {
       width: 100%;
       background-color: var(--color-primary);
       color: var(--color-surface);
-      padding: 12px;
-      text-align: center;
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .card-header-red {
       width: 100%;
       background-color: var(--color-error);
       color: var(--color-surface);
-      padding: 12px;
-      text-align: center;
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .player-name {
       font-family: var(--font-display);
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
+    }
+
+    .score-badge {
+      font-family: var(--font-display);
+      background-color: rgba(255, 255, 255, 0.25);
+      padding: 2px 10px;
+      border-radius: var(--radius-full);
+      font-size: 14px;
     }
 
     .question-display {
       font-family: var(--font-display);
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 700;
-      margin: 10px 0;
+      margin: 8px 0;
+      color: var(--color-on-surface);
     }
 
     .answer-box {
       width: 85%;
-      height: 46px;
-      background-color: var(--color-neutral);
+      height: 44px;
+      background-color: var(--color-bg-canvas);
       border: 2px solid var(--color-border);
       border-radius: var(--radius-md);
       display: flex;
@@ -202,8 +218,8 @@
     }
 
     .key-btn {
-      height: 44px;
-      background-color: var(--color-neutral);
+      height: 42px;
+      background-color: var(--color-bg-canvas);
       border: 1.5px solid var(--color-border);
       border-radius: var(--radius-md);
       font-family: var(--font-display);
@@ -244,51 +260,32 @@
     }
 
     /* =====================================================
-       STAGE PERTANDINGAN (PANEL GIF TUNGGAL)
+       STAGE TENGAH (GIF BERADA DI PALING BELAKANG z-index: 1)
     ===================================================== */
     .tug-stage {
       width: 100%;
       height: 100%;
       position: relative;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
 
-    .center-divider {
+    .gif-background {
       position: absolute;
-      top: 10%;
-      bottom: 10%;
-      width: 4px;
-      background: repeating-linear-gradient(0deg, var(--color-tertiary), var(--color-tertiary) 10px, transparent 10px, transparent 20px);
-      opacity: 0.6;
-      z-index: 1;
-    }
-
-    .rope-container {
       width: 100%;
-      height: 260px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* HANYA MEMANGGIL 1 FILE GIF TUNGGAL DI TENGAH ARENA */
-    .gif-full-stage {
-      width: 100%;
-      max-width: 520px;
+      max-width: 550px;
       height: auto;
       object-fit: contain;
-      z-index: 4;
-      transition: transform 0.3s ease-out; /* Untuk efek geser saat menjawab soal */
+      z-index: 1; /* Paling belakang */
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     @media (max-width: 900px) {
       body { overflow-y: auto; height: auto; }
       .game-arena { grid-template-columns: 1fr; height: auto; }
-      .tug-stage { height: 250px; }
+      .tug-stage { height: 260px; }
     }
   </style>
 </head>
@@ -311,8 +308,9 @@
     <section class="player-card">
       <div class="card-header-blue">
         <h2 class="player-name">TIM BIRU</h2>
+        <span class="score-badge" id="score-left">Skor: 0</span>
       </div>
-      <div class="question-display" id="q-left">6 × 4 = ?</div>
+      <div class="question-display" id="q-left">? × ?</div>
       <div class="answer-box" id="ans-left"></div>
 
       <div class="keypad-grid">
@@ -332,18 +330,15 @@
     </section>
 
     <section class="tug-stage">
-      <div class="center-divider"></div>
-
-      <div class="rope-container">
-        <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-full-stage" id="stageGif" />
-      </div>
+      <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
     <section class="player-card">
       <div class="card-header-red">
         <h2 class="player-name">TIM MERAH</h2>
+        <span class="score-badge" id="score-right">Skor: 0</span>
       </div>
-      <div class="question-display" id="q-right">7 × 5 = ?</div>
+      <div class="question-display" id="q-right">? × ?</div>
       <div class="answer-box" id="ans-right"></div>
 
       <div class="keypad-grid">
@@ -365,26 +360,91 @@
   </main>
 
   <script>
+    // Bank Soal Perkalian Kelas 3 (Halaman 58–63)
+    const questionBank = [
+      { num1: 5, num2: 2, ans: 10 },
+      { num1: 4, num2: 5, ans: 20 },
+      { num1: 5, num2: 6, ans: 30 },
+      { num1: 6, num2: 5, ans: 30 },
+      { num1: 5, num2: 4, ans: 20 },
+      { num1: 6, num2: 2, ans: 12 },
+      { num1: 6, num2: 5, ans: 30 },
+      { num1: 8, num2: 4, ans: 32 },
+      { num1: 7, num2: 3, ans: 21 },
+      { num1: 9, num2: 4, ans: 36 },
+      { num1: 3, num2: 8, ans: 24 },
+      { num1: 7, num2: 5, ans: 35 },
+      { num1: 8, num2: 5, ans: 40 },
+      { num1: 4, num2: 7, ans: 28 },
+      { num1: 6, num2: 6, ans: 36 }
+    ];
+
+    let currentQLeft = {};
+    let currentQRight = {};
+    let inputLeft = "";
+    let inputRight = "";
+    let scoreLeft = 0;
+    let scoreRight = 0;
+    let pullPos = 0; // Posisi pergeseran GIF
+
     document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         document.body.classList.add("curtain-open");
       }, 200);
+
+      // Inisialisasi Soal Awal
+      generateNewQuestion('left');
+      generateNewQuestion('right');
     });
 
-    let inputLeft = "";
-    let inputRight = "";
-    let pullPosition = 0; // Posisi pergeseran GIF (-px = kiri menang, +px = kanan menang)
+    // Acak & Tampilkan Soal Baru
+    function generateNewQuestion(side) {
+      const randomQ = questionBank[Math.floor(Math.random() * questionBank.length)];
+      if (side === 'left') {
+        currentQLeft = randomQ;
+        document.getElementById('q-left').innerText = `${randomQ.num1} × ${randomQ.num2} = ?`;
+      } else {
+        currentQRight = randomQ;
+        document.getElementById('q-right').innerText = `${randomQ.num1} × ${randomQ.num2} = ?`;
+      }
+    }
 
+    // Suara Efek Klik / Jawab
+    function playBeep(freq = 600) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.1);
+    }
+
+    // Logika Keypad Input
     function pressKey(side, val) {
+      playBeep(800);
+
       if (side === 'left') {
         const box = document.getElementById('ans-left');
-        if (val === 'C') inputLeft = "";
-        else if (val === 'OK') {
-          if (inputLeft === "24") {
-            pullPosition -= 25; // Tarik ke kiri
-            document.getElementById('stageGif').style.transform = `translateX(${pullPosition}px)`;
+        if (val === 'C') {
+          inputLeft = "";
+        } else if (val === 'OK') {
+          if (parseInt(inputLeft) === currentQLeft.ans) {
+            playBeep(1200);
+            scoreLeft += 10;
+            pullPos -= 35; // Tarik ke kiri
+            document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
+            document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
             inputLeft = "";
+            generateNewQuestion('left'); // GANTI SOAL BARU
           } else {
+            playBeep(300);
             inputLeft = "";
           }
         } else {
@@ -393,13 +453,19 @@
         box.innerText = inputLeft;
       } else {
         const box = document.getElementById('ans-right');
-        if (val === 'C') inputRight = "";
-        else if (val === 'OK') {
-          if (inputRight === "35") {
-            pullPosition += 25; // Tarik ke kanan
-            document.getElementById('stageGif').style.transform = `translateX(${pullPosition}px)`;
+        if (val === 'C') {
+          inputRight = "";
+        } else if (val === 'OK') {
+          if (parseInt(inputRight) === currentQRight.ans) {
+            playBeep(1200);
+            scoreRight += 10;
+            pullPos += 35; // Tarik ke kanan
+            document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
+            document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
             inputRight = "";
+            generateNewQuestion('right'); // GANTI SOAL BARU
           } else {
+            playBeep(300);
             inputRight = "";
           }
         } else {
