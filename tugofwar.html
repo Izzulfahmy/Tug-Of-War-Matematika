@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tug of War - Perkalian Matematika</title>
-  <!-- Google Fonts: Fredoka & Nunito -->
+  <title>Tarik Tambang - Perkalian Matematika</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    /* ===================================================
-       1. RESET & BASE STYLES
-       =================================================== */
+    /* =====================================================
+       RESET & BASE STYLES
+    ===================================================== */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -20,11 +20,16 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+
     body {
       width: 100vw;
       height: 100vh;
-      font-family: 'Nunito', sans-serif;
-      background: linear-gradient(180deg, #bae6fd 0%, #7dd3fc 55%, #86efac 55%, #4ade80 100%);
+      font-family: "Nunito", sans-serif;
+      background: linear-gradient(180deg, #bae6fd 0%, #7dd3fc 54%, #86efac 54%, #4ade80 100%);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -33,20 +38,18 @@
       position: relative;
     }
 
-    /* ===================================================
-       2. ANIMASI OPENING (TIRAI TERBUKA)
-       =================================================== */
+    /* =====================================================
+       TIRAI OPENING
+    ===================================================== */
     .curtain {
       position: fixed;
       top: 0;
       width: 50vw;
       height: 100vh;
-      background-color: #f43f5e;
+      background: repeating-linear-gradient(90deg, #fb7185 0px, #f43f5e 30px, #e11d48 60px, #f43f5e 90px);
       z-index: 100;
       transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
-      display: flex;
-      align-items: center;
-      box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
+      box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.25), inset -12px 0 20px rgba(255, 255, 255, 0.08);
     }
 
     .curtain-left {
@@ -67,9 +70,9 @@
       transform: translateX(100%);
     }
 
-    /* ===================================================
-       3. HEADER & NAVIGASI ATAS
-       =================================================== */
+    /* =====================================================
+       HEADER
+    ===================================================== */
     header {
       width: 100%;
       max-width: 1000px;
@@ -84,7 +87,7 @@
       text-decoration: none;
       background-color: #ffffff;
       color: #0284c7;
-      font-family: 'Fredoka', sans-serif;
+      font-family: "Fredoka", sans-serif;
       font-weight: 600;
       font-size: 1.1rem;
       padding: 0.6rem 1.2rem;
@@ -107,19 +110,19 @@
     }
 
     .game-title {
-      font-family: 'Fredoka', sans-serif;
+      font-family: "Fredoka", sans-serif;
       font-size: clamp(1.5rem, 3.5vw, 2.3rem);
       color: #ffffff;
-      text-shadow: 3px 3px 0 #0284c7;
+      text-shadow: 3px 3px 0 #0284c7, 0 5px 10px rgba(0, 0, 0, 0.15);
       background-color: rgba(2, 132, 199, 0.4);
       padding: 0.4rem 1.5rem;
       border-radius: 20px;
       backdrop-filter: blur(4px);
     }
 
-    /* ===================================================
-       4. ARENA TARIK TAMBANG
-       =================================================== */
+    /* =====================================================
+       ARENA
+    ===================================================== */
     .arena-container {
       width: 100%;
       max-width: 950px;
@@ -132,7 +135,6 @@
       z-index: 5;
     }
 
-    /* Papan Skor */
     .scoreboard {
       display: flex;
       gap: 3rem;
@@ -140,7 +142,7 @@
     }
 
     .team-badge {
-      font-family: 'Fredoka', sans-serif;
+      font-family: "Fredoka", sans-serif;
       font-size: 1.2rem;
       padding: 0.5rem 1.5rem;
       border-radius: 16px;
@@ -158,17 +160,30 @@
       border: 3px solid #1d4ed8;
     }
 
-    /* Stage Pertandingan */
+    /* =====================================================
+       STAGE
+    ===================================================== */
     .stage {
       width: 100%;
-      height: 220px;
+      height: 250px;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* Garis Tengah Lapangan */
+    .ground-shadow {
+      position: absolute;
+      bottom: 5px;
+      left: 7%;
+      right: 7%;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(21, 128, 61, 0.22);
+      filter: blur(5px);
+      z-index: 0;
+    }
+
     .center-line {
       position: absolute;
       bottom: 0;
@@ -176,9 +191,12 @@
       height: 100%;
       background: repeating-linear-gradient(0deg, #ffffff, #ffffff 15px, transparent 15px, transparent 30px);
       z-index: 1;
+      opacity: 0.9;
     }
 
-    /* Tali Tambang */
+    /* =====================================================
+       TALI (Z-INDEX SANGAT PRESISI)
+    ===================================================== */
     .rope-wrapper {
       position: absolute;
       width: 80%;
@@ -187,73 +205,107 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.3s ease-out;
+      z-index: 3; /* Tali berada di antara lengan belakang dan telapak tangan */
     }
 
     .rope {
       width: 100%;
       height: 18px;
-      background: repeating-linear-gradient(45deg, #d97706, #d97706 12px, #b45309 12px, #b45309 24px);
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.25);
+      background: repeating-linear-gradient(45deg, #d97706 0px, #d97706 10px, #f59e0b 10px, #f59e0b 16px, #b45309 16px, #b45309 24px);
+      border-radius: 12px;
+      border: 2px solid #7c2d12;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25), inset 0 2px 2px rgba(255, 255, 255, 0.25);
       position: relative;
-      z-index: 2;
     }
 
-    /* Pita Merah Penanda Tengah Tali */
     .rope-ribbon {
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
       width: 20px;
-      height: 40px;
-      background-color: #dc2626;
-      border-radius: 4px;
+      height: 42px;
+      background: linear-gradient(90deg, #b91c1c, #ef4444, #b91c1c);
+      border-radius: 5px;
       border: 2px solid #ffffff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    /* KARAKTER VEKTOR MODERN */
-    .character {
-      position: absolute;
-      bottom: 10px;
-      width: 140px;
-      height: 160px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
       z-index: 4;
     }
 
+    .rope-ribbon::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 1px;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 12px solid #dc2626;
+    }
+
+    /* =====================================================
+       KARAKTER POSISI ANATOMI PRESISI
+    ===================================================== */
+    .character {
+      position: absolute;
+      bottom: 20px;
+      width: 170px;
+      height: 200px;
+      z-index: 5;
+      transform-origin: 50% 90%;
+    }
+
     .character-left {
-      left: 12%;
-      animation: tug-pull-left 0.8s infinite alternate ease-in-out;
+      left: 6%;
+      animation: character-pull-left 0.75s infinite alternate ease-in-out;
     }
 
     .character-right {
-      right: 12%;
-      transform: scaleX(-1);
-      animation: tug-pull-right 0.8s infinite alternate ease-in-out;
+      right: 6%;
+      animation: character-pull-right 0.75s infinite alternate ease-in-out;
     }
 
-    /* Animasi Gerakan Menarik Tali yang Bouncing & Ekspresif */
-    @keyframes tug-pull-left {
-      0% { transform: translateX(0) rotate(0deg); }
-      100% { transform: translateX(-10px) rotate(-6deg); }
+    @keyframes character-pull-left {
+      0% { transform: rotate(-1deg) translateX(0); }
+      100% { transform: rotate(-5deg) translateX(-6px); }
     }
 
-    @keyframes tug-pull-right {
-      0% { transform: scaleX(-1) translateX(0) rotate(0deg); }
-      100% { transform: scaleX(-1) translateX(-10px) rotate(-6deg); }
+    @keyframes character-pull-right {
+      0% { transform: scaleX(-1) rotate(-1deg) translateX(0); }
+      100% { transform: scaleX(-1) rotate(-5deg) translateX(-6px); }
     }
 
-    /* ===================================================
-       5. AREA PERTANYAAN / KONTROL
-       =================================================== */
+    /* =====================================================
+       SVG STYLING
+    ===================================================== */
+    .character svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .skin { fill: #f8c38b; stroke: #422006; stroke-width: 2.5; stroke-linejoin: round; }
+    .hair { fill: #3f2a1d; stroke: #26170f; stroke-width: 2.5; }
+    .eye { fill: #111827; }
+    .shirt-red { fill: #ef4444; stroke: #991b1b; stroke-width: 3; }
+    .shirt-blue { fill: #3b82f6; stroke: #1e40af; stroke-width: 3; }
+    .shorts { fill: #334155; stroke: #1e293b; stroke-width: 3; }
+    .shoe { fill: #ffffff; stroke: #1e293b; stroke-width: 3; }
+    .sock { fill: #f8fafc; stroke: #334155; stroke-width: 2; }
+    .arm-stroke { fill: none; stroke: #f8c38b; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+    .arm-outline { fill: none; stroke: #422006; stroke-width: 18; stroke-linecap: round; stroke-linejoin: round; }
+    .hand-fist { fill: #f8c38b; stroke: #422006; stroke-width: 2.5; }
+    .sweat { fill: #38bdf8; stroke: #0369a1; stroke-width: 1.5; opacity: 0.9; }
+
+    /* =====================================================
+       AREA SOAL & RESPONSIF
+    ===================================================== */
     .control-area {
       width: 100%;
       max-width: 800px;
       background-color: #ffffff;
       padding: 1.5rem;
       border-radius: 30px 30px 0 0;
-      box-shadow: 0 -10px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -262,42 +314,28 @@
     }
 
     .question-box {
-      font-family: 'Fredoka', sans-serif;
+      font-family: "Fredoka", sans-serif;
       font-size: clamp(1.5rem, 3vw, 2.2rem);
       color: #1e293b;
       text-align: center;
     }
 
-    /* ===================================================
-       6. RESPONSIF MOBILE
-       =================================================== */
-    @media (max-width: 640px) {
-      .character {
-        width: 100px;
-        height: 120px;
-      }
-
-      .character-left { left: 4%; }
-      .character-right { right: 4%; }
-
-      .scoreboard {
-        gap: 1rem;
-      }
-
-      .team-badge {
-        font-size: 1rem;
-        padding: 0.4rem 1rem;
-      }
+    @media (max-width: 600px) {
+      .character { width: 125px; height: 155px; bottom: 18px; }
+      .character-left { left: -1%; }
+      .character-right { right: -1%; }
+      .rope-wrapper { width: 88%; }
     }
   </style>
 </head>
-<body class="curtain-closed">
 
-  <!-- Tirai Animasi Opening -->
+<body>
+
+  <!-- TIRAI OPENING -->
   <div class="curtain curtain-left"></div>
   <div class="curtain curtain-right"></div>
 
-  <!-- Header Navigasi -->
+  <!-- HEADER -->
   <header>
     <a href="index.html" class="btn-back">
       <span>⬅️</span> Kembali
@@ -306,120 +344,145 @@
     <div style="width: 100px;"></div>
   </header>
 
-  <!-- Arena Pertandingan Tarik Tambang -->
+  <!-- ARENA -->
   <main class="arena-container">
-    
-    <!-- Papan Skor -->
     <div class="scoreboard">
       <div class="team-badge team-red">🔴 Tim Merah</div>
       <div class="team-badge team-blue">🔵 Tim Biru</div>
     </div>
 
-    <!-- Panggung & Tali Tambang -->
     <div class="stage">
+      <div class="ground-shadow"></div>
       <div class="center-line"></div>
 
-      <!-- Tali & Pita Merah -->
+      <!-- TALI TAMBANG -->
       <div class="rope-wrapper" id="ropeWrapper">
         <div class="rope">
           <div class="rope-ribbon"></div>
         </div>
       </div>
 
-      <!-- KARAKTER PEMAIN KIRI (TIM MERAH) -->
+      <!-- KARAKTER KIRI (TIM MERAH) -->
       <div class="character character-left">
-        <svg viewBox="0 0 120 140" width="100%" height="100%">
-          <!-- Bayangan Karakter -->
-          <ellipse cx="60" cy="132" rx="35" ry="7" fill="rgba(0,0,0,0.15)"/>
-          
-          <g transform="rotate(-8 60 120)">
-            <!-- Kaki Belakang -->
-            <path d="M 42 90 Q 25 105 15 128" stroke="#1e293b" stroke-width="12" stroke-linecap="round" fill="none"/>
-            <path d="M 15 128 L 5 128" stroke="#ef4444" stroke-width="12" stroke-linecap="round"/> <!-- Sepatu -->
+        <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Bayangan Kaki -->
+          <ellipse cx="90" cy="192" rx="60" ry="6" fill="rgba(0,0,0,0.15)"/>
 
-            <!-- Kaki Depan -->
-            <path d="M 68 90 Q 82 108 95 128" stroke="#1e293b" stroke-width="12" stroke-linecap="round" fill="none"/>
-            <path d="M 95 128 L 108 128" stroke="#ef4444" stroke-width="12" stroke-linecap="round"/> <!-- Sepatu -->
+          <!-- KAKI BELAKANG (Kuda-kuda Kokoh Menapak Tanah) -->
+          <path d="M 65 130 L 40 160 L 25 185" class="arm-outline" stroke-width="20"/>
+          <path d="M 65 130 L 40 160 L 25 185" stroke="#334155" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <path d="M 23 180 L 32 173 L 38 185 L 23 189 Z" class="sock"/>
+          <path d="M 12 188 C 12 182 25 180 35 183 L 38 193 L 12 193 Z" class="shoe"/>
 
-            <!-- Badan (Kaos Merah) -->
-            <path d="M 40 50 L 75 50 L 70 95 L 35 95 Z" fill="#ef4444" rx="5"/>
-            <path d="M 35 90 L 70 90 L 70 98 L 35 98 Z" fill="#b91c1c"/> <!-- Celana Pendek -->
+          <!-- KAKI DEPAN (Menahan Beban di Depan) -->
+          <path d="M 95 130 L 120 160 L 140 185" class="arm-outline" stroke-width="20"/>
+          <path d="M 95 130 L 120 160 L 140 185" stroke="#334155" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <path d="M 135 180 L 126 173 L 120 185 L 135 189 Z" class="sock"/>
+          <path d="M 115 188 C 115 182 135 180 148 183 L 148 193 L 115 193 Z" class="shoe"/>
 
-            <!-- Kepala (Kulit) -->
-            <circle cx="52" cy="32" r="20" fill="#fde047"/>
-            <!-- Rambut -->
-            <path d="M 32 30 Q 35 10 55 12 Q 72 15 72 32 Q 62 20 52 22 Q 40 22 32 30 Z" fill="#475569"/>
-            <!-- Mata & Ekspresi Ceria -->
-            <circle cx="60" cy="30" r="3" fill="#0f172a"/>
-            <path d="M 55 38 Q 62 44 68 37" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" fill="none"/> <!-- Senyum -->
-            <circle cx="65" cy="35" r="3.5" fill="#f87171" opacity="0.6"/> <!-- Pipi Merah -->
+          <!-- CELANA -->
+          <path d="M 52 110 C 65 105 88 105 108 110 L 115 135 L 88 142 L 78 128 L 68 142 L 48 135 Z" class="shorts"/>
 
-            <!-- Tangan Kiri (Memegang Tali Belakang) -->
-            <path d="M 45 58 Q 65 65 75 62" stroke="#fde047" stroke-width="10" stroke-linecap="round" fill="none"/>
-            <circle cx="76" cy="62" r="6" fill="#fde047"/> <!-- Kepalan Tangan 1 -->
+          <!-- BADAN CONDONG MENGATAS -->
+          <path d="M 48 60 C 62 52 92 52 108 62 C 112 80 108 102 102 115 C 85 120 62 118 48 112 C 42 90 44 72 48 60 Z" class="shirt-red"/>
 
-            <!-- Tangan Kanan (Memegang Tali Depan) -->
-            <path d="M 55 60 Q 80 68 92 62" stroke="#fde047" stroke-width="10" stroke-linecap="round" fill="none"/>
-            <circle cx="93" cy="62" r="6" fill="#fde047"/> <!-- Kepalan Tangan 2 -->
-          </g>
+          <!-- NOMOR PUNGGUNG -->
+          <circle cx="78" cy="85" r="12" fill="#ffffff"/>
+          <text x="78" y="90" text-anchor="middle" font-family="Fredoka" font-size="13" font-weight="700" fill="#dc2626">1</text>
+
+          <!-- KEPALA -->
+          <ellipse cx="68" cy="38" rx="28" ry="28" class="skin"/>
+          <path d="M 42 32 C 42 12 58 4 72 6 C 88 8 98 22 92 38 C 85 30 78 22 68 22 C 58 22 48 28 42 32 Z" class="hair"/>
+          <!-- MATA & EKSPRESI BERJUANG -->
+          <path d="M 54 36 Q 60 32 64 36" stroke="#422006" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M 76 36 Q 82 32 86 36" stroke="#422006" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <ellipse cx="60" cy="42" rx="3" ry="4" class="eye"/>
+          <ellipse cx="80" cy="42" rx="3" ry="4" class="eye"/>
+          <path d="M 62 52 Q 70 58 78 51" stroke="#7f1d1d" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+          <!-- LENGAN BELAKANG (Ditarik Tepat ke Garis Tali y=100) -->
+          <path d="M 60 68 L 85 85 L 120 100" class="arm-outline"/>
+          <path d="M 60 68 L 85 85 L 120 100" class="arm-stroke"/>
+
+          <!-- LENGAN DEPAN (Genggaman Utama di Tali y=100) -->
+          <path d="M 85 70 L 110 85 L 145 100" class="arm-outline"/>
+          <path d="M 85 70 L 110 85 L 145 100" class="arm-stroke"/>
+
+          <!-- KEPALAN TANGAN MENGENGGAM TALI (Tepat di Atas Tali) -->
+          <circle cx="120" cy="100" r="9" class="hand-fist"/>
+          <circle cx="145" cy="100" r="9" class="hand-fist"/>
+
+          <!-- KERINGAT -->
+          <path d="M 98 32 C 102 38 101 42 98 44 C 95 42 95 38 98 32 Z" class="sweat"/>
         </svg>
       </div>
 
-      <!-- KARAKTER PEMAIN KANAN (TIM BIRU) -->
+      <!-- KARAKTER KANAN (TIM BIRU) -->
       <div class="character character-right">
-        <svg viewBox="0 0 120 140" width="100%" height="100%">
-          <!-- Bayangan Karakter -->
-          <ellipse cx="60" cy="132" rx="35" ry="7" fill="rgba(0,0,0,0.15)"/>
-          
-          <g transform="rotate(-8 60 120)">
-            <!-- Kaki Belakang -->
-            <path d="M 42 90 Q 25 105 15 128" stroke="#1e293b" stroke-width="12" stroke-linecap="round" fill="none"/>
-            <path d="M 15 128 L 5 128" stroke="#3b82f6" stroke-width="12" stroke-linecap="round"/> <!-- Sepatu -->
+        <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Bayangan Kaki -->
+          <ellipse cx="90" cy="192" rx="60" ry="6" fill="rgba(0,0,0,0.15)"/>
 
-            <!-- Kaki Depan -->
-            <path d="M 68 90 Q 82 108 95 128" stroke="#1e293b" stroke-width="12" stroke-linecap="round" fill="none"/>
-            <path d="M 95 128 L 108 128" stroke="#3b82f6" stroke-width="12" stroke-linecap="round"/> <!-- Sepatu -->
+          <!-- KAKI BELAKANG -->
+          <path d="M 65 130 L 40 160 L 25 185" class="arm-outline" stroke-width="20"/>
+          <path d="M 65 130 L 40 160 L 25 185" stroke="#334155" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <path d="M 23 180 L 32 173 L 38 185 L 23 189 Z" class="sock"/>
+          <path d="M 12 188 C 12 182 25 180 35 183 L 38 193 L 12 193 Z" class="shoe"/>
 
-            <!-- Badan (Kaos Biru) -->
-            <path d="M 40 50 L 75 50 L 70 95 L 35 95 Z" fill="#3b82f6" rx="5"/>
-            <path d="M 35 90 L 70 90 L 70 98 L 35 98 Z" fill="#1d4ed8"/> <!-- Celana Pendek -->
+          <!-- KAKI DEPAN -->
+          <path d="M 95 130 L 120 160 L 140 185" class="arm-outline" stroke-width="20"/>
+          <path d="M 95 130 L 120 160 L 140 185" stroke="#334155" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <path d="M 135 180 L 126 173 L 120 185 L 135 189 Z" class="sock"/>
+          <path d="M 115 188 C 115 182 135 180 148 183 L 148 193 L 115 193 Z" class="shoe"/>
 
-            <!-- Kepala (Kulit) -->
-            <circle cx="52" cy="32" r="20" fill="#fde047"/>
-            <!-- Rambut Kuncir/Topi -->
-            <path d="M 32 28 Q 38 10 55 12 Q 72 12 72 28 Q 60 18 52 18 Q 40 18 32 28 Z" fill="#fbbf24"/>
-            <!-- Mata & Ekspresi Ceria -->
-            <circle cx="60" cy="30" r="3" fill="#0f172a"/>
-            <path d="M 55 38 Q 62 44 68 37" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            <circle cx="65" cy="35" r="3.5" fill="#f87171" opacity="0.6"/>
+          <!-- CELANA -->
+          <path d="M 52 110 C 65 105 88 105 108 110 L 115 135 L 88 142 L 78 128 L 68 142 L 48 135 Z" class="shorts"/>
 
-            <!-- Tangan Kiri (Memegang Tali Belakang) -->
-            <path d="M 45 58 Q 65 65 75 62" stroke="#fde047" stroke-width="10" stroke-linecap="round" fill="none"/>
-            <circle cx="76" cy="62" r="6" fill="#fde047"/>
+          <!-- BADAN -->
+          <path d="M 48 60 C 62 52 92 52 108 62 C 112 80 108 102 102 115 C 85 120 62 118 48 112 C 42 90 44 72 48 60 Z" class="shirt-blue"/>
 
-            <!-- Tangan Kanan (Memegang Tali Depan) -->
-            <path d="M 55 60 Q 80 68 92 62" stroke="#fde047" stroke-width="10" stroke-linecap="round" fill="none"/>
-            <circle cx="93" cy="62" r="6" fill="#fde047"/>
-          </g>
+          <!-- NOMOR PUNGGUNG -->
+          <circle cx="78" cy="85" r="12" fill="#ffffff"/>
+          <text x="78" y="90" text-anchor="middle" font-family="Fredoka" font-size="13" font-weight="700" fill="#2563eb">2</text>
+
+          <!-- KEPALA -->
+          <ellipse cx="68" cy="38" rx="28" ry="28" class="skin"/>
+          <path d="M 42 32 C 42 12 58 4 72 6 C 88 8 98 22 92 38 C 85 30 78 22 68 22 C 58 22 48 28 42 32 Z" class="hair"/>
+          <path d="M 54 36 Q 60 32 64 36" stroke="#422006" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M 76 36 Q 82 32 86 36" stroke="#422006" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <ellipse cx="60" cy="42" rx="3" ry="4" class="eye"/>
+          <ellipse cx="80" cy="42" rx="3" ry="4" class="eye"/>
+          <path d="M 62 52 Q 70 58 78 51" stroke="#7f1d1d" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+          <!-- LENGAN BELAKANG -->
+          <path d="M 60 68 L 85 85 L 120 100" class="arm-outline"/>
+          <path d="M 60 68 L 85 85 L 120 100" class="arm-stroke"/>
+
+          <!-- LENGAN DEPAN -->
+          <path d="M 85 70 L 110 85 L 145 100" class="arm-outline"/>
+          <path d="M 85 70 L 110 85 L 145 100" class="arm-stroke"/>
+
+          <!-- KEPALAN TANGAN MENGENGGAM TALI -->
+          <circle cx="120" cy="100" r="9" class="hand-fist"/>
+          <circle cx="145" cy="100" r="9" class="hand-fist"/>
+
+          <!-- KERINGAT -->
+          <path d="M 98 32 C 102 38 101 42 98 44 C 95 42 95 38 98 32 Z" class="sweat"/>
         </svg>
       </div>
-
     </div>
-
   </main>
 
-  <!-- Area Soal -->
+  <!-- AREA SOAL -->
   <section class="control-area">
-    <div class="question-box">
-      Siap Bertanding! 🚀
-    </div>
+    <div class="question-box">Siap Bertanding! 🚀</div>
   </section>
 
-  <!-- Script Animasi Opening & Efek Suara -->
+  <!-- SCRIPT -->
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
-        document.body.classList.add('curtain-open');
+        document.body.classList.add("curtain-open");
         playWhistleSound();
       }, 200);
     });
@@ -427,23 +490,26 @@
     function playWhistleSound() {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
-      
-      const audioCtx = new AudioContext();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
+      try {
+        const audioCtx = new AudioContext();
+        const oscillator = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
 
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(2000, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(2400, audioCtx.currentTime + 0.15);
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(1800, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(2500, audioCtx.currentTime + 0.15);
 
-      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
 
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
+        oscillator.connect(gain);
+        gain.connect(audioCtx.destination);
 
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.3);
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.35);
+      } catch (error) {
+        console.log("Audio tidak dapat diputar:", error);
+      }
     }
   </script>
 
