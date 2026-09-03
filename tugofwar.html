@@ -244,7 +244,7 @@
     }
 
     /* =====================================================
-       STAGE PERTANDINGAN DENGAN GAMBAR GIF
+       STAGE PERTANDINGAN (PANEL GIF TUNGGAL)
     ===================================================== */
     .tug-stage {
       width: 100%;
@@ -263,55 +263,26 @@
       width: 4px;
       background: repeating-linear-gradient(0deg, var(--color-tertiary), var(--color-tertiary) 10px, transparent 10px, transparent 20px);
       opacity: 0.6;
+      z-index: 1;
     }
 
     .rope-container {
       width: 100%;
-      height: 220px;
+      height: 260px;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .rope-line {
-      width: 88%;
-      height: 12px;
-      background: repeating-linear-gradient(45deg, var(--color-tertiary) 0px, var(--color-tertiary) 8px, #D97706 8px, #D97706 14px);
-      border-radius: var(--radius-full);
-      border: 1.5px solid #7C2D12;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      position: relative;
-    }
-
-    .rope-marker {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 14px;
-      height: 30px;
-      background-color: var(--color-error);
-      border: 2px solid var(--color-surface);
-      border-radius: 3px;
-    }
-
-    /* WADAH PENGGUNAAN GAMBAR GIF KARAKTER */
-    .gif-character {
-      position: absolute;
-      height: 140px;
+    /* HANYA MEMANGGIL 1 FILE GIF TUNGGAL DI TENGAH ARENA */
+    .gif-full-stage {
+      width: 100%;
+      max-width: 520px;
+      height: auto;
       object-fit: contain;
       z-index: 4;
-      bottom: 30px;
-    }
-
-    .gif-left {
-      left: 8%;
-    }
-
-    .gif-right {
-      right: 8%;
-      transform: scaleX(-1); /* Membalik posisi GIF untuk tim kanan */
+      transition: transform 0.3s ease-out; /* Untuk efek geser saat menjawab soal */
     }
 
     @media (max-width: 900px) {
@@ -364,13 +335,7 @@
       <div class="center-divider"></div>
 
       <div class="rope-container">
-        <div class="rope-line">
-          <div class="rope-marker" id="marker"></div>
-        </div>
-
-        <img src="player-pull.gif" alt="Pemain Kiri" class="gif-character gif-left" />
-
-        <img src="player-pull.gif" alt="Pemain Kanan" class="gif-character gif-right" />
+        <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-full-stage" id="stageGif" />
       </div>
     </section>
 
@@ -408,6 +373,7 @@
 
     let inputLeft = "";
     let inputRight = "";
+    let pullPosition = 0; // Posisi pergeseran GIF (-px = kiri menang, +px = kanan menang)
 
     function pressKey(side, val) {
       if (side === 'left') {
@@ -415,7 +381,8 @@
         if (val === 'C') inputLeft = "";
         else if (val === 'OK') {
           if (inputLeft === "24") {
-            alert("Tim Biru Benar!");
+            pullPosition -= 25; // Tarik ke kiri
+            document.getElementById('stageGif').style.transform = `translateX(${pullPosition}px)`;
             inputLeft = "";
           } else {
             inputLeft = "";
@@ -429,7 +396,8 @@
         if (val === 'C') inputRight = "";
         else if (val === 'OK') {
           if (inputRight === "35") {
-            alert("Tim Merah Benar!");
+            pullPosition += 25; // Tarik ke kanan
+            document.getElementById('stageGif').style.transform = `translateX(${pullPosition}px)`;
             inputRight = "";
           } else {
             inputRight = "";
