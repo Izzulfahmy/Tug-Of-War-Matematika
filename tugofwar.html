@@ -132,7 +132,7 @@
       z-index: 5;
     }
 
-    /* Papan Skor Tim */
+    /* Papan Skor */
     .scoreboard {
       display: flex;
       gap: 3rem;
@@ -191,11 +191,12 @@
 
     .rope {
       width: 100%;
-      height: 16px;
+      height: 18px;
       background: repeating-linear-gradient(45deg, #d97706, #d97706 12px, #b45309 12px, #b45309 24px);
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.25);
       position: relative;
+      z-index: 2;
     }
 
     /* Pita Merah Penanda Tengah Tali */
@@ -204,21 +205,21 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      width: 18px;
-      height: 36px;
+      width: 20px;
+      height: 40px;
       background-color: #dc2626;
       border-radius: 4px;
       border: 2px solid #ffffff;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    /* KARAKTER KARTUN MERAK TAMBANG (SVG) */
+    /* KARAKTER VEKTOR MODERN */
     .character {
       position: absolute;
-      bottom: 15px;
-      width: 120px;
-      height: 140px;
-      z-index: 3;
+      bottom: 10px;
+      width: 140px;
+      height: 160px;
+      z-index: 4;
     }
 
     .character-left {
@@ -228,19 +229,19 @@
 
     .character-right {
       right: 12%;
-      transform: scaleX(-1); /* Dibalik untuk karakter kanan */
+      transform: scaleX(-1);
       animation: tug-pull-right 0.8s infinite alternate ease-in-out;
     }
 
-    /* Animasi Gerakan Menarik Tali secara Ekspresif */
+    /* Animasi Gerakan Menarik Tali yang Bouncing & Ekspresif */
     @keyframes tug-pull-left {
       0% { transform: translateX(0) rotate(0deg); }
-      100% { transform: translateX(-8px) rotate(-4deg); }
+      100% { transform: translateX(-10px) rotate(-6deg); }
     }
 
     @keyframes tug-pull-right {
       0% { transform: scaleX(-1) translateX(0) rotate(0deg); }
-      100% { transform: scaleX(-1) translateX(-8px) rotate(-4deg); }
+      100% { transform: scaleX(-1) translateX(-10px) rotate(-6deg); }
     }
 
     /* ===================================================
@@ -272,12 +273,12 @@
        =================================================== */
     @media (max-width: 640px) {
       .character {
-        width: 90px;
-        height: 110px;
+        width: 100px;
+        height: 120px;
       }
 
-      .character-left { left: 5%; }
-      .character-right { right: 5%; }
+      .character-left { left: 4%; }
+      .character-right { right: 4%; }
 
       .scoreboard {
         gap: 1rem;
@@ -327,58 +328,78 @@
 
       <!-- KARAKTER PEMAIN KIRI (TIM MERAH) -->
       <div class="character character-left">
-        <svg viewBox="0 0 100 120" width="100%" height="100%">
-          <!-- Badan Condong Menarik -->
-          <g transform="rotate(-10 50 100)">
-            <!-- Kaki Kiri Belakang -->
-            <path d="M 40 80 L 20 110 L 10 110" stroke="#111827" stroke-width="8" stroke-linecap="round" fill="none"/>
-            <!-- Kaki Kanan Depan -->
-            <path d="M 55 80 L 70 105 L 85 105" stroke="#111827" stroke-width="8" stroke-linecap="round" fill="none"/>
-            <!-- Baju (Merah) -->
-            <path d="M 35 45 L 60 45 L 55 80 L 30 80 Z" fill="#ef4444" stroke="#b91c1c" stroke-width="3"/>
-            <!-- Kepala -->
-            <circle cx="45" cy="25" r="16" fill="#fde047" stroke="#111827" stroke-width="3"/>
-            <circle cx="40" cy="22" r="2" fill="#111827"/> <!-- Mata -->
-            <!-- Topi/Rambut -->
-            <path d="M 30 20 Q 45 8 60 20 Z" fill="#dc2626"/>
-            <!-- Tangan Kanan Menarik Tali -->
-            <path d="M 40 50 L 65 62 L 80 58" stroke="#fde047" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <path d="M 40 50 L 65 62 L 80 58" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <!-- Tangan Kiri Depan Menarik Tali -->
-            <path d="M 45 55 L 75 62 L 90 58" stroke="#fde047" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <path d="M 45 55 L 75 62 L 90 58" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <!-- Kepalan Tangan Memegang Tali -->
-            <circle cx="80" cy="58" r="5" fill="#fde047" stroke="#111827" stroke-width="2"/>
-            <circle cx="90" cy="58" r="5" fill="#fde047" stroke="#111827" stroke-width="2"/>
+        <svg viewBox="0 0 120 140" width="100%" height="100%">
+          <!-- Bayangan Karakter -->
+          <ellipse cx="60" cy="132" rx="35" ry="7" fill="rgba(0,0,0,0.15)"/>
+          
+          <g transform="rotate(-8 60 120)">
+            <!-- Kaki Belakang -->
+            <path d="M 42 90 Q 25 105 15 128" stroke="#1e293b" stroke-width="12" stroke-linecap="round" fill="none"/>
+            <path d="M 15 128 L 5 128" stroke="#ef4444" stroke-width="12" stroke-linecap="round"/> <!-- Sepatu -->
+
+            <!-- Kaki Depan -->
+            <path d="M 68 90 Q 82 108 95 128" stroke="#1e293b" stroke-width="12" stroke-linecap="round" fill="none"/>
+            <path d="M 95 128 L 108 128" stroke="#ef4444" stroke-width="12" stroke-linecap="round"/> <!-- Sepatu -->
+
+            <!-- Badan (Kaos Merah) -->
+            <path d="M 40 50 L 75 50 L 70 95 L 35 95 Z" fill="#ef4444" rx="5"/>
+            <path d="M 35 90 L 70 90 L 70 98 L 35 98 Z" fill="#b91c1c"/> <!-- Celana Pendek -->
+
+            <!-- Kepala (Kulit) -->
+            <circle cx="52" cy="32" r="20" fill="#fde047"/>
+            <!-- Rambut -->
+            <path d="M 32 30 Q 35 10 55 12 Q 72 15 72 32 Q 62 20 52 22 Q 40 22 32 30 Z" fill="#475569"/>
+            <!-- Mata & Ekspresi Ceria -->
+            <circle cx="60" cy="30" r="3" fill="#0f172a"/>
+            <path d="M 55 38 Q 62 44 68 37" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" fill="none"/> <!-- Senyum -->
+            <circle cx="65" cy="35" r="3.5" fill="#f87171" opacity="0.6"/> <!-- Pipi Merah -->
+
+            <!-- Tangan Kiri (Memegang Tali Belakang) -->
+            <path d="M 45 58 Q 65 65 75 62" stroke="#fde047" stroke-width="10" stroke-linecap="round" fill="none"/>
+            <circle cx="76" cy="62" r="6" fill="#fde047"/> <!-- Kepalan Tangan 1 -->
+
+            <!-- Tangan Kanan (Memegang Tali Depan) -->
+            <path d="M 55 60 Q 80 68 92 62" stroke="#fde047" stroke-width="10" stroke-linecap="round" fill="none"/>
+            <circle cx="93" cy="62" r="6" fill="#fde047"/> <!-- Kepalan Tangan 2 -->
           </g>
         </svg>
       </div>
 
       <!-- KARAKTER PEMAIN KANAN (TIM BIRU) -->
       <div class="character character-right">
-        <svg viewBox="0 0 100 120" width="100%" height="100%">
-          <!-- Badan Condong Menarik -->
-          <g transform="rotate(-10 50 100)">
-            <!-- Kaki Kiri Belakang -->
-            <path d="M 40 80 L 20 110 L 10 110" stroke="#111827" stroke-width="8" stroke-linecap="round" fill="none"/>
-            <!-- Kaki Kanan Depan -->
-            <path d="M 55 80 L 70 105 L 85 105" stroke="#111827" stroke-width="8" stroke-linecap="round" fill="none"/>
-            <!-- Baju (Biru) -->
-            <path d="M 35 45 L 60 45 L 55 80 L 30 80 Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="3"/>
-            <!-- Kepala -->
-            <circle cx="45" cy="25" r="16" fill="#fde047" stroke="#111827" stroke-width="3"/>
-            <circle cx="40" cy="22" r="2" fill="#111827"/> <!-- Mata -->
-            <!-- Topi/Rambut -->
-            <path d="M 30 20 Q 45 8 60 20 Z" fill="#1d4ed8"/>
-            <!-- Tangan Kanan Menarik Tali -->
-            <path d="M 40 50 L 65 62 L 80 58" stroke="#fde047" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <path d="M 40 50 L 65 62 L 80 58" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <!-- Tangan Kiri Depan Menarik Tali -->
-            <path d="M 45 55 L 75 62 L 90 58" stroke="#fde047" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <path d="M 45 55 L 75 62 L 90 58" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <!-- Kepalan Tangan Memegang Tali -->
-            <circle cx="80" cy="58" r="5" fill="#fde047" stroke="#111827" stroke-width="2"/>
-            <circle cx="90" cy="58" r="5" fill="#fde047" stroke="#111827" stroke-width="2"/>
+        <svg viewBox="0 0 120 140" width="100%" height="100%">
+          <!-- Bayangan Karakter -->
+          <ellipse cx="60" cy="132" rx="35" ry="7" fill="rgba(0,0,0,0.15)"/>
+          
+          <g transform="rotate(-8 60 120)">
+            <!-- Kaki Belakang -->
+            <path d="M 42 90 Q 25 105 15 128" stroke="#1e293b" stroke-width="12" stroke-linecap="round" fill="none"/>
+            <path d="M 15 128 L 5 128" stroke="#3b82f6" stroke-width="12" stroke-linecap="round"/> <!-- Sepatu -->
+
+            <!-- Kaki Depan -->
+            <path d="M 68 90 Q 82 108 95 128" stroke="#1e293b" stroke-width="12" stroke-linecap="round" fill="none"/>
+            <path d="M 95 128 L 108 128" stroke="#3b82f6" stroke-width="12" stroke-linecap="round"/> <!-- Sepatu -->
+
+            <!-- Badan (Kaos Biru) -->
+            <path d="M 40 50 L 75 50 L 70 95 L 35 95 Z" fill="#3b82f6" rx="5"/>
+            <path d="M 35 90 L 70 90 L 70 98 L 35 98 Z" fill="#1d4ed8"/> <!-- Celana Pendek -->
+
+            <!-- Kepala (Kulit) -->
+            <circle cx="52" cy="32" r="20" fill="#fde047"/>
+            <!-- Rambut Kuncir/Topi -->
+            <path d="M 32 28 Q 38 10 55 12 Q 72 12 72 28 Q 60 18 52 18 Q 40 18 32 28 Z" fill="#fbbf24"/>
+            <!-- Mata & Ekspresi Ceria -->
+            <circle cx="60" cy="30" r="3" fill="#0f172a"/>
+            <path d="M 55 38 Q 62 44 68 37" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="65" cy="35" r="3.5" fill="#f87171" opacity="0.6"/>
+
+            <!-- Tangan Kiri (Memegang Tali Belakang) -->
+            <path d="M 45 58 Q 65 65 75 62" stroke="#fde047" stroke-width="10" stroke-linecap="round" fill="none"/>
+            <circle cx="76" cy="62" r="6" fill="#fde047"/>
+
+            <!-- Tangan Kanan (Memegang Tali Depan) -->
+            <path d="M 55 60 Q 80 68 92 62" stroke="#fde047" stroke-width="10" stroke-linecap="round" fill="none"/>
+            <circle cx="93" cy="62" r="6" fill="#fde047"/>
           </g>
         </svg>
       </div>
