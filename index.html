@@ -87,14 +87,14 @@
     }
 
     /* ===================================================
-       3. MENU CONTAINER (3 TOMBOL UTAMA)
+       3. MENU CONTAINER (GRID 3 KOLOM BERJAJAR)
        =================================================== */
     .menu-container {
       width: 100%;
-      max-width: 650px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 3 Kolom Berjajar */
+      gap: 1.5rem;
       margin: auto 0;
       padding: 1rem 0;
     }
@@ -102,20 +102,23 @@
     .menu-card {
       text-decoration: none;
       border-radius: 24px;
-      padding: 1.2rem 1.75rem;
+      padding: 2rem 1rem;
       display: flex;
+      flex-direction: column; /* Menyusun logo di atas dan teks di bawah */
       align-items: center;
+      justify-content: center;
       gap: 1.25rem;
       color: #ffffff;
       cursor: pointer;
       user-select: none;
       position: relative;
       transition: all 0.15s ease-in-out;
+      text-align: center;
     }
 
     /* Efek Tekan Tombol 3D */
     .menu-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-4px);
     }
 
     .menu-card:active {
@@ -142,43 +145,28 @@
       box-shadow: 0 8px 0 #0369a1;
     }
 
-    /* WADAH IKON (DIJAMIN TIDAK BERANTAKAN/Aneh) */
+    /* WADAH LOGO/IKON DI ATAS */
     .card-icon-wrapper {
-      width: 65px;
-      height: 65px;
+      width: 75px;
+      height: 75px;
       background-color: rgba(255, 255, 255, 0.25);
       border: 3px solid rgba(255, 255, 255, 0.6);
-      border-radius: 20px;
+      border-radius: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      font-size: 2.2rem; /* Menggunakan font/emoji beresolusi tinggi murni */
+      font-size: 2.5rem; /* Emoji/Logo presisi */
       line-height: 1;
     }
 
-    /* KONTEN TEKS DALAM KARTU */
-    .card-content {
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-      overflow: hidden;
-    }
-
+    /* JUDUL MENU */
     .card-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1.25rem, 2.5vw, 1.55rem);
+      font-size: clamp(1.2rem, 2vw, 1.5rem);
       font-weight: 600;
       line-height: 1.2;
       color: #ffffff;
       text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.15);
-    }
-
-    .card-description {
-      font-size: clamp(0.85rem, 1.8vw, 1rem);
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.95);
-      line-height: 1.3;
     }
 
     /* ===================================================
@@ -198,29 +186,25 @@
     /* ===================================================
        5. RESPONSIF MOBILE
        =================================================== */
-    @media (max-width: 640px) {
-      body {
-        padding: 1.2rem 0.8rem;
-      }
-
+    @media (max-width: 768px) {
       .menu-container {
-        gap: 1rem;
+        grid-template-columns: 1fr; /* Jadi 1 kolom vertikal saat di HP */
+        max-width: 380px;
+        gap: 1.2rem;
       }
 
       .menu-card {
-        padding: 1rem 1.2rem;
-        border-radius: 20px;
+        padding: 1.5rem 1rem;
+        flex-direction: row; /* Kembali menyamping saat layar HP sempit */
+        justify-content: flex-start;
+        text-align: left;
       }
 
-      .card-materi { box-shadow: 0 6px 0 #047857; }
-      .card-game { box-shadow: 0 6px 0 #b45309; }
-      .card-setting { box-shadow: 0 6px 0 #0369a1; }
-
       .card-icon-wrapper {
-        width: 55px;
-        height: 55px;
-        border-radius: 16px;
-        font-size: 1.8rem;
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+        border-radius: 18px;
       }
     }
   </style>
@@ -236,18 +220,15 @@
     <div class="subtitle">Perkalian Bilangan Cacah sampai 100</div>
   </header>
 
-  <!-- Container 3 Tombol Utama -->
+  <!-- Container 3 Tombol Berjajar 3 Kolom -->
   <main class="menu-container">
     
-    <!-- Tombol 1: Materi -->
+    <!-- Tombol 1: Materi Pembelajaran -->
     <a href="materi.html" class="menu-card card-materi">
       <div class="card-icon-wrapper">
         📖
       </div>
-      <div class="card-content">
-        <h2 class="card-title">Materi Pembelajaran</h2>
-        <p class="card-description">Konsep Perkalian & Sifat Komutatif (Halaman 58–60)</p>
-      </div>
+      <h2 class="card-title">Materi Pembelajaran</h2>
     </a>
 
     <!-- Tombol 2: Permainan Tug Of War -->
@@ -255,10 +236,7 @@
       <div class="card-icon-wrapper">
         🪢
       </div>
-      <div class="card-content">
-        <h2 class="card-title">Permainan Tug Of War</h2>
-        <p class="card-description">Adu Ketangkasan Perkalian Lintang Tarik Tambang</p>
-      </div>
+      <h2 class="card-title">Permainan Tug Of War</h2>
     </a>
 
     <!-- Tombol 3: Pengaturan -->
@@ -266,10 +244,7 @@
       <div class="card-icon-wrapper">
         ⚙️
       </div>
-      <div class="card-content">
-        <h2 class="card-title">Pengaturan</h2>
-        <p class="card-description">Pengaturan Suara, Musik, & Informasi Aplikasi</p>
-      </div>
+      <h2 class="card-title">Pengaturan</h2>
     </a>
 
   </main>
