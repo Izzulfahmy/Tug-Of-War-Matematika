@@ -121,7 +121,7 @@
     }
 
     /* =====================================================
-       1. STAGE ANIMASI & GARIS FINIS (KOTAK HITAM PUTIH)
+       1. STAGE ANIMASI & GARIS FINIS (LAYER BELAKANG)
     ===================================================== */
     .tug-stage {
       width: 100%;
@@ -137,13 +137,13 @@
       box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    /* Motif Catur Garis Finis Kiri & Kanan */
+    /* Motif Catur Garis Finis Kiri & Kanan (Di set z-index: 1 agar di belakang) */
     .finish-line {
       position: absolute;
       top: 0;
       bottom: 0;
       width: 24px;
-      z-index: 2;
+      z-index: 1; /* Layer Belakang */
       background-image: 
         linear-gradient(45deg, #000 25%, transparent 25%), 
         linear-gradient(-45deg, #000 25%, transparent 25%), 
@@ -152,7 +152,7 @@
       background-size: 12px 12px;
       background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
       background-color: #fff;
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
     }
 
     .finish-left {
@@ -174,7 +174,7 @@
       width: 4px;
       background-color: var(--color-error);
       transform: translateX(-50%);
-      z-index: 2;
+      z-index: 1; /* Layer Belakang */
       box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
     }
 
@@ -190,12 +190,13 @@
       border-radius: 50%;
     }
 
+    /* Gambar Karakter Penarik (Di set z-index: 2 agar di depan garis finis) */
     .gif-background {
       position: absolute;
       height: 180px;
       width: auto;
       object-fit: contain;
-      z-index: 1;
+      z-index: 2; /* Layer Depan */
       transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
