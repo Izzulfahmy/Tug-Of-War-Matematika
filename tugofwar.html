@@ -250,7 +250,6 @@
       gap: 10px;
     }
 
-    /* Tombol QR Code */
     .btn-qr {
       background-color: rgba(255, 255, 255, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.4);
@@ -379,9 +378,7 @@
       box-shadow: 0 3px 0 #B91C1C;
     }
 
-    /* =====================================================
-       3. MODAL POPUP & QR CODE
-    ===================================================== */
+    /* MODAL POPUP */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -453,11 +450,6 @@
       border: 1px solid var(--color-border);
       border-radius: var(--radius-full);
       cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-
-    .btn-close-modal:hover {
-      background-color: var(--color-border);
     }
 
     .btn-restart {
@@ -470,11 +462,6 @@
       border-radius: var(--radius-full);
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(2, 132, 197, 0.3);
-      transition: transform 0.2s ease;
-    }
-
-    .btn-restart:hover {
-      transform: scale(1.05);
     }
 
     @media (max-width: 768px) {
@@ -624,7 +611,6 @@
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
     import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Konfigurasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyA7qAhQ3LkF6Ey3fiFEPHNEwdy6BHPb548",
       authDomain: "media-pembelajaran-inter-f5f88.firebaseapp.com",
@@ -639,7 +625,6 @@
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
-    // ID Room Unik untuk Sesi Permainan Ini
     const roomId = "room_" + Math.random().toString(36).substring(2, 8);
 
     let currentQLeft = {};
@@ -667,7 +652,6 @@
       generateNewQuestion('left');
       generateNewQuestion('right');
 
-      // Dengarkan perintah input dari remote HP via Firestore Realtime Listener
       listenRemoteControl();
     });
 
@@ -715,20 +699,20 @@
         }
       }
 
-      // Sinkronkan soal terbaru ke Firestore agar remote HP membaca soal yang sama
       syncStateToFirestore(side);
     }
 
-    // Fungsi Update State Soal ke Firestore
     async function syncStateToFirestore(side) {
       try {
         const roomRef = doc(db, "active_rooms", roomId);
         const dataToUpdate = side === 'left' ? {
           questionLeft: currentQLeft,
-          scoreLeft: scoreLeft
+          scoreLeft: scoreLeft,
+          inputLeftVal: ""
         } : {
           questionRight: currentQRight,
-          scoreRight: scoreRight
+          scoreRight: scoreRight,
+          inputRightVal: ""
         };
         
         await setDoc(roomRef, dataToUpdate, { merge: true });
@@ -737,15 +721,25 @@
       }
     }
 
-    // Mendengarkan Sinyal Input dari Remote HP
     function listenRemoteControl() {
       const roomRef = doc(db, "active_rooms", roomId);
       onSnapshot(roomRef, (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.data();
+
+          // Tampilkan teks input realtime dari HP ke desktop
+          if (data.inputLeftVal !== undefined) {
+            inputLeft = data.inputLeftVal;
+            document.getElementById('ans-left').innerText = inputLeft;
+          }
+          if (data.inputRightVal !== undefined) {
+            inputRight = data.inputRightVal;
+            document.getElementById('ans-right').innerText = inputRight;
+          }
+
+          // Tanggapi penekanan tombol action dari HP
           if (data.lastAction) {
             const { side, key, timestamp } = data.lastAction;
-            // Jalankan tombol keypad berdasarkan aksi remote
             if (timestamp && Date.now() - timestamp < 2000) {
               pressKey(side, key, false);
             }
@@ -796,7 +790,7 @@
             inputLeft = "";
           }
         } else {
-          if (inputLeft.length < 3) inputLeft += val;
+          if (isLocal && inputLeft.length < 3) inputLeft += val;
         }
         box.innerText = inputLeft;
       } else {
@@ -820,7 +814,7 @@
             inputRight = "";
           }
         } else {
-          if (inputRight.length < 3) inputRight += val;
+          if (isLocal && inputRight.length < 3) inputRight += val;
         }
         box.innerText = inputRight;
       }
@@ -883,18 +877,16 @@
       generateNewQuestion('right');
     }
 
-    // Fungsi Menampilkan QR Code Remote
     function showQRCode(side) {
       const modal = document.getElementById('qrModal');
       const title = document.getElementById('qrModalTitle');
       const container = document.getElementById('qrcode-container');
       
-      container.innerHTML = ""; // Clear QR sebelumnya
+      container.innerHTML = "";
       
       const teamTitle = side === 'left' ? 'Tim Biru' : 'Tim Merah';
       title.innerText = `Remote ${teamTitle}`;
 
-      // Buat URL Remote HP (misal remote.html?room=xxx&team=left)
       const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
       const remoteUrl = `${baseUrl}/remote.html?room=${roomId}&team=${side}`;
 
@@ -914,7 +906,6 @@
       document.getElementById('qrModal').classList.remove('show');
     }
 
-    // Expose fungsi ke window global
     window.pressKey = pressKey;
     window.restartGame = restartGame;
     window.showQRCode = showQRCode;

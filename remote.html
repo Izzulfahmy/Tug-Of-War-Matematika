@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Canvas Confetti Library untuk Efek Pesta Jawaban Benar -->
+  <!-- Canvas Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -54,7 +54,6 @@
       overflow: hidden;
     }
 
-    /* HEADER NAMA TIM & SKOR */
     .remote-header {
       width: 100%;
       max-width: 420px;
@@ -85,7 +84,6 @@
       font-size: 15px;
     }
 
-    /* KOTAK SOAL CERITA */
     .question-card {
       width: 100%;
       max-width: 420px;
@@ -120,7 +118,6 @@
       line-height: 1.4;
     }
 
-    /* NOTIFIKASI FEEDBACK JAWABAN */
     .feedback-banner {
       width: 100%;
       max-width: 420px;
@@ -156,7 +153,6 @@
       border: 1.5px solid #FCA5A5;
     }
 
-    /* INPUT & KEYPAD JAWABAN */
     .answer-display {
       width: 100%;
       max-width: 420px;
@@ -232,25 +228,20 @@
 
 <body>
 
-  <!-- HEADER NAMA TIM & SKOR -->
   <header class="remote-header bg-blue" id="remoteHeader">
     <h1 class="team-title" id="teamTitle">TIM BIRU</h1>
     <span class="score-badge" id="scoreBadge">Skor: 0</span>
   </header>
 
-  <!-- BOX SOAL CERITA -->
   <main class="question-card">
     <img id="qImg" class="question-img" alt="Gambar Soal" />
     <p class="question-text" id="qText">Menghubungkan ke permainan...</p>
   </main>
 
-  <!-- BANNER NOTIFIKASI BENAR / SALAH -->
   <div class="feedback-banner" id="feedbackBanner"></div>
 
-  <!-- DISPLAY JAWABAN INPUT -->
   <div class="answer-display" id="ansDisplay"></div>
 
-  <!-- KEYPAD ANGKAH KALKULATOR -->
   <div class="keypad-grid">
     <button class="key-btn" onclick="sendKey('1')">1</button>
     <button class="key-btn" onclick="sendKey('2')">2</button>
@@ -266,7 +257,6 @@
     <button class="key-btn key-submit submit-blue" id="btnSubmit" onclick="sendKey('OK')">OK</button>
   </div>
 
-  <!-- FIREBASE INTEGRATION & EFFECT LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -332,7 +322,6 @@
       const imgElem = document.getElementById('qImg');
       
       if (question.image) {
-        // Konversi path gambar relatif agar selalu bisa dibuka dengan benar di URL HP
         let imgUrl = question.image;
         if (!imgUrl.startsWith('http://') && !imgUrl.startsWith('https://')) {
           const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
@@ -346,7 +335,6 @@
       }
     }
 
-    // Suara Efek
     function playBeep(freq = 600, duration = 0.1) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
@@ -363,7 +351,6 @@
       osc.stop(ctx.currentTime + duration);
     }
 
-    // Tampilkan Notifikasi & Efek Perayaan
     function triggerFeedback(isCorrect) {
       const banner = document.getElementById('feedbackBanner');
       
@@ -395,7 +382,6 @@
       }, 1500);
     }
 
-    // Kirim Perintah Tombol Keypad
     async function sendKey(val) {
       const box = document.getElementById('ansDisplay');
 
@@ -419,16 +405,25 @@
 
       box.innerText = inputVal;
 
+      // Update angka realtime & kirim sinyal action ke Firestore
       if (roomId) {
         try {
           const roomRef = doc(db, "active_rooms", roomId);
-          await updateDoc(roomRef, {
+          const updateData = {
             lastAction: {
               side: side,
               key: val,
               timestamp: Date.now()
             }
-          });
+          };
+
+          if (side === 'left') {
+            updateData.inputLeftVal = inputVal;
+          } else {
+            updateData.inputRightVal = inputVal;
+          }
+
+          await updateDoc(roomRef, updateData);
         } catch (err) {
           console.error("Gagal mengirim aksi remote: ", err);
         }
