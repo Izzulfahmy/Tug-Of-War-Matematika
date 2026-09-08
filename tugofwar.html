@@ -3,29 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tarik Tambang Perkalian - Interaktiv</title>
+  <title>Tarik Tambang Perkalian - Sederhana</title>
 
+  <!-- Favicon / Ikon Tab Browser -->
   <link rel="icon" type="image/png" href="assets/logo.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
+  <!-- Library Generator QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
-    /* =====================================================
-       DESIGN TOKENS (Interaktiv)
-    ===================================================== */
     :root {
       --color-primary: #0284C5;
-      --color-secondary: #60A5FA;
-      --color-tertiary: #F59E0B;
-      --color-bg-canvas: #EDEDED; 
+      --color-error: #EF4444;
+      --color-bg: #F1F5F9;
       --color-surface: #FFFFFF;
       --color-on-surface: #0F172A;
       --color-border: #CBD5E1;
-      --color-error: #EF4444;
 
       --radius-md: 10px;
       --radius-lg: 16px;
@@ -47,7 +44,7 @@
       width: 100vw;
       height: 100vh;
       font-family: var(--font-main);
-      background-color: var(--color-bg-canvas);
+      background-color: var(--color-bg);
       color: var(--color-on-surface);
       overflow: hidden;
       display: flex;
@@ -56,29 +53,7 @@
       position: relative;
     }
 
-    /* =====================================================
-       TIRAI OPENING
-    ===================================================== */
-    .curtain {
-      position: fixed;
-      top: 0;
-      width: 50vw;
-      height: 100vh;
-      background: repeating-linear-gradient(90deg, #F43F5E 0px, #EF4444 30px, #DC2626 60px, #EF4444 90px);
-      z-index: 100;
-      transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
-      box-shadow: inset 0 0 50px rgba(15, 23, 42, 0.25);
-    }
-
-    .curtain-left { left: 0; border-right: 8px solid #B91C1C; }
-    .curtain-right { right: 0; border-left: 8px solid #B91C1C; }
-
-    .curtain-open .curtain-left { transform: translateX(-100%); }
-    .curtain-open .curtain-right { transform: translateX(100%); }
-
-    /* =====================================================
-       TOMBOL KEMBALI
-    ===================================================== */
+    /* TOMBOL KEMBALI */
     .btn-back {
       position: fixed;
       top: 16px;
@@ -95,41 +70,29 @@
       border-radius: 50%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       transition: all 0.25s ease-in-out;
     }
 
     .btn-back:hover {
       background-color: rgba(37, 99, 235, 0.95);
-      border-color: rgba(255, 255, 255, 0.4);
       transform: scale(1.08);
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
     }
 
-    .btn-back:active {
-      transform: scale(0.95);
-    }
-
-    /* =====================================================
-       LAYOUT UTAMA PERMAINAN
-    ===================================================== */
     .game-container {
       width: 100%;
       max-width: 1280px;
       height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: 12px 20px;
-      gap: 12px;
+      padding: 16px;
+      gap: 16px;
     }
 
-    /* =====================================================
-       1. STAGE ANIMASI & GARIS FINIS
-    ===================================================== */
+    /* STAGE TARIK TAMBANG */
     .tug-stage {
       width: 100%;
-      height: 220px;
+      height: 200px;
       background-color: #E2E8F0;
       border: 2px solid var(--color-border);
       border-radius: var(--radius-xl);
@@ -145,28 +108,15 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 24px;
+      width: 20px;
       z-index: 1;
-      background-image: 
-        linear-gradient(45deg, #000 25%, transparent 25%), 
-        linear-gradient(-45deg, #000 25%, transparent 25%), 
-        linear-gradient(45deg, transparent 75%, #000 75%), 
-        linear-gradient(-45deg, transparent 75%, #000 75%);
-      background-size: 12px 12px;
-      background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
+      background-image: linear-gradient(45deg, #000 25%, transparent 25%), linear-gradient(-45deg, #000 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #000 75%), linear-gradient(-45deg, transparent 75%, #000 75%);
+      background-size: 10px 10px;
       background-color: #fff;
-      box-shadow: 0 0 8px rgba(0,0,0,0.15);
     }
 
-    .finish-left {
-      left: 60px;
-      border-right: 3px solid #000;
-    }
-
-    .finish-right {
-      right: 60px;
-      border-left: 3px solid #000;
-    }
+    .finish-left { left: 50px; border-right: 2px solid #000; }
+    .finish-right { right: 50px; border-left: 2px solid #000; }
 
     .center-line {
       position: absolute;
@@ -177,33 +127,18 @@
       background-color: var(--color-error);
       transform: translateX(-50%);
       z-index: 1;
-      box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
-    }
-
-    .center-line::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 14px;
-      height: 14px;
-      background-color: var(--color-error);
-      border-radius: 50%;
     }
 
     .gif-background {
       position: absolute;
-      height: 180px;
+      height: 160px;
       width: auto;
       object-fit: contain;
       z-index: 2;
-      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform 0.35s ease-out;
     }
 
-    /* =====================================================
-       2. ARENA SOAL & KEYPAD KALKULATOR
-    ===================================================== */
+    /* ARENA SOAL DENGAN PILIHAN OBJEKTIF */
     .arena-bottom {
       width: 100%;
       flex: 1;
@@ -217,33 +152,25 @@
       background-color: var(--color-surface);
       border-radius: var(--radius-xl);
       border: 2px solid var(--color-border);
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 12px;
+      padding-bottom: 16px;
     }
 
-    .card-header-blue {
+    .card-header-blue, .card-header-red {
       width: 100%;
-      background-color: var(--color-primary);
-      color: var(--color-surface);
-      padding: 8px 16px;
+      color: white;
+      padding: 10px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .card-header-red {
-      width: 100%;
-      background-color: var(--color-error);
-      color: var(--color-surface);
-      padding: 8px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .card-header-blue { background-color: var(--color-primary); }
+    .card-header-red { background-color: var(--color-error); }
 
     .header-left-group {
       display: flex;
@@ -256,138 +183,94 @@
       border: 1px solid rgba(255, 255, 255, 0.4);
       color: white;
       border-radius: var(--radius-md);
-      padding: 5px 8px;
+      padding: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s ease;
-    }
-
-    .btn-qr:hover {
-      background-color: rgba(255, 255, 255, 0.35);
-      transform: scale(1.05);
     }
 
     .player-name {
       font-family: var(--font-display);
       font-size: 18px;
-      font-weight: 700;
     }
 
     .score-badge {
       font-family: var(--font-display);
       background-color: rgba(255, 255, 255, 0.25);
-      padding: 2px 12px;
+      padding: 4px 14px;
       border-radius: var(--radius-full);
       font-size: 14px;
     }
 
     .question-box {
-      width: 92%;
+      width: 90%;
       flex: 1;
-      margin: 8px 0;
-      padding: 8px 12px;
+      margin: 12px 0;
+      padding: 12px;
       background-color: #F8FAFC;
       border: 1.5px dashed var(--color-border);
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-lg);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: 4px;
+      gap: 6px;
     }
 
     .question-img {
       max-width: 100%;
-      max-height: 70px;
+      max-height: 80px;
       object-fit: contain;
       border-radius: 6px;
       display: none;
     }
 
     .question-text {
-      font-family: var(--font-main);
-      font-size: 13.5px;
+      font-size: 16px;
       font-weight: 700;
-      color: var(--color-on-surface);
-      line-height: 1.3;
     }
 
-    .answer-box {
-      width: 80%;
-      height: 38px;
-      background-color: var(--color-bg-canvas);
+    /* GRID TOMBOL JAWABAN OBJEKTIF (A, B, C, D) */
+    .options-grid {
+      width: 90%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .option-btn {
+      padding: 12px;
+      background-color: #F1F5F9;
       border: 2px solid var(--color-border);
       border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       font-family: var(--font-display);
-      font-size: 22px;
-      color: var(--color-on-surface);
-      margin-bottom: 8px;
-    }
-
-    .keypad-grid {
-      width: 80%;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
-
-    .key-btn {
-      height: 38px;
-      background-color: var(--color-bg-canvas);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-md);
-      font-family: var(--font-display);
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--color-on-surface);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.1s ease;
+      transition: all 0.15s ease;
       box-shadow: 0 3px 0 var(--color-border);
+      text-align: center;
     }
 
-    .key-btn:active {
+    .option-btn:hover {
+      background-color: #E2E8F0;
+    }
+
+    .option-btn:active {
       transform: translateY(2px);
       box-shadow: 0 1px 0 var(--color-border);
-    }
-
-    .key-clear {
-      background-color: #FFE4E6;
-      color: var(--color-error);
-      border-color: #FECDD3;
-    }
-
-    .key-submit-blue {
-      background-color: var(--color-primary);
-      color: var(--color-surface);
-      border-color: #0369A1;
-      box-shadow: 0 3px 0 #0369A1;
-    }
-
-    .key-submit-red {
-      background-color: var(--color-error);
-      color: var(--color-surface);
-      border-color: #B91C1C;
-      box-shadow: 0 3px 0 #B91C1C;
     }
 
     /* MODAL POPUP */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(4px);
       z-index: 10000;
       display: flex;
       align-items: center;
@@ -407,82 +290,45 @@
       border-radius: var(--radius-xl);
       padding: 24px;
       text-align: center;
-      max-width: 380px;
+      max-width: 360px;
       width: 90%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      transform: scale(0.8);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .modal-overlay.show .modal-card {
-      transform: scale(1);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
 
     .modal-title {
       font-family: var(--font-display);
       font-size: 22px;
-      color: var(--color-primary);
       margin-bottom: 8px;
     }
 
     .modal-desc {
       font-size: 14px;
-      color: var(--color-on-surface);
       margin-bottom: 16px;
     }
 
-    #qrcode-container {
-      padding: 12px;
-      background: white;
-      border: 2px dashed var(--color-border);
-      border-radius: var(--radius-lg);
-      margin-bottom: 16px;
-    }
-
-    .btn-close-modal {
-      background-color: var(--color-bg-canvas);
-      color: var(--color-on-surface);
-      font-family: var(--font-display);
-      font-size: 15px;
-      padding: 8px 20px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-full);
-      cursor: pointer;
-    }
-
-    .btn-restart {
+    .btn-restart, .btn-close-modal {
       background-color: var(--color-primary);
       color: white;
       font-family: var(--font-display);
-      font-size: 16px;
-      padding: 10px 24px;
+      font-size: 15px;
+      padding: 8px 20px;
       border: none;
       border-radius: var(--radius-full);
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(2, 132, 197, 0.3);
     }
 
     @media (max-width: 768px) {
       body { overflow-y: auto; height: auto; }
       .game-container { height: auto; }
       .arena-bottom { grid-template-columns: 1fr; }
-      .tug-stage { height: 180px; }
-      .gif-background { height: 140px; }
-      .finish-left { left: 20px; }
-      .finish-right { right: 20px; }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="curtain curtain-left"></div>
-  <div class="curtain curtain-right"></div>
-
-  <a href="index.html" class="btn-back" title="Kembali ke Beranda" aria-label="Kembali ke Beranda">
+  <!-- Tombol Kembali -->
+  <a href="index.html" class="btn-back" title="Kembali ke Beranda">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
@@ -491,25 +337,23 @@
 
   <div class="game-container">
     
+    <!-- STAGE TARIK TAMBANG -->
     <section class="tug-stage">
-      <div class="finish-line finish-left" title="Garis Finis Tim Biru"></div>
-      <div class="center-line" title="Batas Tengah Tali"></div>
-      <div class="finish-line finish-right" title="Garis Finis Tim Merah"></div>
+      <div class="finish-line finish-left"></div>
+      <div class="center-line"></div>
+      <div class="finish-line finish-right"></div>
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
+    <!-- ARENA SOAL OBJEKTIF -->
     <main class="arena-bottom">
 
+      <!-- TIM BIRU -->
       <section class="player-card">
         <div class="card-header-blue">
           <div class="header-left-group">
-            <button class="btn-qr" onclick="showQRCode('left')" title="Scan Remote HP">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="7"></rect>
-                <rect x="14" y="3" width="7" height="7"></rect>
-                <rect x="14" y="14" width="7" height="7"></rect>
-                <rect x="3" y="14" width="7" height="7"></rect>
-              </svg>
+            <button class="btn-qr" onclick="showQRCode('left')" title="Scan Remote">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             </button>
             <h2 class="player-name">TIM BIRU</h2>
           </div>
@@ -517,37 +361,21 @@
         </div>
         
         <div class="question-box">
-          <img id="img-left" class="question-img" alt="Gambar Soal Tim Biru" />
+          <img id="img-left" class="question-img" alt="Gambar Soal" />
           <p class="question-text" id="q-left">Memuat soal...</p>
         </div>
-        <div class="answer-box" id="ans-left"></div>
 
-        <div class="keypad-grid">
-          <button class="key-btn" onclick="pressKey('left', '1')">1</button>
-          <button class="key-btn" onclick="pressKey('left', '2')">2</button>
-          <button class="key-btn" onclick="pressKey('left', '3')">3</button>
-          <button class="key-btn" onclick="pressKey('left', '4')">4</button>
-          <button class="key-btn" onclick="pressKey('left', '5')">5</button>
-          <button class="key-btn" onclick="pressKey('left', '6')">6</button>
-          <button class="key-btn" onclick="pressKey('left', '7')">7</button>
-          <button class="key-btn" onclick="pressKey('left', '8')">8</button>
-          <button class="key-btn" onclick="pressKey('left', '9')">9</button>
-          <button class="key-btn key-clear" onclick="pressKey('left', 'C')">C</button>
-          <button class="key-btn" onclick="pressKey('left', '0')">0</button>
-          <button class="key-btn key-submit-blue" onclick="pressKey('left', 'OK')">OK</button>
+        <div class="options-grid" id="options-left">
+          <!-- Tombol Pilihan Jawaban A, B, C, D akan di-generate otomatis -->
         </div>
       </section>
 
+      <!-- TIM MERAH -->
       <section class="player-card">
         <div class="card-header-red">
           <div class="header-left-group">
-            <button class="btn-qr" onclick="showQRCode('right')" title="Scan Remote HP">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="7"></rect>
-                <rect x="14" y="3" width="7" height="7"></rect>
-                <rect x="14" y="14" width="7" height="7"></rect>
-                <rect x="3" y="14" width="7" height="7"></rect>
-              </svg>
+            <button class="btn-qr" onclick="showQRCode('right')" title="Scan Remote">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             </button>
             <h2 class="player-name">TIM MERAH</h2>
           </div>
@@ -555,53 +383,44 @@
         </div>
         
         <div class="question-box">
-          <img id="img-right" class="question-img" alt="Gambar Soal Tim Merah" />
+          <img id="img-right" class="question-img" alt="Gambar Soal" />
           <p class="question-text" id="q-right">Memuat soal...</p>
         </div>
-        <div class="answer-box" id="ans-right"></div>
 
-        <div class="keypad-grid">
-          <button class="key-btn" onclick="pressKey('right', '1')">1</button>
-          <button class="key-btn" onclick="pressKey('right', '2')">2</button>
-          <button class="key-btn" onclick="pressKey('right', '3')">3</button>
-          <button class="key-btn" onclick="pressKey('right', '4')">4</button>
-          <button class="key-btn" onclick="pressKey('right', '5')">5</button>
-          <button class="key-btn" onclick="pressKey('right', '6')">6</button>
-          <button class="key-btn" onclick="pressKey('right', '7')">7</button>
-          <button class="key-btn" onclick="pressKey('right', '8')">8</button>
-          <button class="key-btn" onclick="pressKey('right', '9')">9</button>
-          <button class="key-btn key-clear" onclick="pressKey('right', 'C')">C</button>
-          <button class="key-btn" onclick="pressKey('right', '0')">0</button>
-          <button class="key-btn key-submit-red" onclick="pressKey('right', 'OK')">OK</button>
+        <div class="options-grid" id="options-right">
+          <!-- Tombol Pilihan Jawaban A, B, C, D akan di-generate otomatis -->
         </div>
       </section>
 
     </main>
   </div>
 
+  <!-- POPUP QR CODE -->
   <div class="modal-overlay" id="qrModal">
     <div class="modal-card">
       <h2 class="modal-title" id="qrModalTitle">Remote Control</h2>
-      <p class="modal-desc">Scan QR Code ini menggunakan kamera HP untuk membuka controller remote.</p>
-      <div id="qrcode-container"></div>
+      <p class="modal-desc">Scan QR Code ini untuk membuka kontroler tim di HP.</p>
+      <div id="qrcode-container" style="display:flex; justify-content:center; margin-bottom:16px;"></div>
       <button class="btn-close-modal" onclick="closeQRModal()">Tutup</button>
     </div>
   </div>
 
+  <!-- POPUP WINNER -->
   <div class="modal-overlay" id="winnerModal">
     <div class="modal-card">
       <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
-      <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menyentuh garis finis terlebih dahulu.</p>
+      <p class="modal-desc" id="winnerDesc">Selamat atas kemenangannya!</p>
       <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
     </div>
   </div>
 
+  <!-- Bank Soal Eksternal -->
   <script src="soal.js"></script>
 
+  <!-- Firebase & Game Engine Realtime -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-    import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA7qAhQ3LkF6Ey3fiFEPHNEwdy6BHPb548",
@@ -609,107 +428,81 @@
       projectId: "media-pembelajaran-inter-f5f88",
       storageBucket: "media-pembelajaran-inter-f5f88.firebasestorage.app",
       messagingSenderId: "913703978337",
-      appId: "1:913703978337:web:6a3d3fd07cbe4038c8f120",
-      measurementId: "G-WDSJDMM8RR"
+      appId: "1:913703978337:web:6a3d3fd07cbe4038c8f120"
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
     const roomId = "room_" + Math.random().toString(36).substring(2, 8);
 
     let currentQLeft = {};
     let currentQRight = {};
-    let inputLeft = "";
-    let inputRight = "";
     let scoreLeft = 0;
     let scoreRight = 0;
-    let pullPos = 0; 
+    let pullPos = 0;
     let isGameOver = false;
 
     const PULL_STEP = 60;
-    const WIN_THRESHOLD = 380; 
-
-    let lastIndexLeft = -1;
-    let lastIndexRight = -1;
-
-    let qrGenerator = null;
+    const WIN_THRESHOLD = 360;
 
     document.addEventListener("DOMContentLoaded", () => {
-      setTimeout(() => {
-        document.body.classList.add("curtain-open");
-      }, 200);
-
       generateNewQuestion('left');
       generateNewQuestion('right');
-
       listenRemoteControl();
     });
 
-    function getRandomQuestionIndex(exceptIndex = -1) {
-      if (typeof questionBank === 'undefined' || questionBank.length === 0) return 0;
-      
-      let newIndex;
-      do {
-        newIndex = Math.floor(Math.random() * questionBank.length);
-      } while (newIndex === exceptIndex && questionBank.length > 1);
-
-      return newIndex;
-    }
-
     function generateNewQuestion(side) {
       if (typeof questionBank === 'undefined' || questionBank.length === 0) return;
-      
+      const index = Math.floor(Math.random() * questionBank.length);
+      const question = questionBank[index];
+
       if (side === 'left') {
-        const index = getRandomQuestionIndex(lastIndexRight);
-        lastIndexLeft = index;
-        currentQLeft = questionBank[index];
-        
-        document.getElementById('q-left').innerText = currentQLeft.text;
-        
-        const imgElem = document.getElementById('img-left');
-        if (currentQLeft.image) {
-          imgElem.src = currentQLeft.image;
-          imgElem.style.display = 'block';
-        } else {
-          imgElem.style.display = 'none';
-        }
+        currentQLeft = question;
+        renderQuestionUI('left', question);
       } else {
-        const index = getRandomQuestionIndex(lastIndexLeft);
-        lastIndexRight = index;
-        currentQRight = questionBank[index];
-        
-        document.getElementById('q-right').innerText = currentQRight.text;
-        
-        const imgElem = document.getElementById('img-right');
-        if (currentQRight.image) {
-          imgElem.src = currentQRight.image;
-          imgElem.style.display = 'block';
-        } else {
-          imgElem.style.display = 'none';
-        }
+        currentQRight = question;
+        renderQuestionUI('right', question);
       }
 
       syncStateToFirestore(side);
     }
 
+    function renderQuestionUI(side, question) {
+      document.getElementById(`q-${side}`).innerText = question.text;
+      const imgElem = document.getElementById(`img-${side}`);
+      
+      if (question.image) {
+        imgElem.src = question.image;
+        imgElem.style.display = 'block';
+      } else {
+        imgElem.style.display = 'none';
+      }
+
+      // Generate Pilihan Jawaban (A, B, C, D atau opsi langsung)
+      const optionsContainer = document.getElementById(`options-${side}`);
+      optionsContainer.innerHTML = '';
+
+      const options = question.options || [question.ans, question.ans + 2, question.ans - 1, question.ans + 5];
+      // Acak pilihan jawaban
+      const shuffled = [...options].sort(() => Math.random() - 0.5);
+
+      shuffled.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => selectAnswer(side, opt);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
     async function syncStateToFirestore(side) {
       try {
         const roomRef = doc(db, "active_rooms", roomId);
-        const dataToUpdate = side === 'left' ? {
-          questionLeft: currentQLeft,
-          scoreLeft: scoreLeft,
-          inputLeftVal: ""
-        } : {
-          questionRight: currentQRight,
-          scoreRight: scoreRight,
-          inputRightVal: ""
-        };
-        
+        const dataToUpdate = side === 'left' ? { questionLeft: currentQLeft, scoreLeft } : { questionRight: currentQRight, scoreRight };
         await setDoc(roomRef, dataToUpdate, { merge: true });
       } catch (err) {
-        console.error("Gagal sinkronisasi room: ", err);
+        console.error("Error sync Firestore: ", err);
       }
     }
 
@@ -718,97 +511,36 @@
       onSnapshot(roomRef, (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.data();
-
-          // Tampilkan teks input realtime dari HP ke desktop
-          if (data.inputLeftVal !== undefined) {
-            inputLeft = data.inputLeftVal;
-            document.getElementById('ans-left').innerText = inputLeft;
-          }
-          if (data.inputRightVal !== undefined) {
-            inputRight = data.inputRightVal;
-            document.getElementById('ans-right').innerText = inputRight;
-          }
-
-          // Tanggapi penekanan tombol action dari HP
           if (data.lastAction) {
-            const { side, key, timestamp } = data.lastAction;
+            const { side, answer, timestamp } = data.lastAction;
             if (timestamp && Date.now() - timestamp < 2000) {
-              pressKey(side, key, false);
+              selectAnswer(side, answer);
             }
           }
         }
       });
     }
 
-    function playBeep(freq = 600) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContext) return;
-      const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.1);
-    }
-
-    function pressKey(side, val, isLocal = true) {
+    function selectAnswer(side, selectedAns) {
       if (isGameOver) return;
-      
-      playBeep(800);
 
-      if (side === 'left') {
-        const box = document.getElementById('ans-left');
-        if (val === 'C') {
-          inputLeft = "";
-        } else if (val === 'OK') {
-          if (parseInt(inputLeft) === currentQLeft.ans) {
-            playBeep(1200);
-            scoreLeft += 10;
-            
-            pullPos -= PULL_STEP;
-            document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
-            document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
-            inputLeft = "";
-            
-            checkWinner();
-            if (!isGameOver) generateNewQuestion('left');
-          } else {
-            playBeep(300);
-            inputLeft = "";
-          }
+      const currentQ = side === 'left' ? currentQLeft : currentQRight;
+
+      if (parseInt(selectedAns) === parseInt(currentQ.ans)) {
+        if (side === 'left') {
+          scoreLeft += 10;
+          pullPos -= PULL_STEP;
+          document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
         } else {
-          if (isLocal && inputLeft.length < 3) inputLeft += val;
+          scoreRight += 10;
+          pullPos += PULL_STEP;
+          document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
         }
-        box.innerText = inputLeft;
-      } else {
-        const box = document.getElementById('ans-right');
-        if (val === 'C') {
-          inputRight = "";
-        } else if (val === 'OK') {
-          if (parseInt(inputRight) === currentQRight.ans) {
-            playBeep(1200);
-            scoreRight += 10;
-            
-            pullPos += PULL_STEP;
-            document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
-            document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
-            inputRight = "";
-            
-            checkWinner();
-            if (!isGameOver) generateNewQuestion('right');
-          } else {
-            playBeep(300);
-            inputRight = "";
-          }
-        } else {
-          if (isLocal && inputRight.length < 3) inputRight += val;
-        }
-        box.innerText = inputRight;
+
+        document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
+        checkWinner();
+
+        if (!isGameOver) generateNewQuestion(side);
       }
     }
 
@@ -820,34 +552,13 @@
       }
     }
 
-    async function saveGameResult(winner) {
-      try {
-        await addDoc(collection(db, "tarik_tambang"), {
-          winner: winner,
-          scoreBlue: scoreLeft,
-          scoreRed: scoreRight,
-          playedAt: serverTimestamp()
-        });
-      } catch (e) {
-        console.error("Gagal menyimpan hasil permainan: ", e);
-      }
-    }
-
     function showWinner(teamName, color) {
       isGameOver = true;
       const modal = document.getElementById('winnerModal');
       const title = document.getElementById('winnerText');
-      const desc = document.getElementById('winnerDesc');
-
       title.innerText = `${teamName} MENANG! 🎉`;
       title.style.color = color;
-      desc.innerText = `Selamat! ${teamName} berhasil menarik tali hingga menyentuh garis finis.`;
-
-      saveGameResult(teamName);
-
-      setTimeout(() => {
-        modal.classList.add('show');
-      }, 350);
+      modal.classList.add('show');
     }
 
     function restartGame() {
@@ -855,13 +566,9 @@
       scoreLeft = 0;
       scoreRight = 0;
       pullPos = 0;
-      inputLeft = "";
-      inputRight = "";
 
       document.getElementById('score-left').innerText = `Skor: 0`;
       document.getElementById('score-right').innerText = `Skor: 0`;
-      document.getElementById('ans-left').innerText = "";
-      document.getElementById('ans-right').innerText = "";
       document.getElementById('stageGif').style.transform = `translateX(0px)`;
       document.getElementById('winnerModal').classList.remove('show');
 
@@ -871,26 +578,13 @@
 
     function showQRCode(side) {
       const modal = document.getElementById('qrModal');
-      const title = document.getElementById('qrModalTitle');
       const container = document.getElementById('qrcode-container');
-      
       container.innerHTML = "";
-      
-      const teamTitle = side === 'left' ? 'Tim Biru' : 'Tim Merah';
-      title.innerText = `Remote ${teamTitle}`;
 
       const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
       const remoteUrl = `${baseUrl}/remote.html?room=${roomId}&team=${side}`;
 
-      qrGenerator = new QRCode(container, {
-        text: remoteUrl,
-        width: 180,
-        height: 180,
-        colorDark: "#0F172A",
-        colorLight: "#FFFFFF",
-        correctLevel: QRCode.CorrectLevel.H
-      });
-
+      new QRCode(container, { text: remoteUrl, width: 160, height: 160 });
       modal.classList.add('show');
     }
 
@@ -898,7 +592,6 @@
       document.getElementById('qrModal').classList.remove('show');
     }
 
-    window.pressKey = pressKey;
     window.restartGame = restartGame;
     window.showQRCode = showQRCode;
     window.closeQRModal = closeQRModal;
