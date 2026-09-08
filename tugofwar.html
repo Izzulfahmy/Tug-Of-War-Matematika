@@ -6,7 +6,7 @@
   <title>Tarik Tambang Perkalian</title>
 
   <!-- Favicon dari folder asset/logo.png -->
-  <link rel="icon" type="image/png" href="asset/unej.png />
+  <link rel="icon" type="image/png" href="asset/logo.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -123,7 +123,7 @@
     }
 
     /* =====================================================
-       LAYOUT UTAMA PERMAINAN
+       LAYOUT UTAMA PERMAINAN (DESKTOP)
     ===================================================== */
     .game-container {
       width: 100%;
@@ -635,10 +635,88 @@
       .rules-card { display: none; }
     }
 
-    @media (max-width: 640px) and (orientation: portrait) {
-      body { overflow-y: auto; }
-      .arena-bottom { flex-direction: column; align-items: center; gap: 16px; }
-      .player-card { width: 100%; max-width: 100%; }
+    /* =====================================================
+       3. TAMPILAN KHUSUS MOBILE (DIBALIK & DITENGAHKAN)
+    ===================================================== */
+    @media (max-width: 640px) {
+      body {
+        overflow: hidden;
+        padding: 4px;
+      }
+
+      .game-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 6px;
+        height: 100dvh;
+      }
+
+      .arena-bottom {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0;
+        height: 100%;
+        flex: 1;
+      }
+
+      /* Card Tim Merah (Di Atas & Dibalik 180 Derajat) */
+      #card-right {
+        order: 1;
+        transform: rotate(180deg);
+        max-width: 100%;
+        height: 38dvh;
+        flex: none;
+      }
+
+      /* Stage Penarik Tambang (Di Tengah Antara Merah & Biru) */
+      .tug-stage {
+        order: 2;
+        height: 20dvh;
+        min-height: 120px;
+        width: 100%;
+        margin: 4px 0;
+        flex-shrink: 0;
+      }
+
+      /* Card Tim Biru (Di Bawah & Tegak Biasa) */
+      #card-left {
+        order: 3;
+        max-width: 100%;
+        height: 38dvh;
+        flex: none;
+      }
+
+      /* Sembunyikan Card Aturan/Petunjuk di Mobile */
+      .rules-card {
+        display: none !important;
+      }
+
+      /* Penyesuaian Elemen Dalam Card Mobile */
+      .card-body {
+        padding: 4px 8px;
+        gap: 4px;
+      }
+
+      .question-box {
+        padding: 4px;
+      }
+
+      .question-text {
+        font-size: 12px;
+      }
+
+      .key-btn {
+        height: 28px;
+        font-size: 13px;
+      }
+
+      .answer-box {
+        height: 28px;
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -646,9 +724,7 @@
 <body>
 
   <!-- ELEMENT AUDIO BAGIAN BELAKANG -->
-  <!-- Musik Latar Wii -->
   <audio id="bgMusic" src="asset/Wii Music - Gaming Background Music HD.mp3" loop preload="auto"></audio>
-  <!-- SFX Perayaan Kemenangan -->
   <audio id="victorySfx" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
 
   <div class="curtain curtain-left"></div>
@@ -691,7 +767,7 @@
   <div class="game-container">
     
     <!-- 1. STAGE ANIMASI TARIK TAMBANG -->
-    <section class="tug-stage">
+    <section class="tug-stage" id="tugStage">
       <!-- BENDERA FINISH TIM BIRU -->
       <div class="flag-pole flag-pole-left" title="Finis Tim Biru">
         <div class="flag-banner"></div>
@@ -710,7 +786,7 @@
     </section>
 
     <!-- 2. ARENA SOAL DAN KALKULATOR -->
-    <main class="arena-bottom">
+    <main class="arena-bottom" id="arenaBottom">
 
       <!-- TIM BIRU -->
       <section class="player-card" id="card-left">
@@ -891,13 +967,33 @@
 
     let qrGenerator = null;
 
+    // --- MANAJEMEN LAYOUT MOBILE / DESKTOP REARRANGE ---
+    function rearrangeLayoutForMobile() {
+      const isMobile = window.innerWidth <= 640;
+      const arena = document.getElementById('arenaBottom');
+      const stage = document.getElementById('tugStage');
+
+      if (isMobile && arena && stage) {
+        if (!arena.contains(stage)) {
+          arena.insertBefore(stage, document.getElementById('card-left'));
+        }
+      } else if (!isMobile && arena && stage) {
+        const gameContainer = document.querySelector('.game-container');
+        if (gameContainer && !gameContainer.contains(stage)) {
+          gameContainer.insertBefore(stage, arena);
+        }
+      }
+    }
+
+    window.addEventListener('resize', rearrangeLayoutForMobile);
+
     // --- MANAJEMEN AUDIO BACKSOUND & SFX ---
     let audioCtx = null;
     let isMusicMuted = false;
 
     const bgMusicElem = document.getElementById('bgMusic');
     const victorySfxElem = document.getElementById('victorySfx');
-    bgMusicElem.volume = 0.35; // Atur volume musik latar Wii
+    bgMusicElem.volume = 0.35;
 
     function getAudioContext() {
       if (!audioCtx) {
@@ -912,9 +1008,7 @@
 
     function startBgMusic() {
       if (isMusicMuted || isGameOver) return;
-      bgMusicElem.play().catch(() => {
-        // Autoplay terblokir sampai ada interaksi
-      });
+      bgMusicElem.play().catch(() => {});
     }
 
     function stopBgMusic() {
@@ -959,7 +1053,7 @@
       if (!ctx) return;
       
       const now = ctx.currentTime;
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // Harmoni Ceria
+      const notes = [523.25, 659.25, 783.99, 1046.50];
       
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
@@ -1115,7 +1209,8 @@
         document.body.classList.add("curtain-open");
       }, 200);
 
-      // Memutar musik pada interaksi awal pengguna
+      rearrangeLayoutForMobile();
+
       const startMusicOnUserInteraction = () => {
         startBgMusic();
         document.removeEventListener('click', startMusicOnUserInteraction);
