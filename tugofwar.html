@@ -84,9 +84,9 @@
     .curtain-open .curtain-right { transform: translateX(100%); }
 
     /* =====================================================
-       TOMBOL KEMBALI & FULLSCREEN
+       TOMBOL KEMBALI, MUSIC & FULLSCREEN
     ===================================================== */
-    .btn-back, .btn-fullscreen {
+    .btn-back, .btn-fullscreen, .btn-music {
       position: fixed;
       top: 12px;
       z-index: 9999;
@@ -108,16 +108,17 @@
     }
 
     .btn-back { left: 12px; }
+    .btn-music { right: 62px; }
     .btn-fullscreen { right: 12px; }
 
-    .btn-back:hover, .btn-fullscreen:hover {
+    .btn-back:hover, .btn-fullscreen:hover, .btn-music:hover {
       background-color: rgba(37, 99, 235, 0.95);
       border-color: rgba(255, 255, 255, 0.4);
       transform: scale(1.08);
       box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
     }
 
-    .btn-back:active, .btn-fullscreen:active {
+    .btn-back:active, .btn-fullscreen:active, .btn-music:active {
       transform: scale(0.95);
     }
 
@@ -228,7 +229,7 @@
       border-radius: var(--radius-xl);
       border: 2px solid #E2E8F0;
       box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(15, 23, 42, 0.04);
-      overflow: visible; /* Diubah agar partikel letusan mengambang ke luar */
+      overflow: visible;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -655,6 +656,22 @@
     </svg>
   </a>
 
+  <!-- Tombol Toggle Musik -->
+  <button class="btn-music" id="btnMusic" onclick="toggleMusic()" title="Musik Latar" aria-label="Musik Latar">
+    <svg id="iconMusicOn" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 18V5l12-2v13"></path>
+      <circle cx="6" cy="18" r="3"></circle>
+      <circle cx="18" cy="16" r="3"></circle>
+    </svg>
+    <svg id="iconMusicOff" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+      <line x1="1" y1="1" x2="23" y2="23"></line>
+      <path d="M9 9v9"></path>
+      <circle cx="6" cy="18" r="3"></circle>
+      <path d="M12 4.12L21 3v8.5"></path>
+      <circle cx="18" cy="16" r="3"></circle>
+    </svg>
+  </button>
+
   <!-- Tombol Full Screen -->
   <button class="btn-fullscreen" id="btnFullscreen" onclick="toggleFullscreen()" title="Layar Penuh" aria-label="Layar Penuh">
     <svg id="iconExpand" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -868,8 +885,11 @@
 
     let qrGenerator = null;
 
-    // --- LOGIKA AUDIO EFEK ---
+    // --- LOGIKA AUDIO EFEK & BACKSOUND MUSIK ---
     let audioCtx = null;
+    let bgMusicTimer = null;
+    let isMusicPlaying = false;
+    let isMusicMuted = false;
 
     function getAudioContext() {
       if (!audioCtx) {
@@ -882,7 +902,91 @@
       return audioCtx;
     }
 
+    // Melodi Chiptune Upbeat untuk Musik Latar
+    const bgMelody = [
+      { note: 261.63, duration: 0.15 }, // C4
+      { note: 329.63, duration: 0.15 }, // E4
+      { note: 392.00, duration: 0.15 }, // G4
+      { note: 523.25, duration: 0.25 }, // C5
+      { note: 392.00, duration: 0.15 }, // G4
+      { note: 523.25, duration: 0.30 }, // C5
+      { note: 349.23, duration: 0.15 }, // F4
+      { note: 440.00, duration: 0.15 }, // A4
+      { note: 523.25, duration: 0.15 }, // C5
+      { note: 659.25, duration: 0.25 }, // E5
+      { note: 523.25, duration: 0.15 }, // C5
+      { note: 659.25, duration: 0.30 }, // E5
+      { note: 392.00, duration: 0.15 }, // G4
+      { note: 493.88, duration: 0.15 }, // B4
+      { note: 587.33, duration: 0.15 }, // D5
+      { note: 698.46, duration: 0.25 }, // F5
+      { note: 587.33, duration: 0.15 }, // D5
+      { note: 523.25, duration: 0.30 }  // C5
+    ];
+
+    let noteIndex = 0;
+
+    function startBgMusic() {
+      if (isMusicPlaying || isMusicMuted) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      isMusicPlaying = true;
+
+      function playNextNote() {
+        if (!isMusicPlaying || isMusicMuted) return;
+
+        const current = bgMelody[noteIndex];
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'square'; // Karakteristik suara game klasik
+        osc.frequency.setValueAtTime(current.note, ctx.currentTime);
+
+        // Volume lembut untuk latar
+        gain.gain.setValueAtTime(0.025, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + current.duration);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + current.duration);
+
+        noteIndex = (noteIndex + 1) % bgMelody.length;
+        bgMusicTimer = setTimeout(playNextNote, current.duration * 1000 + 40);
+      }
+
+      playNextNote();
+    }
+
+    function stopBgMusic() {
+      isMusicPlaying = false;
+      if (bgMusicTimer) {
+        clearTimeout(bgMusicTimer);
+        bgMusicTimer = null;
+      }
+    }
+
+    function toggleMusic() {
+      isMusicMuted = !isMusicMuted;
+      
+      const iconOn = document.getElementById('iconMusicOn');
+      const iconOff = document.getElementById('iconMusicOff');
+
+      if (isMusicMuted) {
+        iconOn.style.display = 'none';
+        iconOff.style.display = 'block';
+        stopBgMusic();
+      } else {
+        iconOn.style.display = 'block';
+        iconOff.style.display = 'none';
+        startBgMusic();
+      }
+    }
+
     function playBeep(freq = 600) {
+      startBgMusic(); // Mulai musik saat interaksi pertama
       const ctx = getAudioContext();
       if (!ctx) return;
       const osc = ctx.createOscillator();
@@ -975,15 +1079,13 @@
         particle.style.height = `${size}px`;
         particle.style.backgroundColor = color;
         
-        // Posisikan partikel di sekitar tengah kartu
         particle.style.left = '50%';
         particle.style.top = '40%';
 
-        // Arah letusan acak 360 derajat
         const angle = Math.random() * Math.PI * 2;
         const distance = Math.floor(Math.random() * 110) + 50;
         const tx = Math.cos(angle) * distance;
-        const ty = Math.sin(angle) * distance - 30; // Sedikit dorongan ke atas
+        const ty = Math.sin(angle) * distance - 30;
 
         particle.style.setProperty('--tx', `${tx}px`);
         particle.style.setProperty('--ty', `${ty}px`);
@@ -1007,7 +1109,6 @@
       void card.offsetWidth; // Trigger reflow
       card.classList.add('shake');
 
-      // Teks Mengambang "SALAH!"
       const feedback = document.createElement('div');
       feedback.className = 'floating-feedback wrong';
       feedback.innerText = 'SALAH!';
@@ -1053,6 +1154,15 @@
       setTimeout(() => {
         document.body.classList.add("curtain-open");
       }, 200);
+
+      // Listener global interaksi pertama pengguna untuk memutar musik
+      const startMusicOnUserInteraction = () => {
+        startBgMusic();
+        document.removeEventListener('click', startMusicOnUserInteraction);
+        document.removeEventListener('keydown', startMusicOnUserInteraction);
+      };
+      document.addEventListener('click', startMusicOnUserInteraction);
+      document.addEventListener('keydown', startMusicOnUserInteraction);
 
       generateNewQuestion('left');
       generateNewQuestion('right');
@@ -1234,6 +1344,8 @@
 
     function showWinner(teamName, color) {
       isGameOver = true;
+      stopBgMusic();
+
       const modal = document.getElementById('winnerModal');
       const title = document.getElementById('winnerText');
       const desc = document.getElementById('winnerDesc');
@@ -1263,6 +1375,8 @@
       document.getElementById('ans-right').innerText = "";
       document.getElementById('stageGif').style.transform = `translateX(0px)`;
       document.getElementById('winnerModal').classList.remove('show');
+
+      startBgMusic();
 
       generateNewQuestion('left');
       generateNewQuestion('right');
@@ -1298,6 +1412,7 @@
     }
 
     window.toggleFullscreen = toggleFullscreen;
+    window.toggleMusic = toggleMusic;
     window.pressKey = pressKey;
     window.restartGame = restartGame;
     window.showQRCode = showQRCode;
