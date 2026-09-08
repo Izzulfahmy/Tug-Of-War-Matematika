@@ -6,7 +6,7 @@
   <title>Tarik Tambang Perkalian - Interaktiv-ta'lim</title>
 
   <!-- Favicon / Ikon Tab Browser -->
-  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="icon" type="image/png" href="asset/logo.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,9 +29,9 @@
       --color-border: #CBD5E1;
       --color-error: #EF4444;
 
-      --radius-md: 12px;
-      --radius-lg: 18px;
-      --radius-xl: 24px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
       --radius-full: 9999px;
 
       --font-main: 'Nunito', sans-serif;
@@ -60,7 +60,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: clamp(8px, 1.5vh, 16px);
+      padding: clamp(8px, 1.2vh, 14px);
     }
 
     /* =====================================================
@@ -93,8 +93,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       background-color: rgba(15, 23, 42, 0.85);
       color: #ffffff;
       text-decoration: none;
@@ -130,25 +130,25 @@
       height: 100%;
       display: flex;
       flex-direction: column;
-      gap: clamp(8px, 1.5vh, 14px);
+      gap: clamp(8px, 1.2vh, 12px);
     }
 
     /* =====================================================
-       1. STAGE ANIMASI TARIK TAMBANG (PROPORSI PROMINEN)
+       1. STAGE ANIMASI TARIK TAMBANG
     ===================================================== */
     .tug-stage {
       width: 100%;
-      height: clamp(150px, 32vh, 240px);
+      height: clamp(140px, 28vh, 210px);
       flex-shrink: 0;
       background: linear-gradient(180deg, #38BDF8 0%, #BAE6FD 60%, #86EFAC 60%, #4ADE80 100%);
-      border: 3.5px solid #0284C5;
+      border: 3px solid #0284C5;
       border-radius: var(--radius-xl);
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(2, 132, 197, 0.15);
+      box-shadow: 0 6px 18px rgba(2, 132, 197, 0.15);
     }
 
     .finish-line {
@@ -166,8 +166,8 @@
       background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
       background-color: #fff;
     }
-    .finish-left { left: clamp(20px, 6vw, 80px); border-right: 2px solid #000; }
-    .finish-right { right: clamp(20px, 6vw, 80px); border-left: 2px solid #000; }
+    .finish-left { left: clamp(20px, 6vw, 70px); border-right: 2px solid #000; }
+    .finish-right { right: clamp(20px, 6vw, 70px); border-left: 2px solid #000; }
 
     .center-line {
       position: absolute;
@@ -182,7 +182,7 @@
 
     .gif-background {
       position: absolute;
-      height: 92%;
+      height: 90%;
       width: auto;
       object-fit: contain;
       z-index: 2;
@@ -190,7 +190,7 @@
     }
 
     /* =====================================================
-       2. ARENA SOAL & KEYPAD KALKULATOR (PROPORSI SEIMBANG)
+       2. ARENA SOAL & KEYPAD KALKULATOR
     ===================================================== */
     .arena-bottom {
       width: 100%;
@@ -198,39 +198,39 @@
       min-height: 0;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: clamp(10px, 1.8vw, 16px);
+      gap: clamp(10px, 1.5vw, 16px);
     }
 
     .player-card {
       background-color: var(--color-surface);
       border-radius: var(--radius-xl);
-      border: 3px solid var(--color-border);
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      border: 2.5px solid var(--color-border);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 0 0 10px 0;
+      padding-bottom: 10px;
       height: 100%;
     }
 
     .card-header-blue, .card-header-red {
       width: 100%;
       color: var(--color-surface);
-      padding: clamp(8px, 1.2vh, 12px) 16px;
+      padding: clamp(6px, 1vh, 10px) 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-shrink: 0;
     }
 
-    .card-header-blue { background: linear-gradient(180deg, #38BDF8 0%, #0284C5 100%); border-bottom: 3px solid #0369A1; }
-    .card-header-red { background: linear-gradient(180deg, #F87171 0%, #EF4444 100%); border-bottom: 3px solid #B91C1C; }
+    .card-header-blue { background: linear-gradient(180deg, #38BDF8 0%, #0284C5 100%); border-bottom: 2.5px solid #0369A1; }
+    .card-header-red { background: linear-gradient(180deg, #F87171 0%, #EF4444 100%); border-bottom: 2.5px solid #B91C1C; }
 
     .header-left-group {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .btn-qr {
@@ -238,7 +238,7 @@
       border: 1px solid rgba(255, 255, 255, 0.5);
       color: white;
       border-radius: var(--radius-md);
-      padding: 5px 8px;
+      padding: 4px 7px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -253,7 +253,7 @@
 
     .player-name {
       font-family: var(--font-display);
-      font-size: clamp(16px, 2.2vw, 20px);
+      font-size: clamp(15px, 2vw, 18px);
       font-weight: 700;
       letter-spacing: 0.5px;
     }
@@ -261,93 +261,92 @@
     .score-badge {
       font-family: var(--font-display);
       background-color: rgba(255, 255, 255, 0.3);
-      padding: 3px 12px;
+      padding: 2px 10px;
       border-radius: var(--radius-full);
-      font-size: clamp(13px, 1.6vw, 16px);
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+      font-size: clamp(12px, 1.4vw, 15px);
     }
 
-    /* AREA KONTEN UTAMA KARTU (SOAL + INPUT) */
+    /* KONTEN UTAMA KARTU (RAPI & SEJAJAR) */
     .card-body {
       width: 100%;
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-evenly;
-      padding: clamp(6px, 1vh, 12px) 16px;
-      gap: clamp(6px, 1vh, 10px);
+      justify-content: space-between;
+      padding: clamp(6px, 1vh, 10px) 14px;
+      gap: clamp(6px, 1vh, 8px);
       min-height: 0;
     }
 
-    .display-row {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
+    /* KOTAK SOAL CERITA (ATAS) */
     .question-box {
+      width: 100%;
       flex: 1;
-      height: clamp(52px, 7.5vh, 72px);
       background-color: #F8FAFC;
-      border: 2.5px dashed var(--color-border);
+      border: 2px dashed var(--color-border);
       border-radius: var(--radius-lg);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 4px 10px;
+      padding: 6px 12px;
       text-align: center;
+      min-height: 0;
+      overflow: hidden;
     }
 
     .question-img {
-      max-height: 100%;
-      max-width: 50%;
+      max-height: clamp(30px, 5vh, 50px);
+      max-width: 80%;
       object-fit: contain;
       border-radius: 6px;
       display: none;
-      margin-right: 8px;
+      margin-bottom: 4px;
     }
 
     .question-text {
       font-family: var(--font-display);
-      font-size: clamp(22px, 3.8vh, 32px);
+      font-size: clamp(15px, 2.2vh, 22px);
       font-weight: 700;
       color: #0F172A;
+      line-height: 1.25;
     }
 
+    /* KOTAK INPUT JAWABAN (BAWAH SOAL) */
     .answer-box {
-      width: clamp(90px, 14vw, 130px);
-      height: clamp(52px, 7.5vh, 72px);
+      width: 100%;
+      height: clamp(38px, 5vh, 48px);
+      flex-shrink: 0;
       background-color: #FEF08A;
-      border: 3px solid #F59E0B;
-      border-radius: var(--radius-lg);
+      border: 2.5px solid #F59E0B;
+      border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: clamp(24px, 4vh, 36px);
+      font-size: clamp(20px, 3vh, 28px);
       font-weight: 700;
       color: #78350F;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
 
-    /* KEYPAD MUA TERATUR & EMPUK */
+    /* KEYPAD GRID */
     .keypad-grid {
       width: 100%;
+      flex-shrink: 0;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: clamp(5px, 1vh, 8px);
+      gap: clamp(4px, 0.8vh, 6px);
     }
 
     .key-btn {
-      height: clamp(38px, 5.5vh, 52px);
+      height: clamp(34px, 4.8vh, 44px);
       background-color: #F1F5F9;
-      border: 2px solid #CBD5E1;
+      border: 1.5px solid #CBD5E1;
       border-radius: var(--radius-md);
       font-family: var(--font-display);
-      font-size: clamp(18px, 2.5vh, 24px);
+      font-size: clamp(16px, 2.2vh, 20px);
       font-weight: 700;
       color: var(--color-on-surface);
       cursor: pointer;
@@ -355,11 +354,11 @@
       align-items: center;
       justify-content: center;
       transition: all 0.1s ease;
-      box-shadow: 0 4px 0 #CBD5E1;
+      box-shadow: 0 3px 0 #CBD5E1;
     }
 
     .key-btn:active {
-      transform: translateY(3px);
+      transform: translateY(2px);
       box-shadow: 0 1px 0 #CBD5E1;
     }
 
@@ -367,21 +366,21 @@
       background-color: #FFE4E6; 
       color: var(--color-error); 
       border-color: #FECDD3; 
-      box-shadow: 0 4px 0 #FECDD3; 
+      box-shadow: 0 3px 0 #FECDD3; 
     }
 
     .key-submit-blue { 
       background-color: var(--color-primary); 
       color: white; 
       border-color: #0369A1; 
-      box-shadow: 0 4px 0 #0369A1; 
+      box-shadow: 0 3px 0 #0369A1; 
     }
 
     .key-submit-red { 
       background-color: var(--color-error); 
       color: white; 
       border-color: #B91C1C; 
-      box-shadow: 0 4px 0 #B91C1C; 
+      box-shadow: 0 3px 0 #B91C1C; 
     }
 
     /* =====================================================
@@ -401,8 +400,8 @@
 
     .modal-card {
       background: white; border-radius: var(--radius-xl);
-      padding: 28px; text-align: center;
-      max-width: 380px; width: 90%;
+      padding: 24px; text-align: center;
+      max-width: 360px; width: 90%;
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       transform: scale(0.8);
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -410,30 +409,30 @@
     }
     .modal-overlay.show .modal-card { transform: scale(1); }
 
-    .modal-title { font-family: var(--font-display); font-size: 24px; color: var(--color-primary); margin-bottom: 8px; }
-    .modal-desc { font-size: 15px; color: var(--color-on-surface); margin-bottom: 18px; }
+    .modal-title { font-family: var(--font-display); font-size: 22px; color: var(--color-primary); margin-bottom: 8px; }
+    .modal-desc { font-size: 14px; color: var(--color-on-surface); margin-bottom: 16px; }
 
     #qrcode-container {
       padding: 12px; background: white;
-      border: 2.5px dashed var(--color-border);
-      border-radius: var(--radius-lg); margin-bottom: 18px;
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-lg); margin-bottom: 16px;
     }
 
     .btn-close-modal {
       background-color: var(--color-bg-canvas); color: var(--color-on-surface);
-      font-family: var(--font-display); font-size: 15px;
-      padding: 8px 22px; border: 1.5px solid var(--color-border);
+      font-family: var(--font-display); font-size: 14px;
+      padding: 8px 20px; border: 1.5px solid var(--color-border);
       border-radius: var(--radius-full); cursor: pointer;
     }
 
     .btn-restart {
       background-color: var(--color-primary); color: white;
-      font-family: var(--font-display); font-size: 17px;
-      padding: 12px 28px; border: none; border-radius: var(--radius-full);
-      cursor: pointer; box-shadow: 0 4px 14px rgba(2, 132, 197, 0.35);
+      font-family: var(--font-display); font-size: 16px;
+      padding: 10px 26px; border: none; border-radius: var(--radius-full);
+      cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 197, 0.35);
     }
 
-    @media (max-width: 640px) and (orientation: portrait) {
+    @media (max-width: 600px) and (orientation: portrait) {
       body { overflow-y: auto; }
       .arena-bottom { grid-template-columns: 1fr; }
     }
@@ -494,13 +493,12 @@
         </div>
 
         <div class="card-body">
-          <div class="display-row">
-            <div class="question-box">
-              <img id="img-left" class="question-img" alt="Gambar Soal Tim Biru" />
-              <p class="question-text" id="q-left">Memuat...</p>
-            </div>
-            <div class="answer-box" id="ans-left"></div>
+          <div class="question-box">
+            <img id="img-left" class="question-img" alt="Gambar Soal Tim Biru" />
+            <p class="question-text" id="q-left">Memuat...</p>
           </div>
+          
+          <div class="answer-box" id="ans-left"></div>
 
           <div class="keypad-grid">
             <button class="key-btn" onclick="pressKey('left', '1')">1</button>
@@ -537,13 +535,12 @@
         </div>
 
         <div class="card-body">
-          <div class="display-row">
-            <div class="question-box">
-              <img id="img-right" class="question-img" alt="Gambar Soal Tim Merah" />
-              <p class="question-text" id="q-right">Memuat...</p>
-            </div>
-            <div class="answer-box" id="ans-right"></div>
+          <div class="question-box">
+            <img id="img-right" class="question-img" alt="Gambar Soal Tim Merah" />
+            <p class="question-text" id="q-right">Memuat...</p>
           </div>
+          
+          <div class="answer-box" id="ans-right"></div>
 
           <div class="keypad-grid">
             <button class="key-btn" onclick="pressKey('right', '1')">1</button>
