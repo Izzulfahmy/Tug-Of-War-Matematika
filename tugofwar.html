@@ -3,29 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tarik Tambang Perkalian - Sederhana</title>
+  <title>Tarik Tambang Perkalian - Interaktiv-ta'lim</title>
 
   <!-- Favicon / Ikon Tab Browser -->
   <link rel="icon" type="image/png" href="assets/logo.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
-
-  <!-- Library Generator QR Code -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
+    /* =====================================================
+       DESIGN TOKENS
+    ===================================================== */
     :root {
-      --color-blue: #0284C5;
-      --color-red: #EF4444;
-      --color-bg: #F1F5F9;
-      --color-card: #FFFFFF;
-      --color-text: #0F172A;
+      --color-primary: #0284C5;
+      --color-error: #EF4444;
+      --color-bg-canvas: #EDEDED; 
+      --color-surface: #FFFFFF;
+      --color-on-surface: #0F172A;
       --color-border: #CBD5E1;
 
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+
       --font-main: 'Nunito', sans-serif;
-      --font-display: 'Fredoka', sans-serif;
+      --font-display: 'Fredoka', 'Nunito', sans-serif;
     }
 
     * {
@@ -33,67 +38,98 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
     body {
       width: 100vw;
       height: 100vh;
       font-family: var(--font-main);
-      background-color: var(--color-bg);
-      color: var(--color-text);
+      background-color: var(--color-bg-canvas);
+      color: var(--color-on-surface);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 16px;
+      position: relative;
     }
 
-    /* TOMBOL KEMBALI */
+    /* =====================================================
+       TOMBOL KEMBALI
+    ===================================================== */
     .btn-back {
       position: fixed;
       top: 16px;
       left: 16px;
-      z-index: 100;
+      z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
-      background-color: var(--color-text);
-      color: white;
+      width: 44px;
+      height: 44px;
+      background-color: rgba(15, 23, 42, 0.85);
+      color: #ffffff;
       text-decoration: none;
       border-radius: 50%;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      transition: transform 0.2s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.25s ease-in-out;
     }
 
     .btn-back:hover {
+      background-color: rgba(37, 99, 235, 0.95);
       transform: scale(1.08);
     }
 
-    /* CONTAINER UTAMA */
+    /* =====================================================
+       LAYOUT UTAMA PERMAINAN
+    ===================================================== */
     .game-container {
       width: 100%;
-      max-width: 1100px;
-      height: 100%;
+      max-width: 1280px;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      padding: 12px 20px;
+      gap: 12px;
     }
 
-    /* ARENA TARIK TAMBANG */
+    /* =====================================================
+       1. STAGE ANIMASI & GARIS FINIS
+    ===================================================== */
     .tug-stage {
       width: 100%;
-      height: 180px;
+      height: 220px;
       background-color: #E2E8F0;
       border: 2px solid var(--color-border);
-      border-radius: 16px;
+      border-radius: var(--radius-xl);
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
     }
+
+    .finish-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      z-index: 1;
+      background-image: 
+        linear-gradient(45deg, #000 25%, transparent 25%), 
+        linear-gradient(-45deg, #000 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #000 75%), 
+        linear-gradient(-45deg, transparent 75%, #000 75%);
+      background-size: 12px 12px;
+      background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
+      background-color: #fff;
+    }
+    .finish-left { left: 60px; border-right: 3px solid #000; }
+    .finish-right { right: 60px; border-left: 3px solid #000; }
 
     .center-line {
       position: absolute;
@@ -101,193 +137,180 @@
       bottom: 0;
       left: 50%;
       width: 4px;
-      background-color: var(--color-red);
+      background-color: var(--color-error);
       transform: translateX(-50%);
       z-index: 1;
     }
 
     .gif-background {
       position: absolute;
-      height: 150px;
+      height: 180px;
+      width: auto;
       object-fit: contain;
       z-index: 2;
-      transition: transform 0.3s ease;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* ARENA TIM & KALKULATOR */
+    /* =====================================================
+       2. ARENA SOAL & KEYPAD KALKULATOR
+    ===================================================== */
     .arena-bottom {
       width: 100%;
       flex: 1;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 20px;
       min-height: 0;
     }
 
     .player-card {
-      background-color: var(--color-card);
-      border-radius: 16px;
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl);
       border: 2px solid var(--color-border);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding-bottom: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
-    .card-header {
+    .card-header-blue {
       width: 100%;
-      padding: 10px 16px;
-      color: white;
+      background-color: var(--color-primary);
+      color: var(--color-surface);
+      padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top-left-radius: 14px;
-      border-top-right-radius: 14px;
     }
 
-    .bg-blue { background-color: var(--color-blue); }
-    .bg-red { background-color: var(--color-red); }
+    .card-header-red {
+      width: 100%;
+      background-color: var(--color-error);
+      color: var(--color-surface);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
     .player-name {
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: 20px;
+      font-weight: 700;
     }
 
     .score-badge {
       font-family: var(--font-display);
-      background: rgba(255, 255, 255, 0.25);
-      padding: 2px 10px;
-      border-radius: 20px;
-      font-size: 14px;
+      background-color: rgba(255, 255, 255, 0.25);
+      padding: 4px 14px;
+      border-radius: var(--radius-full);
+      font-size: 16px;
     }
 
-    .btn-qr {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color: white;
-      border-radius: 6px;
-      padding: 4px 8px;
-      cursor: pointer;
-    }
-
-    /* BOX SOAL PERKALIAN BIASA */
     .question-box {
-      width: 85%;
+      width: 90%;
       flex: 1;
       margin: 12px 0;
+      padding: 16px;
       background-color: #F8FAFC;
       border: 2px dashed var(--color-border);
-      border-radius: 12px;
+      border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
+      text-align: center;
     }
 
     .question-text {
       font-family: var(--font-display);
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 700;
-      color: var(--color-text);
+      color: var(--color-on-surface);
     }
 
     .answer-box {
-      width: 75%;
-      height: 42px;
-      background-color: #E2E8F0;
+      width: 80%;
+      height: 48px;
+      background-color: var(--color-bg-canvas);
       border: 2px solid var(--color-border);
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: 24px;
-      margin-bottom: 10px;
+      font-size: 28px;
+      color: var(--color-on-surface);
+      margin-bottom: 12px;
     }
 
-    /* KEYPAD KALKULATOR */
     .keypad-grid {
-      width: 75%;
+      width: 80%;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
+      gap: 8px;
     }
 
     .key-btn {
-      height: 38px;
-      background-color: var(--color-card);
-      border: 1.5px solid var(--color-border);
-      border-radius: 8px;
+      height: 46px;
+      background-color: var(--color-bg-canvas);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
+      color: var(--color-on-surface);
       cursor: pointer;
-      box-shadow: 0 2px 0 var(--color-border);
-    }
-
-    .key-btn:active {
-      transform: translateY(2px);
-      box-shadow: none;
-    }
-
-    .key-clear {
-      background-color: #FFE4E6;
-      color: var(--color-red);
-    }
-
-    .submit-blue { background-color: var(--color-blue); color: white; }
-    .submit-red { background-color: var(--color-red); color: white; }
-
-    /* MODAL POPUP */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.6);
-      z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
+      transition: all 0.1s ease;
+      box-shadow: 0 4px 0 var(--color-border);
     }
 
-    .modal-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
+    .key-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--color-border);
     }
+
+    .key-clear { background-color: #FFE4E6; color: var(--color-error); border-color: #FECDD3; }
+    .key-submit-blue { background-color: var(--color-primary); color: white; border-color: #0369A1; box-shadow: 0 4px 0 #0369A1; }
+    .key-submit-red { background-color: var(--color-error); color: white; border-color: #B91C1C; box-shadow: 0 4px 0 #B91C1C; }
+
+    /* =====================================================
+       MODAL PEMENANG
+    ===================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 10000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: auto; }
 
     .modal-card {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      max-width: 320px;
-      width: 90%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
+      background: white; border-radius: var(--radius-xl);
+      padding: 30px; text-align: center;
+      max-width: 400px; width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      transform: scale(0.8);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
+    .modal-overlay.show .modal-card { transform: scale(1); }
 
-    .btn-close {
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
-      padding: 6px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-family: var(--font-display);
-    }
+    .modal-title { font-family: var(--font-display); font-size: 26px; margin-bottom: 10px; }
+    .modal-desc { font-size: 16px; color: var(--color-on-surface); margin-bottom: 24px; }
 
     .btn-restart {
-      background: var(--color-blue);
-      color: white;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-family: var(--font-display);
-      font-size: 16px;
+      background-color: var(--color-primary); color: white;
+      font-family: var(--font-display); font-size: 18px;
+      padding: 12px 30px; border: none; border-radius: var(--radius-full);
+      cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 197, 0.3);
     }
   </style>
 </head>
@@ -296,7 +319,7 @@
 
   <!-- Tombol Kembali -->
   <a href="index.html" class="btn-back" title="Kembali ke Beranda">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
     </svg>
@@ -304,27 +327,26 @@
 
   <div class="game-container">
     
-    <!-- STAGE TARIK TAMBANG -->
+    <!-- STAGE ANIMASI TARIK TAMBANG -->
     <section class="tug-stage">
+      <div class="finish-line finish-left"></div>
       <div class="center-line"></div>
+      <div class="finish-line finish-right"></div>
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
-    <!-- ARENA SOAL PERKALIAN & KEYPAD -->
+    <!-- ARENA SOAL DAN KALKULATOR -->
     <main class="arena-bottom">
 
       <!-- TIM BIRU -->
       <section class="player-card">
-        <div class="card-header bg-blue">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <button class="btn-qr" onclick="showQRCode('left')">QR</button>
-            <h2 class="player-name">TIM BIRU</h2>
-          </div>
+        <div class="card-header-blue">
+          <h2 class="player-name">TIM BIRU</h2>
           <span class="score-badge" id="score-left">Skor: 0</span>
         </div>
         
         <div class="question-box">
-          <p class="question-text" id="q-left">3 × 3 = ?</p>
+          <p class="question-text" id="q-left">Memuat...</p>
         </div>
         <div class="answer-box" id="ans-left"></div>
 
@@ -340,22 +362,19 @@
           <button class="key-btn" onclick="pressKey('left', '9')">9</button>
           <button class="key-btn key-clear" onclick="pressKey('left', 'C')">C</button>
           <button class="key-btn" onclick="pressKey('left', '0')">0</button>
-          <button class="key-btn submit-blue" onclick="pressKey('left', 'OK')">OK</button>
+          <button class="key-btn key-submit-blue" onclick="pressKey('left', 'OK')">OK</button>
         </div>
       </section>
 
       <!-- TIM MERAH -->
       <section class="player-card">
-        <div class="card-header bg-red">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <button class="btn-qr" onclick="showQRCode('right')">QR</button>
-            <h2 class="player-name">TIM MERAH</h2>
-          </div>
+        <div class="card-header-red">
+          <h2 class="player-name">TIM MERAH</h2>
           <span class="score-badge" id="score-right">Skor: 0</span>
         </div>
         
         <div class="question-box">
-          <p class="question-text" id="q-right">4 × 5 = ?</p>
+          <p class="question-text" id="q-right">Memuat...</p>
         </div>
         <div class="answer-box" id="ans-right"></div>
 
@@ -371,198 +390,199 @@
           <button class="key-btn" onclick="pressKey('right', '9')">9</button>
           <button class="key-btn key-clear" onclick="pressKey('right', 'C')">C</button>
           <button class="key-btn" onclick="pressKey('right', '0')">0</button>
-          <button class="key-btn submit-red" onclick="pressKey('right', 'OK')">OK</button>
+          <button class="key-btn key-submit-red" onclick="pressKey('right', 'OK')">OK</button>
         </div>
       </section>
 
     </main>
   </div>
 
-  <!-- POPUP QR CODE -->
-  <div class="modal-overlay" id="qrModal">
-    <div class="modal-card">
-      <h3 id="qrModalTitle" style="font-family: var(--font-display);">Remote Control</h3>
-      <div id="qrcode-container"></div>
-      <button class="btn-close" onclick="closeQRModal()">Tutup</button>
-    </div>
-  </div>
-
-  <!-- POPUP WINNER -->
+  <!-- POPUP WINNER MODAL -->
   <div class="modal-overlay" id="winnerModal">
     <div class="modal-card">
-      <h2 id="winnerText" style="font-family: var(--font-display);">TIM BIRU MENANG! 🎉</h2>
-      <p id="winnerDesc">Selamat atas kemenangannya!</p>
+      <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
+      <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menyentuh garis finis terlebih dahulu.</p>
       <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
     </div>
   </div>
 
-  <!-- FIREBASE & GAME LOGIC -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  <!-- JAVASCRIPT LOGIKA LOKAL -->
+  <script>
+    // 1. Data Soal Perkalian Sederhana (Langsung di dalam file)
+    const questionBank = [
+      { text: "2 x 3", ans: 6 },
+      { text: "3 x 3", ans: 9 },
+      { text: "4 x 2", ans: 8 },
+      { text: "4 x 5", ans: 20 },
+      { text: "5 x 3", ans: 15 },
+      { text: "5 x 5", ans: 25 },
+      { text: "6 x 2", ans: 12 },
+      { text: "6 x 4", ans: 24 },
+      { text: "6 x 6", ans: 36 },
+      { text: "7 x 3", ans: 21 },
+      { text: "7 x 5", ans: 35 },
+      { text: "7 x 7", ans: 49 },
+      { text: "8 x 2", ans: 16 },
+      { text: "8 x 4", ans: 32 },
+      { text: "8 x 8", ans: 64 },
+      { text: "9 x 3", ans: 27 },
+      { text: "9 x 5", ans: 45 },
+      { text: "9 x 9", ans: 81 },
+      { text: "10 x 4", ans: 40 },
+      { text: "10 x 10", ans: 100 }
+    ];
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyA7qAhQ3LkF6Ey3fiFEPHNEwdy6BHPb548",
-      authDomain: "media-pembelajaran-inter-f5f88.firebaseapp.com",
-      projectId: "media-pembelajaran-inter-f5f88",
-      storageBucket: "media-pembelajaran-inter-f5f88.firebasestorage.app",
-      messagingSenderId: "913703978337",
-      appId: "1:913703978337:web:6a3d3fd07cbe4038c8f120"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const roomId = "room_" + Math.random().toString(36).substring(2, 8);
-
+    // Variabel Permainan
     let currentQLeft = {};
     let currentQRight = {};
     let inputLeft = "";
     let inputRight = "";
     let scoreLeft = 0;
     let scoreRight = 0;
-    let pullPos = 0;
+    let pullPos = 0; 
     let isGameOver = false;
 
-    const PULL_STEP = 50;
-    const WIN_THRESHOLD = 300;
+    // Jarak tarikan setiap kali benar (dalam pixel)
+    const PULL_STEP = 60;
+    // Jarak garis finis (dalam pixel dari tengah)
+    const WIN_THRESHOLD = 380; 
 
+    // Saat web dimuat, langsung buat soal baru
     document.addEventListener("DOMContentLoaded", () => {
-      generateSimpleQuestion('left');
-      generateSimpleQuestion('right');
-      listenRemoteControl();
+      generateNewQuestion('left');
+      generateNewQuestion('right');
     });
 
-    // GENERATE SOAL PERKALIAN SEDERHANA (1x1 sampai 10x10)
-    function generateSimpleQuestion(side) {
-      const num1 = Math.floor(Math.random() * 9) + 2; // Angka 2 - 10
-      const num2 = Math.floor(Math.random() * 9) + 1; // Angka 1 - 9
-      const questionData = {
-        text: `${num1} × ${num2}`,
-        ans: num1 * num2
-      };
+    function getRandomQuestion() {
+      const randomIndex = Math.floor(Math.random() * questionBank.length);
+      return questionBank[randomIndex];
+    }
 
+    function generateNewQuestion(side) {
       if (side === 'left') {
-        currentQLeft = questionData;
-        document.getElementById('q-left').innerText = `${questionData.text} = ?`;
+        currentQLeft = getRandomQuestion();
+        document.getElementById('q-left').innerText = currentQLeft.text + " = ?";
       } else {
-        currentQRight = questionData;
-        document.getElementById('q-right').innerText = `${questionData.text} = ?`;
-      }
-
-      syncStateToFirestore(side);
-    }
-
-    async function syncStateToFirestore(side) {
-      try {
-        const roomRef = doc(db, "active_rooms", roomId);
-        const dataToUpdate = side === 'left' ? {
-          questionLeft: currentQLeft,
-          scoreLeft: scoreLeft,
-          inputLeftVal: ""
-        } : {
-          questionRight: currentQRight,
-          scoreRight: scoreRight,
-          inputRightVal: ""
-        };
-        await setDoc(roomRef, dataToUpdate, { merge: true });
-      } catch (err) {
-        console.error("Gagal sync Firestore: ", err);
+        currentQRight = getRandomQuestion();
+        document.getElementById('q-right').innerText = currentQRight.text + " = ?";
       }
     }
 
-    function listenRemoteControl() {
-      const roomRef = doc(db, "active_rooms", roomId);
-      onSnapshot(roomRef, (snapshot) => {
-        if (snapshot.exists()) {
-          const data = snapshot.data();
-
-          if (data.inputLeftVal !== undefined) {
-            inputLeft = data.inputLeftVal;
-            document.getElementById('ans-left').innerText = inputLeft;
-          }
-          if (data.inputRightVal !== undefined) {
-            inputRight = data.inputRightVal;
-            document.getElementById('ans-right').innerText = inputRight;
-          }
-
-          if (data.lastAction) {
-            const { side, key, timestamp } = data.lastAction;
-            if (timestamp && Date.now() - timestamp < 2000) {
-              pressKey(side, key, false);
-            }
-          }
-        }
-      });
+    // Fungsi Suara (Beep)
+    function playBeep(freq = 600, duration = 0.1) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
     }
 
-    function pressKey(side, val, isLocal = true) {
+    // Fungsi Tombol Angka Ditekan
+    function pressKey(side, val) {
       if (isGameOver) return;
+      playBeep(800, 0.05); // Suara klik biasa
 
       if (side === 'left') {
         const box = document.getElementById('ans-left');
+        
         if (val === 'C') {
           inputLeft = "";
         } else if (val === 'OK') {
+          // Cek Jawaban
           if (parseInt(inputLeft) === currentQLeft.ans) {
+            playBeep(1200, 0.15); // Suara benar
             scoreLeft += 10;
-            pullPos -= PULL_STEP;
+            pullPos -= PULL_STEP; // Tarik ke kiri (negatif)
+            
             document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
+            
             inputLeft = "";
             checkWinner();
-            if (!isGameOver) generateSimpleQuestion('left');
+            if (!isGameOver) generateNewQuestion('left');
           } else {
-            inputLeft = "";
+            playBeep(300, 0.2); // Suara salah (buzzer)
+            inputLeft = ""; // Kosongkan input agar mencoba lagi
           }
         } else {
-          if (isLocal && inputLeft.length < 3) inputLeft += val;
+          // Batasi maksimal 3 digit angka
+          if (inputLeft.length < 3) inputLeft += val;
         }
         box.innerText = inputLeft;
+
       } else {
+        // Logika untuk TIM MERAH (Kanan)
         const box = document.getElementById('ans-right');
+        
         if (val === 'C') {
           inputRight = "";
         } else if (val === 'OK') {
+          // Cek Jawaban
           if (parseInt(inputRight) === currentQRight.ans) {
+            playBeep(1200, 0.15); // Suara benar
             scoreRight += 10;
-            pullPos += PULL_STEP;
+            pullPos += PULL_STEP; // Tarik ke kanan (positif)
+            
             document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
+            
             inputRight = "";
             checkWinner();
-            if (!isGameOver) generateSimpleQuestion('right');
+            if (!isGameOver) generateNewQuestion('right');
           } else {
-            inputRight = "";
+            playBeep(300, 0.2); // Suara salah (buzzer)
+            inputRight = ""; // Kosongkan input
           }
         } else {
-          if (isLocal && inputRight.length < 3) inputRight += val;
+          // Batasi maksimal 3 digit angka
+          if (inputRight.length < 3) inputRight += val;
         }
         box.innerText = inputRight;
       }
     }
 
+    // Cek apakah ada tim yang mencapai garis finis
     function checkWinner() {
       if (pullPos <= -WIN_THRESHOLD) {
-        showWinner("TIM BIRU", "#0284C5");
+        showWinner("TIM BIRU", "var(--color-primary)");
       } else if (pullPos >= WIN_THRESHOLD) {
-        showWinner("TIM MERAH", "#EF4444");
+        showWinner("TIM MERAH", "var(--color-error)");
       }
     }
 
+    // Tampilkan Popup Pemenang
     function showWinner(teamName, color) {
       isGameOver = true;
       const modal = document.getElementById('winnerModal');
       const title = document.getElementById('winnerText');
+      const desc = document.getElementById('winnerDesc');
+
       title.innerText = `${teamName} MENANG! 🎉`;
       title.style.color = color;
+      desc.innerText = `Selamat! ${teamName} berhasil menarik tali hingga menyentuh garis finis.`;
+
       modal.classList.add('show');
     }
 
+    // Mengulang Game Kembali
     function restartGame() {
       isGameOver = false;
-      scoreLeft = 0; scoreRight = 0; pullPos = 0;
-      inputLeft = ""; inputRight = "";
+      scoreLeft = 0;
+      scoreRight = 0;
+      pullPos = 0;
+      inputLeft = "";
+      inputRight = "";
+
       document.getElementById('score-left').innerText = `Skor: 0`;
       document.getElementById('score-right').innerText = `Skor: 0`;
       document.getElementById('ans-left').innerText = "";
@@ -570,36 +590,9 @@
       document.getElementById('stageGif').style.transform = `translateX(0px)`;
       document.getElementById('winnerModal').classList.remove('show');
 
-      generateSimpleQuestion('left');
-      generateSimpleQuestion('right');
+      generateNewQuestion('left');
+      generateNewQuestion('right');
     }
-
-    function showQRCode(side) {
-      const modal = document.getElementById('qrModal');
-      const title = document.getElementById('qrModalTitle');
-      const container = document.getElementById('qrcode-container');
-      container.innerHTML = "";
-      
-      title.innerText = `Remote ${side === 'left' ? 'Tim Biru' : 'Tim Merah'}`;
-      const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-      const remoteUrl = `${baseUrl}/remote.html?room=${roomId}&team=${side}`;
-
-      new QRCode(container, {
-        text: remoteUrl,
-        width: 160, height: 160
-      });
-
-      modal.classList.add('show');
-    }
-
-    function closeQRModal() {
-      document.getElementById('qrModal').classList.remove('show');
-    }
-
-    window.pressKey = pressKey;
-    window.restartGame = restartGame;
-    window.showQRCode = showQRCode;
-    window.closeQRModal = closeQRModal;
   </script>
 
 </body>
