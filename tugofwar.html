@@ -3,16 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Tarik Tambang Perkalian - Interaktiv-ta'lim</title>
+  <title>Tarik Tambang Perkalian</title>
 
-  <!-- Favicon dari folder asset/logo.png -->
   <link rel="icon" type="image/png" href="asset/logo.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Library Generator QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
@@ -126,7 +124,7 @@
     ===================================================== */
     .game-container {
       width: 100%;
-      max-width: 1280px; /* Diperlebar agar ruang jangkauan pinggir lebih luas */
+      max-width: 1280px;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -209,20 +207,21 @@
     }
 
     /* =====================================================
-       2. ARENA SOAL & KARTU TIM (KARTU DIPUSH PENUH KE PINGGIR)
+       2. ARENA SOAL & KARTU TIM (AGAK DIRAPATKAN KE TENGAH)
     ===================================================== */
     .arena-bottom {
       width: 100%;
       flex: 1;
       min-height: 0;
       display: flex;
-      justify-content: space-between; /* DORONG KARTU SEPENUHNYA KE UJUNG KIRI DAN KANAN */
-      gap: 20px;
+      justify-content: center; /* Dirapatkan ke tengah */
+      align-items: stretch;
+      gap: clamp(12px, 2.5vw, 24px);
     }
 
     .player-card {
       width: 100%;
-      max-width: 380px; /* Tetap menjaga ukuran kartu kompak & proporsional */
+      max-width: 380px;
       background-color: var(--color-surface);
       border-radius: var(--radius-xl);
       border: 2px solid #E2E8F0;
@@ -233,6 +232,84 @@
       align-items: center;
       padding-bottom: 6px;
       height: 100%;
+    }
+
+    /* CARD KETERANGAN SKOR & ATURAN DI TENGAH */
+    .rules-card {
+      width: 100%;
+      max-width: 240px;
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl);
+      border: 2px solid #CBD5E1;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      height: 100%;
+      flex-shrink: 0;
+    }
+
+    .rules-header {
+      background: linear-gradient(180deg, #F59E0B 0%, #D97706 100%);
+      color: #FFFFFF;
+      font-family: var(--font-display);
+      font-size: clamp(12px, 1.3vw, 15px);
+      font-weight: 700;
+      text-align: center;
+      padding: clamp(6px, 1vh, 9px) 10px;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .rules-body {
+      padding: clamp(8px, 1.2vh, 12px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: clamp(6px, 1vh, 10px);
+      height: 100%;
+      font-size: clamp(11px, 1.1vw, 13px);
+      color: #334155;
+    }
+
+    .rule-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background-color: #F8FAFC;
+      padding: 6px 8px;
+      border-radius: var(--radius-md);
+      border: 1px solid #E2E8F0;
+    }
+
+    .rule-badge-correct {
+      background-color: #10B981;
+      color: white;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+
+    .rule-badge-wrong {
+      background-color: #EF4444;
+      color: white;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+
+    .rule-text {
+      line-height: 1.3;
+      font-weight: 600;
     }
 
     .card-header-blue, .card-header-red {
@@ -464,6 +541,10 @@
       cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 197, 0.35);
     }
 
+    @media (max-width: 820px) {
+      .rules-card { display: none; } /* Menyembunyikan kartu aturan pada layar sangat sempit agar responsif */
+    }
+
     @media (max-width: 640px) and (orientation: portrait) {
       body { overflow-y: auto; }
       .arena-bottom { flex-direction: column; align-items: center; gap: 16px; }
@@ -477,7 +558,6 @@
   <div class="curtain curtain-left"></div>
   <div class="curtain curtain-right"></div>
 
-  <!-- Tombol Kembali -->
   <a href="index.html" class="btn-back" title="Kembali ke Beranda" aria-label="Kembali ke Beranda">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -485,7 +565,6 @@
     </svg>
   </a>
 
-  <!-- Tombol Full Screen -->
   <button class="btn-fullscreen" id="btnFullscreen" onclick="toggleFullscreen()" title="Layar Penuh" aria-label="Layar Penuh">
     <svg id="iconExpand" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
@@ -497,9 +576,7 @@
 
   <div class="game-container">
     
-    <!-- 1. STAGE ANIMASI TARIK TAMBANG -->
     <section class="tug-stage">
-      <!-- BENDERA FINISH TIM BIRU -->
       <div class="flag-pole flag-pole-left" title="Finis Tim Biru">
         <div class="flag-banner"></div>
         <div class="flag-stick"></div>
@@ -507,7 +584,6 @@
 
       <div class="center-line" title="Batas Tengah Tali"></div>
 
-      <!-- BENDERA FINISH TIM MERAH -->
       <div class="flag-pole flag-pole-right" title="Finis Tim Merah">
         <div class="flag-banner"></div>
         <div class="flag-stick"></div>
@@ -516,10 +592,8 @@
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
-    <!-- 2. ARENA SOAL DAN KALKULATOR -->
     <main class="arena-bottom">
 
-      <!-- TIM BIRU (POSISI KIRI PAS) -->
       <section class="player-card">
         <div class="card-header-blue">
           <div class="header-left-group">
@@ -563,7 +637,32 @@
         </div>
       </section>
 
-      <!-- TIM MERAH (POSISI KANAN PAS) -->
+      <aside class="rules-card">
+        <div class="rules-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          KETENTUAN SKOR
+        </div>
+        <div class="rules-body">
+          <div class="rule-item">
+            <span class="rule-badge-correct">+10 SKOR</span>
+            <span class="rule-text">Jawaban Benar! Tali ditarik mendekati garis finis timmu.</span>
+          </div>
+          <div class="rule-item">
+            <span class="rule-badge-wrong">0 SKOR</span>
+            <span class="rule-text">Jawaban Salah. Jawaban terhapus, coba lagi.</span>
+          </div>
+          <div class="rule-item" style="background-color: #FEF3C7; border-color: #FDE68A;">
+            <span class="rule-text" style="color: #92400E; text-align: center; width: 100%;">
+              🏆 Tim pertama yang menarik tali sampai garis <strong>FINIS</strong> menang!
+            </span>
+          </div>
+        </div>
+      </aside>
+
       <section class="player-card">
         <div class="card-header-red">
           <div class="header-left-group">
@@ -610,7 +709,6 @@
     </main>
   </div>
 
-  <!-- POPUP QR CODE MODAL -->
   <div class="modal-overlay" id="qrModal">
     <div class="modal-card">
       <h2 class="modal-title" id="qrModalTitle">Remote Control</h2>
@@ -620,7 +718,6 @@
     </div>
   </div>
 
-  <!-- POPUP WINNER MODAL -->
   <div class="modal-overlay" id="winnerModal">
     <div class="modal-card">
       <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
@@ -629,10 +726,8 @@
     </div>
   </div>
 
-  <!-- Bank Soal Eksternal -->
   <script src="soal.js"></script>
 
-  <!-- Firebase & Game Engine Realtime -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
