@@ -10,27 +10,22 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
 
   <!-- Library Generator QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     :root {
-      --color-primary: #0284C5;
-      --color-error: #EF4444;
+      --color-blue: #0284C5;
+      --color-red: #EF4444;
       --color-bg: #F1F5F9;
-      --color-surface: #FFFFFF;
-      --color-on-surface: #0F172A;
+      --color-card: #FFFFFF;
+      --color-text: #0F172A;
       --color-border: #CBD5E1;
 
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
-      --radius-full: 9999px;
-
       --font-main: 'Nunito', sans-serif;
-      --font-display: 'Fredoka', 'Nunito', sans-serif;
+      --font-display: 'Fredoka', sans-serif;
     }
 
     * {
@@ -45,12 +40,12 @@
       height: 100vh;
       font-family: var(--font-main);
       background-color: var(--color-bg);
-      color: var(--color-on-surface);
+      color: var(--color-text);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      position: relative;
+      padding: 16px;
     }
 
     /* TOMBOL KEMBALI */
@@ -58,65 +53,47 @@
       position: fixed;
       top: 16px;
       left: 16px;
-      z-index: 9999;
+      z-index: 100;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
-      background-color: rgba(15, 23, 42, 0.85);
-      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      background-color: var(--color-text);
+      color: white;
       text-decoration: none;
       border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.25s ease-in-out;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
     }
 
     .btn-back:hover {
-      background-color: rgba(37, 99, 235, 0.95);
       transform: scale(1.08);
     }
 
+    /* CONTAINER UTAMA */
     .game-container {
       width: 100%;
-      max-width: 1280px;
-      height: 100vh;
+      max-width: 1100px;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      padding: 16px;
       gap: 16px;
     }
 
-    /* STAGE TARIK TAMBANG */
+    /* ARENA TARIK TAMBANG */
     .tug-stage {
       width: 100%;
-      height: 200px;
+      height: 180px;
       background-color: #E2E8F0;
       border: 2px solid var(--color-border);
-      border-radius: var(--radius-xl);
+      border-radius: 16px;
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
     }
-
-    .finish-line {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 20px;
-      z-index: 1;
-      background-image: linear-gradient(45deg, #000 25%, transparent 25%), linear-gradient(-45deg, #000 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #000 75%), linear-gradient(-45deg, transparent 75%, #000 75%);
-      background-size: 10px 10px;
-      background-color: #fff;
-    }
-
-    .finish-left { left: 50px; border-right: 2px solid #000; }
-    .finish-right { right: 50px; border-left: 2px solid #000; }
 
     .center-line {
       position: absolute;
@@ -124,71 +101,53 @@
       bottom: 0;
       left: 50%;
       width: 4px;
-      background-color: var(--color-error);
+      background-color: var(--color-red);
       transform: translateX(-50%);
       z-index: 1;
     }
 
     .gif-background {
       position: absolute;
-      height: 160px;
-      width: auto;
+      height: 150px;
       object-fit: contain;
       z-index: 2;
-      transition: transform 0.35s ease-out;
+      transition: transform 0.3s ease;
     }
 
-    /* ARENA SOAL DENGAN PILIHAN OBJEKTIF */
+    /* ARENA TIM & KALKULATOR */
     .arena-bottom {
       width: 100%;
       flex: 1;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 16px;
       min-height: 0;
     }
 
     .player-card {
-      background-color: var(--color-surface);
-      border-radius: var(--radius-xl);
+      background-color: var(--color-card);
+      border-radius: 16px;
       border: 2px solid var(--color-border);
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
-      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 16px;
+      padding-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
-    .card-header-blue, .card-header-red {
+    .card-header {
       width: 100%;
+      padding: 10px 16px;
       color: white;
-      padding: 10px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
     }
 
-    .card-header-blue { background-color: var(--color-primary); }
-    .card-header-red { background-color: var(--color-error); }
-
-    .header-left-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn-qr {
-      background-color: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color: white;
-      border-radius: var(--radius-md);
-      padding: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .bg-blue { background-color: var(--color-blue); }
+    .bg-red { background-color: var(--color-red); }
 
     .player-name {
       font-family: var(--font-display);
@@ -197,87 +156,100 @@
 
     .score-badge {
       font-family: var(--font-display);
-      background-color: rgba(255, 255, 255, 0.25);
-      padding: 4px 14px;
-      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.25);
+      padding: 2px 10px;
+      border-radius: 20px;
       font-size: 14px;
     }
 
-    .question-box {
-      width: 90%;
-      flex: 1;
-      margin: 12px 0;
-      padding: 12px;
-      background-color: #F8FAFC;
-      border: 1.5px dashed var(--color-border);
-      border-radius: var(--radius-lg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      gap: 6px;
+    .btn-qr {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
     }
 
-    .question-img {
-      max-width: 100%;
-      max-height: 80px;
-      object-fit: contain;
-      border-radius: 6px;
-      display: none;
+    /* BOX SOAL PERKALIAN BIASA */
+    .question-box {
+      width: 85%;
+      flex: 1;
+      margin: 12px 0;
+      background-color: #F8FAFC;
+      border: 2px dashed var(--color-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .question-text {
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    /* GRID TOMBOL JAWABAN OBJEKTIF (A, B, C, D) */
-    .options-grid {
-      width: 90%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .option-btn {
-      padding: 12px;
-      background-color: #F1F5F9;
-      border: 2px solid var(--color-border);
-      border-radius: var(--radius-md);
       font-family: var(--font-display);
-      font-size: 16px;
+      font-size: 36px;
       font-weight: 700;
-      color: var(--color-on-surface);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      box-shadow: 0 3px 0 var(--color-border);
-      text-align: center;
+      color: var(--color-text);
     }
 
-    .option-btn:hover {
+    .answer-box {
+      width: 75%;
+      height: 42px;
       background-color: #E2E8F0;
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 24px;
+      margin-bottom: 10px;
     }
 
-    .option-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 1px 0 var(--color-border);
+    /* KEYPAD KALKULATOR */
+    .keypad-grid {
+      width: 75%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
     }
+
+    .key-btn {
+      height: 38px;
+      background-color: var(--color-card);
+      border: 1.5px solid var(--color-border);
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 0 var(--color-border);
+    }
+
+    .key-btn:active {
+      transform: translateY(2px);
+      box-shadow: none;
+    }
+
+    .key-clear {
+      background-color: #FFE4E6;
+      color: var(--color-red);
+    }
+
+    .submit-blue { background-color: var(--color-blue); color: white; }
+    .submit-red { background-color: var(--color-red); color: white; }
 
     /* MODAL POPUP */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px);
-      z-index: 10000;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.6);
+      z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.2s ease;
     }
 
     .modal-overlay.show {
@@ -287,40 +259,35 @@
 
     .modal-card {
       background: white;
-      border-radius: var(--radius-xl);
-      padding: 24px;
+      border-radius: 16px;
+      padding: 20px;
       text-align: center;
-      max-width: 360px;
+      max-width: 320px;
       width: 90%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
     }
 
-    .modal-title {
-      font-family: var(--font-display);
-      font-size: 22px;
-      margin-bottom: 8px;
-    }
-
-    .modal-desc {
-      font-size: 14px;
-      margin-bottom: 16px;
-    }
-
-    .btn-restart, .btn-close-modal {
-      background-color: var(--color-primary);
-      color: white;
-      font-family: var(--font-display);
-      font-size: 15px;
-      padding: 8px 20px;
-      border: none;
-      border-radius: var(--radius-full);
+    .btn-close {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      padding: 6px 16px;
+      border-radius: 20px;
       cursor: pointer;
+      font-family: var(--font-display);
     }
 
-    @media (max-width: 768px) {
-      body { overflow-y: auto; height: auto; }
-      .game-container { height: auto; }
-      .arena-bottom { grid-template-columns: 1fr; }
+    .btn-restart {
+      background: var(--color-blue);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: var(--font-display);
+      font-size: 16px;
     }
   </style>
 </head>
@@ -329,7 +296,7 @@
 
   <!-- Tombol Kembali -->
   <a href="index.html" class="btn-back" title="Kembali ke Beranda">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
     </svg>
@@ -339,56 +306,72 @@
     
     <!-- STAGE TARIK TAMBANG -->
     <section class="tug-stage">
-      <div class="finish-line finish-left"></div>
       <div class="center-line"></div>
-      <div class="finish-line finish-right"></div>
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
-    <!-- ARENA SOAL OBJEKTIF -->
+    <!-- ARENA SOAL PERKALIAN & KEYPAD -->
     <main class="arena-bottom">
 
       <!-- TIM BIRU -->
       <section class="player-card">
-        <div class="card-header-blue">
-          <div class="header-left-group">
-            <button class="btn-qr" onclick="showQRCode('left')" title="Scan Remote">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            </button>
+        <div class="card-header bg-blue">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button class="btn-qr" onclick="showQRCode('left')">QR</button>
             <h2 class="player-name">TIM BIRU</h2>
           </div>
           <span class="score-badge" id="score-left">Skor: 0</span>
         </div>
         
         <div class="question-box">
-          <img id="img-left" class="question-img" alt="Gambar Soal" />
-          <p class="question-text" id="q-left">Memuat soal...</p>
+          <p class="question-text" id="q-left">3 × 3 = ?</p>
         </div>
+        <div class="answer-box" id="ans-left"></div>
 
-        <div class="options-grid" id="options-left">
-          <!-- Tombol Pilihan Jawaban A, B, C, D akan di-generate otomatis -->
+        <div class="keypad-grid">
+          <button class="key-btn" onclick="pressKey('left', '1')">1</button>
+          <button class="key-btn" onclick="pressKey('left', '2')">2</button>
+          <button class="key-btn" onclick="pressKey('left', '3')">3</button>
+          <button class="key-btn" onclick="pressKey('left', '4')">4</button>
+          <button class="key-btn" onclick="pressKey('left', '5')">5</button>
+          <button class="key-btn" onclick="pressKey('left', '6')">6</button>
+          <button class="key-btn" onclick="pressKey('left', '7')">7</button>
+          <button class="key-btn" onclick="pressKey('left', '8')">8</button>
+          <button class="key-btn" onclick="pressKey('left', '9')">9</button>
+          <button class="key-btn key-clear" onclick="pressKey('left', 'C')">C</button>
+          <button class="key-btn" onclick="pressKey('left', '0')">0</button>
+          <button class="key-btn submit-blue" onclick="pressKey('left', 'OK')">OK</button>
         </div>
       </section>
 
       <!-- TIM MERAH -->
       <section class="player-card">
-        <div class="card-header-red">
-          <div class="header-left-group">
-            <button class="btn-qr" onclick="showQRCode('right')" title="Scan Remote">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            </button>
+        <div class="card-header bg-red">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button class="btn-qr" onclick="showQRCode('right')">QR</button>
             <h2 class="player-name">TIM MERAH</h2>
           </div>
           <span class="score-badge" id="score-right">Skor: 0</span>
         </div>
         
         <div class="question-box">
-          <img id="img-right" class="question-img" alt="Gambar Soal" />
-          <p class="question-text" id="q-right">Memuat soal...</p>
+          <p class="question-text" id="q-right">4 × 5 = ?</p>
         </div>
+        <div class="answer-box" id="ans-right"></div>
 
-        <div class="options-grid" id="options-right">
-          <!-- Tombol Pilihan Jawaban A, B, C, D akan di-generate otomatis -->
+        <div class="keypad-grid">
+          <button class="key-btn" onclick="pressKey('right', '1')">1</button>
+          <button class="key-btn" onclick="pressKey('right', '2')">2</button>
+          <button class="key-btn" onclick="pressKey('right', '3')">3</button>
+          <button class="key-btn" onclick="pressKey('right', '4')">4</button>
+          <button class="key-btn" onclick="pressKey('right', '5')">5</button>
+          <button class="key-btn" onclick="pressKey('right', '6')">6</button>
+          <button class="key-btn" onclick="pressKey('right', '7')">7</button>
+          <button class="key-btn" onclick="pressKey('right', '8')">8</button>
+          <button class="key-btn" onclick="pressKey('right', '9')">9</button>
+          <button class="key-btn key-clear" onclick="pressKey('right', 'C')">C</button>
+          <button class="key-btn" onclick="pressKey('right', '0')">0</button>
+          <button class="key-btn submit-red" onclick="pressKey('right', 'OK')">OK</button>
         </div>
       </section>
 
@@ -398,26 +381,22 @@
   <!-- POPUP QR CODE -->
   <div class="modal-overlay" id="qrModal">
     <div class="modal-card">
-      <h2 class="modal-title" id="qrModalTitle">Remote Control</h2>
-      <p class="modal-desc">Scan QR Code ini untuk membuka kontroler tim di HP.</p>
-      <div id="qrcode-container" style="display:flex; justify-content:center; margin-bottom:16px;"></div>
-      <button class="btn-close-modal" onclick="closeQRModal()">Tutup</button>
+      <h3 id="qrModalTitle" style="font-family: var(--font-display);">Remote Control</h3>
+      <div id="qrcode-container"></div>
+      <button class="btn-close" onclick="closeQRModal()">Tutup</button>
     </div>
   </div>
 
   <!-- POPUP WINNER -->
   <div class="modal-overlay" id="winnerModal">
     <div class="modal-card">
-      <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
-      <p class="modal-desc" id="winnerDesc">Selamat atas kemenangannya!</p>
+      <h2 id="winnerText" style="font-family: var(--font-display);">TIM BIRU MENANG! 🎉</h2>
+      <p id="winnerDesc">Selamat atas kemenangannya!</p>
       <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
     </div>
   </div>
 
-  <!-- Bank Soal Eksternal -->
-  <script src="soal.js"></script>
-
-  <!-- Firebase & Game Engine Realtime -->
+  <!-- FIREBASE & GAME LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -438,71 +417,57 @@
 
     let currentQLeft = {};
     let currentQRight = {};
+    let inputLeft = "";
+    let inputRight = "";
     let scoreLeft = 0;
     let scoreRight = 0;
     let pullPos = 0;
     let isGameOver = false;
 
-    const PULL_STEP = 60;
-    const WIN_THRESHOLD = 360;
+    const PULL_STEP = 50;
+    const WIN_THRESHOLD = 300;
 
     document.addEventListener("DOMContentLoaded", () => {
-      generateNewQuestion('left');
-      generateNewQuestion('right');
+      generateSimpleQuestion('left');
+      generateSimpleQuestion('right');
       listenRemoteControl();
     });
 
-    function generateNewQuestion(side) {
-      if (typeof questionBank === 'undefined' || questionBank.length === 0) return;
-      const index = Math.floor(Math.random() * questionBank.length);
-      const question = questionBank[index];
+    // GENERATE SOAL PERKALIAN SEDERHANA (1x1 sampai 10x10)
+    function generateSimpleQuestion(side) {
+      const num1 = Math.floor(Math.random() * 9) + 2; // Angka 2 - 10
+      const num2 = Math.floor(Math.random() * 9) + 1; // Angka 1 - 9
+      const questionData = {
+        text: `${num1} × ${num2}`,
+        ans: num1 * num2
+      };
 
       if (side === 'left') {
-        currentQLeft = question;
-        renderQuestionUI('left', question);
+        currentQLeft = questionData;
+        document.getElementById('q-left').innerText = `${questionData.text} = ?`;
       } else {
-        currentQRight = question;
-        renderQuestionUI('right', question);
+        currentQRight = questionData;
+        document.getElementById('q-right').innerText = `${questionData.text} = ?`;
       }
 
       syncStateToFirestore(side);
     }
 
-    function renderQuestionUI(side, question) {
-      document.getElementById(`q-${side}`).innerText = question.text;
-      const imgElem = document.getElementById(`img-${side}`);
-      
-      if (question.image) {
-        imgElem.src = question.image;
-        imgElem.style.display = 'block';
-      } else {
-        imgElem.style.display = 'none';
-      }
-
-      // Generate Pilihan Jawaban (A, B, C, D atau opsi langsung)
-      const optionsContainer = document.getElementById(`options-${side}`);
-      optionsContainer.innerHTML = '';
-
-      const options = question.options || [question.ans, question.ans + 2, question.ans - 1, question.ans + 5];
-      // Acak pilihan jawaban
-      const shuffled = [...options].sort(() => Math.random() - 0.5);
-
-      shuffled.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.innerText = opt;
-        btn.onclick = () => selectAnswer(side, opt);
-        optionsContainer.appendChild(btn);
-      });
-    }
-
     async function syncStateToFirestore(side) {
       try {
         const roomRef = doc(db, "active_rooms", roomId);
-        const dataToUpdate = side === 'left' ? { questionLeft: currentQLeft, scoreLeft } : { questionRight: currentQRight, scoreRight };
+        const dataToUpdate = side === 'left' ? {
+          questionLeft: currentQLeft,
+          scoreLeft: scoreLeft,
+          inputLeftVal: ""
+        } : {
+          questionRight: currentQRight,
+          scoreRight: scoreRight,
+          inputRightVal: ""
+        };
         await setDoc(roomRef, dataToUpdate, { merge: true });
       } catch (err) {
-        console.error("Error sync Firestore: ", err);
+        console.error("Gagal sync Firestore: ", err);
       }
     }
 
@@ -511,36 +476,69 @@
       onSnapshot(roomRef, (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.data();
+
+          if (data.inputLeftVal !== undefined) {
+            inputLeft = data.inputLeftVal;
+            document.getElementById('ans-left').innerText = inputLeft;
+          }
+          if (data.inputRightVal !== undefined) {
+            inputRight = data.inputRightVal;
+            document.getElementById('ans-right').innerText = inputRight;
+          }
+
           if (data.lastAction) {
-            const { side, answer, timestamp } = data.lastAction;
+            const { side, key, timestamp } = data.lastAction;
             if (timestamp && Date.now() - timestamp < 2000) {
-              selectAnswer(side, answer);
+              pressKey(side, key, false);
             }
           }
         }
       });
     }
 
-    function selectAnswer(side, selectedAns) {
+    function pressKey(side, val, isLocal = true) {
       if (isGameOver) return;
 
-      const currentQ = side === 'left' ? currentQLeft : currentQRight;
-
-      if (parseInt(selectedAns) === parseInt(currentQ.ans)) {
-        if (side === 'left') {
-          scoreLeft += 10;
-          pullPos -= PULL_STEP;
-          document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
+      if (side === 'left') {
+        const box = document.getElementById('ans-left');
+        if (val === 'C') {
+          inputLeft = "";
+        } else if (val === 'OK') {
+          if (parseInt(inputLeft) === currentQLeft.ans) {
+            scoreLeft += 10;
+            pullPos -= PULL_STEP;
+            document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
+            document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
+            inputLeft = "";
+            checkWinner();
+            if (!isGameOver) generateSimpleQuestion('left');
+          } else {
+            inputLeft = "";
+          }
         } else {
-          scoreRight += 10;
-          pullPos += PULL_STEP;
-          document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
+          if (isLocal && inputLeft.length < 3) inputLeft += val;
         }
-
-        document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
-        checkWinner();
-
-        if (!isGameOver) generateNewQuestion(side);
+        box.innerText = inputLeft;
+      } else {
+        const box = document.getElementById('ans-right');
+        if (val === 'C') {
+          inputRight = "";
+        } else if (val === 'OK') {
+          if (parseInt(inputRight) === currentQRight.ans) {
+            scoreRight += 10;
+            pullPos += PULL_STEP;
+            document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
+            document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
+            inputRight = "";
+            checkWinner();
+            if (!isGameOver) generateSimpleQuestion('right');
+          } else {
+            inputRight = "";
+          }
+        } else {
+          if (isLocal && inputRight.length < 3) inputRight += val;
+        }
+        box.innerText = inputRight;
       }
     }
 
@@ -563,28 +561,34 @@
 
     function restartGame() {
       isGameOver = false;
-      scoreLeft = 0;
-      scoreRight = 0;
-      pullPos = 0;
-
+      scoreLeft = 0; scoreRight = 0; pullPos = 0;
+      inputLeft = ""; inputRight = "";
       document.getElementById('score-left').innerText = `Skor: 0`;
       document.getElementById('score-right').innerText = `Skor: 0`;
+      document.getElementById('ans-left').innerText = "";
+      document.getElementById('ans-right').innerText = "";
       document.getElementById('stageGif').style.transform = `translateX(0px)`;
       document.getElementById('winnerModal').classList.remove('show');
 
-      generateNewQuestion('left');
-      generateNewQuestion('right');
+      generateSimpleQuestion('left');
+      generateSimpleQuestion('right');
     }
 
     function showQRCode(side) {
       const modal = document.getElementById('qrModal');
+      const title = document.getElementById('qrModalTitle');
       const container = document.getElementById('qrcode-container');
       container.innerHTML = "";
-
+      
+      title.innerText = `Remote ${side === 'left' ? 'Tim Biru' : 'Tim Merah'}`;
       const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
       const remoteUrl = `${baseUrl}/remote.html?room=${roomId}&team=${side}`;
 
-      new QRCode(container, { text: remoteUrl, width: 160, height: 160 });
+      new QRCode(container, {
+        text: remoteUrl,
+        width: 160, height: 160
+      });
+
       modal.classList.add('show');
     }
 
@@ -592,6 +596,7 @@
       document.getElementById('qrModal').classList.remove('show');
     }
 
+    window.pressKey = pressKey;
     window.restartGame = restartGame;
     window.showQRCode = showQRCode;
     window.closeQRModal = closeQRModal;
