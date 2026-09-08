@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Remote Control - Tarik Tambang Perkalian</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-primary: #0284C5;
+      --color-secondary: #60A5FA;
+      --color-bg: #F1F5F9;
+      --color-surface: #FFFFFF;
+      --color-on-surface: #0F172A;
+      --color-border: #CBD5E1;
+      --color-error: #EF4444;
+
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-full: 9999px;
+
+      --font-main: 'Nunito', sans-serif;
+      --font-display: 'Fredoka', 'Nunito', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      font-family: var(--font-main);
+      background-color: var(--color-bg);
+      color: var(--color-on-surface);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    /* HEADER NAMA TIM & SKOR */
+    .remote-header {
+      width: 100%;
+      max-width: 420px;
+      padding: 12px 18px;
+      border-radius: var(--radius-lg);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    }
+
+    .bg-blue { background-color: var(--color-primary); }
+    .bg-red { background-color: var(--color-error); }
+
+    .team-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .score-badge {
+      font-family: var(--font-display);
+      background: rgba(255, 255, 255, 0.25);
+      padding: 4px 14px;
+      border-radius: var(--radius-full);
+      font-size: 15px;
+    }
+
+    /* KOTAK SOAL CERITA */
+    .question-card {
+      width: 100%;
+      max-width: 420px;
+      flex: 1;
+      margin: 12px 0;
+      padding: 14px;
+      background: var(--color-surface);
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .question-img {
+      max-width: 100%;
+      max-height: 100px;
+      object-fit: contain;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .question-text {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    /* INPUT & KEYPAD JAWABAN */
+    .answer-display {
+      width: 100%;
+      max-width: 420px;
+      height: 50px;
+      background-color: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 26px;
+      margin-bottom: 12px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .keypad-grid {
+      width: 100%;
+      max-width: 420px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .key-btn {
+      height: 52px;
+      background-color: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-on-surface);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 0 var(--color-border);
+      transition: all 0.1s ease;
+    }
+
+    .key-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--color-border);
+    }
+
+    .key-clear {
+      background-color: #FFE4E6;
+      color: var(--color-error);
+      border-color: #FECDD3;
+      box-shadow: 0 4px 0 #FECDD3;
+    }
+
+    .key-submit {
+      color: white;
+    }
+
+    .submit-blue {
+      background-color: var(--color-primary);
+      border-color: #0369A1;
+      box-shadow: 0 4px 0 #0369A1;
+    }
+
+    .submit-red {
+      background-color: var(--color-error);
+      border-color: #B91C1C;
+      box-shadow: 0 4px 0 #B91C1C;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER NAMA TIM & SKOR -->
+  <header class="remote-header bg-blue" id="remoteHeader">
+    <h1 class="team-title" id="teamTitle">TIM BIRU</h1>
+    <span class="score-badge" id="scoreBadge">Skor: 0</span>
+  </header>
+
+  <!-- BOX SOAL CERITA -->
+  <main class="question-card">
+    <img id="qImg" class="question-img" alt="Gambar Soal" />
+    <p class="question-text" id="qText">Menghubungkan ke permainan...</p>
+  </main>
+
+  <!-- DISPLAY JAWABAN INPUT -->
+  <div class="answer-display" id="ansDisplay"></div>
+
+  <!-- KEYPAD ANGKAH KALKULATOR -->
+  <div class="keypad-grid">
+    <button class="key-btn" onclick="sendKey('1')">1</button>
+    <button class="key-btn" onclick="sendKey('2')">2</button>
+    <button class="key-btn" onclick="sendKey('3')">3</button>
+    <button class="key-btn" onclick="sendKey('4')">4</button>
+    <button class="key-btn" onclick="sendKey('5')">5</button>
+    <button class="key-btn" onclick="sendKey('6')">6</button>
+    <button class="key-btn" onclick="sendKey('7')">7</button>
+    <button class="key-btn" onclick="sendKey('8')">8</button>
+    <button class="key-btn" onclick="sendKey('9')">9</button>
+    <button class="key-btn key-clear" onclick="sendKey('C')">C</button>
+    <button class="key-btn" onclick="sendKey('0')">0</button>
+    <button class="key-btn key-submit submit-blue" id="btnSubmit" onclick="sendKey('OK')">OK</button>
+  </div>
+
+  <!-- FIREBASE INTEGRATION -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Konfigurasi Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7qAhQ3LkF6Ey3fiFEPHNEwdy6BHPb548",
+      authDomain: "media-pembelajaran-inter-f5f88.firebaseapp.com",
+      projectId: "media-pembelajaran-inter-f5f88",
+      storageBucket: "media-pembelajaran-inter-f5f88.firebasestorage.app",
+      messagingSenderId: "913703978337",
+      appId: "1:913703978337:web:6a3d3fd07cbe4038c8f120"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Ambil parameter URL (?room=xxx&team=left/right)
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomId = urlParams.get('room');
+    const side = urlParams.get('team') || 'left'; // 'left' = Tim Biru, 'right' = Tim Merah
+
+    let inputVal = "";
+
+    // Sesuaikan Tampilan UI Berdasarkan Tim
+    const header = document.getElementById('remoteHeader');
+    const title = document.getElementById('teamTitle');
+    const btnSubmit = document.getElementById('btnSubmit');
+
+    if (side === 'left') {
+      header.className = "remote-header bg-blue";
+      title.innerText = "TIM BIRU";
+      btnSubmit.className = "key-btn key-submit submit-blue";
+    } else {
+      header.className = "remote-header bg-red";
+      title.innerText = "TIM MERAH";
+      btnSubmit.className = "key-btn key-submit submit-red";
+    }
+
+    // Dengarkan Perubahan Soal & Skor secara Realtime dari Firestore
+    if (roomId) {
+      const roomRef = doc(db, "active_rooms", roomId);
+      onSnapshot(roomRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          
+          if (side === 'left') {
+            if (data.questionLeft) updateQuestionUI(data.questionLeft);
+            if (data.scoreLeft !== undefined) document.getElementById('scoreBadge').innerText = `Skor: ${data.scoreLeft}`;
+          } else {
+            if (data.questionRight) updateQuestionUI(data.questionRight);
+            if (data.scoreRight !== undefined) document.getElementById('scoreBadge').innerText = `Skor: ${data.scoreRight}`;
+          }
+        }
+      });
+    }
+
+    function updateQuestionUI(question) {
+      document.getElementById('qText').innerText = question.text;
+      const imgElem = document.getElementById('qImg');
+      
+      if (question.image) {
+        imgElem.src = question.image;
+        imgElem.style.display = 'block';
+      } else {
+        imgElem.style.display = 'none';
+      }
+    }
+
+    // Kirim Perintah Tombol Keypad ke Firestore
+    async function sendKey(val) {
+      const box = document.getElementById('ansDisplay');
+
+      if (val === 'C') {
+        inputVal = "";
+      } else if (val === 'OK') {
+        inputVal = "";
+      } else {
+        if (inputVal.length < 3) inputVal += val;
+      }
+
+      box.innerText = inputVal;
+
+      // Kirim sinyal aksi ke Firestore agar layar utama merespons
+      if (roomId) {
+        try {
+          const roomRef = doc(db, "active_rooms", roomId);
+          await updateDoc(roomRef, {
+            lastAction: {
+              side: side,
+              key: val,
+              timestamp: Date.now()
+            }
+          });
+        } catch (err) {
+          console.error("Gagal mengirim aksi remote: ", err);
+        }
+      }
+    }
+
+    window.sendKey = sendKey;
+  </script>
+
+</body>
+</html>
