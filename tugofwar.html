@@ -2,31 +2,34 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tarik Tambang Perkalian - Interaktiv-ta'lim</title>
 
-  <!-- Favicon / Ikon Tab Browser -->
-  <link rel="icon" type="image/png" href="asset/logo.png" />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
   <style>
     /* =====================================================
-       DESIGN TOKENS & RESPONSIVE BASE
+       DESIGN TOKENS (Interaktiv-ta'lim)
     ===================================================== */
     :root {
       --color-primary: #0284C5;
-      --color-error: #EF4444;
+      --color-secondary: #60A5FA;
+      --color-tertiary: #F59E0B;
       --color-bg-canvas: #EDEDED; 
       --color-surface: #FFFFFF;
       --color-on-surface: #0F172A;
       --color-border: #CBD5E1;
+      --color-error: #EF4444;
 
       --radius-md: 10px;
-      --radius-lg: 14px;
-      --radius-xl: 20px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
       --radius-full: 9999px;
 
       --font-main: 'Nunito', sans-serif;
@@ -38,38 +41,54 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100vh;
-      height: 100dvh; /* Dynamic Viewport Height untuk Tablet/HP */
-      font-family: var(--font-main);
-      background-color: var(--color-bg-canvas);
-      color: var(--color-on-surface);
-      overflow: hidden; /* Menghilangkan scrollbar seluruhnya */
     }
 
     body {
+      width: 100vw;
+      height: 100vh;
+      font-family: var(--font-main);
+      background-color: var(--color-bg-canvas);
+      color: var(--color-on-surface);
+      overflow: hidden;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      padding: 10px;
+      position: relative;
     }
 
     /* =====================================================
-       TOMBOL KEMBALI & FULLSCREEN
+       TIRAI OPENING
     ===================================================== */
-    .btn-back, .btn-fullscreen {
+    .curtain {
       position: fixed;
-      top: 10px;
+      top: 0;
+      width: 50vw;
+      height: 100vh;
+      background: repeating-linear-gradient(90deg, #F43F5E 0px, #EF4444 30px, #DC2626 60px, #EF4444 90px);
+      z-index: 100;
+      transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+      box-shadow: inset 0 0 50px rgba(15, 23, 42, 0.25);
+    }
+
+    .curtain-left { left: 0; border-right: 8px solid #B91C1C; }
+    .curtain-right { right: 0; border-left: 8px solid #B91C1C; }
+
+    .curtain-open .curtain-left { transform: translateX(-100%); }
+    .curtain-open .curtain-right { transform: translateX(100%); }
+
+    /* =====================================================
+       TOMBOL KEMBALI
+    ===================================================== */
+    .btn-back {
+      position: fixed;
+      top: 16px;
+      left: 16px;
       z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       background-color: rgba(15, 23, 42, 0.85);
       color: #ffffff;
       text-decoration: none;
@@ -78,21 +97,18 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      cursor: pointer;
       transition: all 0.25s ease-in-out;
     }
 
-    .btn-back {
-      left: 10px;
-    }
-
-    .btn-fullscreen {
-      right: 10px;
-    }
-
-    .btn-back:hover, .btn-fullscreen:hover {
+    .btn-back:hover {
       background-color: rgba(37, 99, 235, 0.95);
+      border-color: rgba(255, 255, 255, 0.4);
       transform: scale(1.08);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-back:active {
+      transform: scale(0.95);
     }
 
     /* =====================================================
@@ -100,20 +116,20 @@
     ===================================================== */
     .game-container {
       width: 100%;
-      max-width: 1200px;
-      height: 100%;
+      max-width: 1280px;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      padding: 12px 20px;
+      gap: 12px;
     }
 
     /* =====================================================
-       1. STAGE ANIMASI TARIK TAMBANG
+       1. STAGE ANIMASI & GARIS FINIS
     ===================================================== */
     .tug-stage {
       width: 100%;
-      height: clamp(120px, 22vh, 180px);
-      flex-shrink: 0;
+      height: 220px;
       background-color: #E2E8F0;
       border: 2px solid var(--color-border);
       border-radius: var(--radius-xl);
@@ -129,19 +145,28 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 18px;
+      width: 24px;
       z-index: 1;
       background-image: 
         linear-gradient(45deg, #000 25%, transparent 25%), 
         linear-gradient(-45deg, #000 25%, transparent 25%), 
         linear-gradient(45deg, transparent 75%, #000 75%), 
         linear-gradient(-45deg, transparent 75%, #000 75%);
-      background-size: 8px 8px;
-      background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+      background-size: 12px 12px;
+      background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
       background-color: #fff;
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
     }
-    .finish-left { left: clamp(16px, 4vw, 50px); border-right: 2px solid #000; }
-    .finish-right { right: clamp(16px, 4vw, 50px); border-left: 2px solid #000; }
+
+    .finish-left {
+      left: 60px;
+      border-right: 3px solid #000;
+    }
+
+    .finish-right {
+      right: 60px;
+      border-left: 3px solid #000;
+    }
 
     .center-line {
       position: absolute;
@@ -152,11 +177,24 @@
       background-color: var(--color-error);
       transform: translateX(-50%);
       z-index: 1;
+      box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
+    }
+
+    .center-line::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 14px;
+      background-color: var(--color-error);
+      border-radius: 50%;
     }
 
     .gif-background {
       position: absolute;
-      height: 85%;
+      height: 180px;
       width: auto;
       object-fit: contain;
       z-index: 2;
@@ -169,78 +207,117 @@
     .arena-bottom {
       width: 100%;
       flex: 1;
-      min-height: 0;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      min-height: 0;
     }
 
     .player-card {
       background-color: var(--color-surface);
       border-radius: var(--radius-xl);
       border: 2px solid var(--color-border);
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 8px;
-      height: 100%;
+      padding-bottom: 12px;
     }
 
-    .card-header-blue, .card-header-red {
+    .card-header-blue {
       width: 100%;
+      background-color: var(--color-primary);
       color: var(--color-surface);
-      padding: clamp(6px, 1.2vh, 10px) 14px;
+      padding: 8px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-shrink: 0;
     }
 
-    .card-header-blue { background-color: var(--color-primary); }
-    .card-header-red { background-color: var(--color-error); }
+    .card-header-red {
+      width: 100%;
+      background-color: var(--color-error);
+      color: var(--color-surface);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-qr {
+      background-color: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 5px 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .btn-qr:hover {
+      background-color: rgba(255, 255, 255, 0.35);
+      transform: scale(1.05);
+    }
 
     .player-name {
       font-family: var(--font-display);
-      font-size: clamp(15px, 2vw, 18px);
+      font-size: 18px;
       font-weight: 700;
     }
 
     .score-badge {
       font-family: var(--font-display);
       background-color: rgba(255, 255, 255, 0.25);
-      padding: 2px 10px;
+      padding: 2px 12px;
       border-radius: var(--radius-full);
-      font-size: clamp(12px, 1.4vw, 15px);
+      font-size: 14px;
     }
 
     .question-box {
-      width: 90%;
+      width: 92%;
       flex: 1;
-      margin: 6px 0;
-      padding: 4px 8px;
+      margin: 8px 0;
+      padding: 8px 12px;
       background-color: #F8FAFC;
-      border: 2px dashed var(--color-border);
+      border: 1.5px dashed var(--color-border);
       border-radius: var(--radius-md);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      min-height: 0;
+      gap: 4px;
+    }
+
+    .question-img {
+      max-width: 100%;
+      max-height: 70px;
+      object-fit: contain;
+      border-radius: 6px;
+      display: none;
     }
 
     .question-text {
-      font-family: var(--font-display);
-      font-size: clamp(20px, 3.2vh, 30px);
+      font-family: var(--font-main);
+      font-size: 13.5px;
       font-weight: 700;
       color: var(--color-on-surface);
+      line-height: 1.3;
     }
 
     .answer-box {
-      width: 85%;
-      height: clamp(32px, 4.5vh, 44px);
-      flex-shrink: 0;
+      width: 80%;
+      height: 38px;
       background-color: var(--color-bg-canvas);
       border: 2px solid var(--color-border);
       border-radius: var(--radius-md);
@@ -248,26 +325,25 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: clamp(18px, 2.8vh, 26px);
+      font-size: 22px;
       color: var(--color-on-surface);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .keypad-grid {
-      width: 85%;
-      flex-shrink: 0;
+      width: 80%;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 5px;
+      gap: 6px;
     }
 
     .key-btn {
-      height: clamp(32px, 4.8vh, 44px);
+      height: 38px;
       background-color: var(--color-bg-canvas);
       border: 1.5px solid var(--color-border);
       border-radius: var(--radius-md);
       font-family: var(--font-display);
-      font-size: clamp(15px, 2.2vh, 20px);
+      font-size: 17px;
       font-weight: 700;
       color: var(--color-on-surface);
       cursor: pointer;
@@ -283,94 +359,166 @@
       box-shadow: 0 1px 0 var(--color-border);
     }
 
-    .key-clear { background-color: #FFE4E6; color: var(--color-error); border-color: #FECDD3; }
-    .key-submit-blue { background-color: var(--color-primary); color: white; border-color: #0369A1; box-shadow: 0 3px 0 #0369A1; }
-    .key-submit-red { background-color: var(--color-error); color: white; border-color: #B91C1C; box-shadow: 0 3px 0 #B91C1C; }
+    .key-clear {
+      background-color: #FFE4E6;
+      color: var(--color-error);
+      border-color: #FECDD3;
+    }
 
-    /* =====================================================
-       MODAL PEMENANG
-    ===================================================== */
+    .key-submit-blue {
+      background-color: var(--color-primary);
+      color: var(--color-surface);
+      border-color: #0369A1;
+      box-shadow: 0 3px 0 #0369A1;
+    }
+
+    .key-submit-red {
+      background-color: var(--color-error);
+      color: var(--color-surface);
+      border-color: #B91C1C;
+      box-shadow: 0 3px 0 #B91C1C;
+    }
+
+    /* MODAL POPUP */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(6px);
       z-index: 10000;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
       transition: opacity 0.3s ease;
     }
-    .modal-overlay.show { opacity: 1; pointer-events: auto; }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     .modal-card {
-      background: white; border-radius: var(--radius-xl);
-      padding: 24px; text-align: center;
-      max-width: 360px; width: 90%;
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      text-align: center;
+      max-width: 380px;
+      width: 90%;
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       transform: scale(0.8);
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .modal-overlay.show .modal-card { transform: scale(1); }
 
-    .modal-title { font-family: var(--font-display); font-size: 22px; margin-bottom: 8px; }
-    .modal-desc { font-size: 14px; color: var(--color-on-surface); margin-bottom: 18px; }
+    .modal-overlay.show .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--color-primary);
+      margin-bottom: 8px;
+    }
+
+    .modal-desc {
+      font-size: 14px;
+      color: var(--color-on-surface);
+      margin-bottom: 16px;
+    }
+
+    #qrcode-container {
+      padding: 12px;
+      background: white;
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 16px;
+    }
+
+    .btn-close-modal {
+      background-color: var(--color-bg-canvas);
+      color: var(--color-on-surface);
+      font-family: var(--font-display);
+      font-size: 15px;
+      padding: 8px 20px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+    }
 
     .btn-restart {
-      background-color: var(--color-primary); color: white;
-      font-family: var(--font-display); font-size: 16px;
-      padding: 10px 24px; border: none; border-radius: var(--radius-full);
-      cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 197, 0.3);
+      background-color: var(--color-primary);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 16px;
+      padding: 10px 24px;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(2, 132, 197, 0.3);
     }
 
-    @media (max-width: 600px) and (orientation: portrait) {
-      body { overflow-y: auto; }
+    @media (max-width: 768px) {
+      body { overflow-y: auto; height: auto; }
+      .game-container { height: auto; }
       .arena-bottom { grid-template-columns: 1fr; }
+      .tug-stage { height: 180px; }
+      .gif-background { height: 140px; }
+      .finish-left { left: 20px; }
+      .finish-right { right: 20px; }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Tombol Kembali -->
-  <a href="index.html" class="btn-back" title="Kembali ke Beranda">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <div class="curtain curtain-left"></div>
+  <div class="curtain curtain-right"></div>
+
+  <a href="index.html" class="btn-back" title="Kembali ke Beranda" aria-label="Kembali ke Beranda">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
     </svg>
   </a>
 
-  <!-- Tombol Full Screen (Pojok Kanan Atas) -->
-  <button class="btn-fullscreen" id="btnFullscreen" onclick="toggleFullscreen()" title="Layar Penuh">
-    <svg id="iconExpand" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-    </svg>
-    <svg id="iconCompress" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-      <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
-    </svg>
-  </button>
-
   <div class="game-container">
     
-    <!-- STAGE ANIMASI TARIK TAMBANG -->
     <section class="tug-stage">
-      <div class="finish-line finish-left"></div>
-      <div class="center-line"></div>
-      <div class="finish-line finish-right"></div>
+      <div class="finish-line finish-left" title="Garis Finis Tim Biru"></div>
+      <div class="center-line" title="Batas Tengah Tali"></div>
+      <div class="finish-line finish-right" title="Garis Finis Tim Merah"></div>
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
-    <!-- ARENA SOAL DAN KALKULATOR -->
     <main class="arena-bottom">
 
-      <!-- TIM BIRU -->
       <section class="player-card">
         <div class="card-header-blue">
-          <h2 class="player-name">TIM BIRU</h2>
+          <div class="header-left-group">
+            <button class="btn-qr" onclick="showQRCode('left')" title="Scan Remote HP">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </button>
+            <h2 class="player-name">TIM BIRU</h2>
+          </div>
           <span class="score-badge" id="score-left">Skor: 0</span>
         </div>
         
         <div class="question-box">
-          <p class="question-text" id="q-left">Memuat...</p>
+          <img id="img-left" class="question-img" alt="Gambar Soal Tim Biru" />
+          <p class="question-text" id="q-left">Memuat soal...</p>
         </div>
         <div class="answer-box" id="ans-left"></div>
 
@@ -390,15 +538,25 @@
         </div>
       </section>
 
-      <!-- TIM MERAH -->
       <section class="player-card">
         <div class="card-header-red">
-          <h2 class="player-name">TIM MERAH</h2>
+          <div class="header-left-group">
+            <button class="btn-qr" onclick="showQRCode('right')" title="Scan Remote HP">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </button>
+            <h2 class="player-name">TIM MERAH</h2>
+          </div>
           <span class="score-badge" id="score-right">Skor: 0</span>
         </div>
         
         <div class="question-box">
-          <p class="question-text" id="q-right">Memuat...</p>
+          <img id="img-right" class="question-img" alt="Gambar Soal Tim Merah" />
+          <p class="question-text" id="q-right">Memuat soal...</p>
         </div>
         <div class="answer-box" id="ans-right"></div>
 
@@ -421,39 +579,45 @@
     </main>
   </div>
 
-  <!-- POPUP WINNER MODAL -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-card">
+      <h2 class="modal-title" id="qrModalTitle">Remote Control</h2>
+      <p class="modal-desc">Scan QR Code ini menggunakan kamera HP untuk membuka controller remote.</p>
+      <div id="qrcode-container"></div>
+      <button class="btn-close-modal" onclick="closeQRModal()">Tutup</button>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="winnerModal">
     <div class="modal-card">
       <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
-      <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menarik tali hingga menyentuh garis finis.</p>
+      <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menyentuh garis finis terlebih dahulu.</p>
       <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
     </div>
   </div>
 
-  <!-- JAVASCRIPT LOGIKA PERMAINAN & FULLSCREEN -->
-  <script>
-    const questionBank = [
-      { text: "2 x 3", ans: 6 },
-      { text: "3 x 3", ans: 9 },
-      { text: "4 x 2", ans: 8 },
-      { text: "4 x 5", ans: 20 },
-      { text: "5 x 3", ans: 15 },
-      { text: "5 x 5", ans: 25 },
-      { text: "6 x 2", ans: 12 },
-      { text: "6 x 4", ans: 24 },
-      { text: "6 x 6", ans: 36 },
-      { text: "7 x 3", ans: 21 },
-      { text: "7 x 5", ans: 35 },
-      { text: "7 x 7", ans: 49 },
-      { text: "8 x 2", ans: 16 },
-      { text: "8 x 4", ans: 32 },
-      { text: "8 x 8", ans: 64 },
-      { text: "9 x 3", ans: 27 },
-      { text: "9 x 5", ans: 45 },
-      { text: "9 x 9", ans: 81 },
-      { text: "10 x 4", ans: 40 },
-      { text: "10 x 10", ans: 100 }
-    ];
+  <script src="soal.js"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7qAhQ3LkF6Ey3fiFEPHNEwdy6BHPb548",
+      authDomain: "media-pembelajaran-inter-f5f88.firebaseapp.com",
+      projectId: "media-pembelajaran-inter-f5f88",
+      storageBucket: "media-pembelajaran-inter-f5f88.firebasestorage.app",
+      messagingSenderId: "913703978337",
+      appId: "1:913703978337:web:6a3d3fd07cbe4038c8f120",
+      measurementId: "G-WDSJDMM8RR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    const roomId = "room_" + Math.random().toString(36).substring(2, 8);
 
     let currentQLeft = {};
     let currentQRight = {};
@@ -464,153 +628,208 @@
     let pullPos = 0; 
     let isGameOver = false;
 
-    // --- LOGIKA FULLSCREEN ---
-    function toggleFullscreen() {
-      const doc = window.document;
-      const docEl = doc.documentElement;
+    const PULL_STEP = 60;
+    const WIN_THRESHOLD = 380; 
 
-      const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestAnimationFrame || docEl.msRequestFullscreen;
-      const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+    let lastIndexLeft = -1;
+    let lastIndexRight = -1;
 
-      if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-        if (requestFullScreen) {
-          requestFullScreen.call(docEl);
-        } else if (docEl.webkitRequestFullscreen) {
-          docEl.webkitRequestFullscreen();
-        }
-      } else {
-        if (cancelFullScreen) {
-          cancelFullScreen.call(doc);
-        }
-      }
-    }
-
-    // Ubah Ikon Fullscreen Otomatis
-    function updateFullscreenIcons() {
-      const isFS = document.fullscreenElement || document.webkitFullscreenElement;
-      document.getElementById('iconExpand').style.display = isFS ? 'none' : 'block';
-      document.getElementById('iconCompress').style.display = isFS ? 'block' : 'none';
-    }
-
-    document.addEventListener('fullscreenchange', updateFullscreenIcons);
-    document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
-
-    // --- LOGIKA PERMAINAN ---
-    function getPullStep() {
-      const stageWidth = document.querySelector('.tug-stage').clientWidth;
-      return stageWidth * 0.08;
-    }
-
-    function getWinThreshold() {
-      const stageWidth = document.querySelector('.tug-stage').clientWidth;
-      return (stageWidth / 2) - 35;
-    }
+    let qrGenerator = null;
 
     document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => {
+        document.body.classList.add("curtain-open");
+      }, 200);
+
       generateNewQuestion('left');
       generateNewQuestion('right');
+
+      listenRemoteControl();
     });
 
-    function getRandomQuestion() {
-      const randomIndex = Math.floor(Math.random() * questionBank.length);
-      return questionBank[randomIndex];
+    function getRandomQuestionIndex(exceptIndex = -1) {
+      if (typeof questionBank === 'undefined' || questionBank.length === 0) return 0;
+      
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * questionBank.length);
+      } while (newIndex === exceptIndex && questionBank.length > 1);
+
+      return newIndex;
     }
 
     function generateNewQuestion(side) {
+      if (typeof questionBank === 'undefined' || questionBank.length === 0) return;
+      
       if (side === 'left') {
-        currentQLeft = getRandomQuestion();
-        document.getElementById('q-left').innerText = currentQLeft.text + " = ?";
+        const index = getRandomQuestionIndex(lastIndexRight);
+        lastIndexLeft = index;
+        currentQLeft = questionBank[index];
+        
+        document.getElementById('q-left').innerText = currentQLeft.text;
+        
+        const imgElem = document.getElementById('img-left');
+        if (currentQLeft.image) {
+          imgElem.src = currentQLeft.image;
+          imgElem.style.display = 'block';
+        } else {
+          imgElem.style.display = 'none';
+        }
       } else {
-        currentQRight = getRandomQuestion();
-        document.getElementById('q-right').innerText = currentQRight.text + " = ?";
+        const index = getRandomQuestionIndex(lastIndexLeft);
+        lastIndexRight = index;
+        currentQRight = questionBank[index];
+        
+        document.getElementById('q-right').innerText = currentQRight.text;
+        
+        const imgElem = document.getElementById('img-right');
+        if (currentQRight.image) {
+          imgElem.src = currentQRight.image;
+          imgElem.style.display = 'block';
+        } else {
+          imgElem.style.display = 'none';
+        }
+      }
+
+      syncStateToFirestore(side);
+    }
+
+    async function syncStateToFirestore(side) {
+      try {
+        const roomRef = doc(db, "active_rooms", roomId);
+        const dataToUpdate = side === 'left' ? {
+          questionLeft: currentQLeft,
+          scoreLeft: scoreLeft,
+          inputLeftVal: ""
+        } : {
+          questionRight: currentQRight,
+          scoreRight: scoreRight,
+          inputRightVal: ""
+        };
+        
+        await setDoc(roomRef, dataToUpdate, { merge: true });
+      } catch (err) {
+        console.error("Gagal sinkronisasi room: ", err);
       }
     }
 
-    function playBeep(freq = 600, duration = 0.1) {
+    function listenRemoteControl() {
+      const roomRef = doc(db, "active_rooms", roomId);
+      onSnapshot(roomRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+
+          // Tampilkan teks input realtime dari HP ke desktop
+          if (data.inputLeftVal !== undefined) {
+            inputLeft = data.inputLeftVal;
+            document.getElementById('ans-left').innerText = inputLeft;
+          }
+          if (data.inputRightVal !== undefined) {
+            inputRight = data.inputRightVal;
+            document.getElementById('ans-right').innerText = inputRight;
+          }
+
+          // Tanggapi penekanan tombol action dari HP
+          if (data.lastAction) {
+            const { side, key, timestamp } = data.lastAction;
+            if (timestamp && Date.now() - timestamp < 2000) {
+              pressKey(side, key, false);
+            }
+          }
+        }
+      });
+    }
+
+    function playBeep(freq = 600) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
       const ctx = new AudioContext();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      
       osc.type = 'sine';
       osc.frequency.value = freq;
       gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
-      
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
-      osc.stop(ctx.currentTime + duration);
+      osc.stop(ctx.currentTime + 0.1);
     }
 
-    function pressKey(side, val) {
+    function pressKey(side, val, isLocal = true) {
       if (isGameOver) return;
-      playBeep(800, 0.05);
-
-      const pullStep = getPullStep();
+      
+      playBeep(800);
 
       if (side === 'left') {
         const box = document.getElementById('ans-left');
-        
         if (val === 'C') {
           inputLeft = "";
         } else if (val === 'OK') {
           if (parseInt(inputLeft) === currentQLeft.ans) {
-            playBeep(1200, 0.15);
+            playBeep(1200);
             scoreLeft += 10;
-            pullPos -= pullStep;
             
+            pullPos -= PULL_STEP;
             document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
-            
             inputLeft = "";
+            
             checkWinner();
             if (!isGameOver) generateNewQuestion('left');
           } else {
-            playBeep(300, 0.2);
+            playBeep(300);
             inputLeft = "";
           }
         } else {
-          if (inputLeft.length < 3) inputLeft += val;
+          if (isLocal && inputLeft.length < 3) inputLeft += val;
         }
         box.innerText = inputLeft;
-
       } else {
         const box = document.getElementById('ans-right');
-        
         if (val === 'C') {
           inputRight = "";
         } else if (val === 'OK') {
           if (parseInt(inputRight) === currentQRight.ans) {
-            playBeep(1200, 0.15);
+            playBeep(1200);
             scoreRight += 10;
-            pullPos += pullStep;
             
+            pullPos += PULL_STEP;
             document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
-            
             inputRight = "";
+            
             checkWinner();
             if (!isGameOver) generateNewQuestion('right');
           } else {
-            playBeep(300, 0.2);
+            playBeep(300);
             inputRight = "";
           }
         } else {
-          if (inputRight.length < 3) inputRight += val;
+          if (isLocal && inputRight.length < 3) inputRight += val;
         }
         box.innerText = inputRight;
       }
     }
 
     function checkWinner() {
-      const winThreshold = getWinThreshold();
+      if (pullPos <= -WIN_THRESHOLD) {
+        showWinner("TIM BIRU", "#0284C5");
+      } else if (pullPos >= WIN_THRESHOLD) {
+        showWinner("TIM MERAH", "#EF4444");
+      }
+    }
 
-      if (pullPos <= -winThreshold) {
-        showWinner("TIM BIRU", "var(--color-primary)");
-      } else if (pullPos >= winThreshold) {
-        showWinner("TIM MERAH", "var(--color-error)");
+    async function saveGameResult(winner) {
+      try {
+        await addDoc(collection(db, "tarik_tambang"), {
+          winner: winner,
+          scoreBlue: scoreLeft,
+          scoreRed: scoreRight,
+          playedAt: serverTimestamp()
+        });
+      } catch (e) {
+        console.error("Gagal menyimpan hasil permainan: ", e);
       }
     }
 
@@ -624,7 +843,11 @@
       title.style.color = color;
       desc.innerText = `Selamat! ${teamName} berhasil menarik tali hingga menyentuh garis finis.`;
 
-      modal.classList.add('show');
+      saveGameResult(teamName);
+
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 350);
     }
 
     function restartGame() {
@@ -646,10 +869,39 @@
       generateNewQuestion('right');
     }
 
-    window.addEventListener('resize', () => {
-      pullPos = 0;
-      document.getElementById('stageGif').style.transform = `translateX(0px)`;
-    });
+    function showQRCode(side) {
+      const modal = document.getElementById('qrModal');
+      const title = document.getElementById('qrModalTitle');
+      const container = document.getElementById('qrcode-container');
+      
+      container.innerHTML = "";
+      
+      const teamTitle = side === 'left' ? 'Tim Biru' : 'Tim Merah';
+      title.innerText = `Remote ${teamTitle}`;
+
+      const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+      const remoteUrl = `${baseUrl}/remote.html?room=${roomId}&team=${side}`;
+
+      qrGenerator = new QRCode(container, {
+        text: remoteUrl,
+        width: 180,
+        height: 180,
+        colorDark: "#0F172A",
+        colorLight: "#FFFFFF",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      modal.classList.add('show');
+    }
+
+    function closeQRModal() {
+      document.getElementById('qrModal').classList.remove('show');
+    }
+
+    window.pressKey = pressKey;
+    window.restartGame = restartGame;
+    window.showQRCode = showQRCode;
+    window.closeQRModal = closeQRModal;
   </script>
 
 </body>
