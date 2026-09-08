@@ -5,23 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Materi Pembelajaran - Perkalian Bilangan Cacah</title>
   
+  <!-- Font Google (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
+
   <style>
-    /* Reset default margin & padding */
+    /* Reset & Base Style */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    /* Set HTML & Body memenuhi 100% tinggi dan lebar layar */
     html, body {
       width: 100%;
       height: 100%;
-      overflow: hidden; /* Sembunyikan scrollbar agar benar-benar full screen */
-      background-color: #000000; /* Latar belakang hitam khas tampilan presentasi */
+      overflow: hidden; /* Menghilangkan scrollbar */
+      background-color: #000000;
+      font-family: 'Inter', sans-serif;
     }
 
-    /* Container Canva Fullscreen */
+    /* Container Fullscreen Canva */
     .fullscreen-canva {
       position: absolute;
       top: 0;
@@ -29,19 +34,76 @@
       width: 100vw;
       height: 100vh;
       border: none;
+      z-index: 1;
     }
 
-    /* Frame iFrame memenuhi layar */
     .fullscreen-canva iframe {
       width: 100%;
       height: 100%;
       border: none;
       display: block;
     }
+
+    /* Tombol Kembali Floating di Pojok Kiri Atas */
+    .btn-back {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 9999; /* Memastikan tombol selalu berada di paling depan */
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background-color: rgba(15, 23, 42, 0.85); /* Warna gelap elegan dengan efek transparan */
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 50px; /* Bentuk kapsul */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px); /* Efek blur modern di latar belakang tombol */
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.25s ease-in-out;
+    }
+
+    /* Efek Hover (Saat kursor diarahkan ke tombol) */
+    .btn-back:hover {
+      background-color: rgba(37, 99, 235, 0.95); /* Berubah menjadi warna biru */
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
+
+    /* Efek Klik */
+    .btn-back:active {
+      transform: translateY(0);
+    }
+
+    /* Responsif untuk Layar HP */
+    @media (max-width: 640px) {
+      .btn-back {
+        top: 12px;
+        left: 12px;
+        padding: 8px 14px;
+        font-size: 0.8rem;
+      }
+    }
   </style>
 </head>
 <body>
 
+  <!-- Tombol Kembali ke Beranda -->
+  <!-- Silakan ubah "index.html" sesuai dengan nama file beranda/menu utama Anda -->
+  <a href="index.html" class="btn-back">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    <span>Kembali ke Beranda</span>
+  </a>
+
+  <!-- Container Fullscreen Canva Embed -->
   <div class="fullscreen-canva">
     <iframe 
       loading="lazy" 
