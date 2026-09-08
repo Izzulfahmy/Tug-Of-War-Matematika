@@ -156,12 +156,12 @@
     }
 
     .finish-left {
-      left: 60px;
+      left: 100px;
       border-right: 3px solid #000;
     }
 
     .finish-right {
-      right: 60px;
+      right: 100px;
       border-left: 3px solid #000;
     }
 
@@ -196,7 +196,7 @@
       width: auto;
       object-fit: contain;
       z-index: 1;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     /* =====================================================
@@ -452,7 +452,7 @@
 
   <div class="game-container">
     
-    <!-- 1. STAGE ANIMASI TARIK TAMBANG (DENGAN GARIS FINIS KIRI & KANAN) -->
+    <!-- 1. STAGE ANIMASI TARIK TAMBANG (GARIS FINIS KIRI & KANAN) -->
     <section class="tug-stage">
       <div class="finish-line finish-left" title="Garis Finis Tim Biru"></div>
       <div class="center-line" title="Batas Tengah Tali"></div>
@@ -547,8 +547,9 @@
     let pullPos = 0; 
     let isGameOver = false;
 
-    // Batas pergeseran piksel untuk menyentuh garis finis
-    const WIN_THRESHOLD = 140; 
+    // Jarak pergeseran per jawaban benar (60px) & Batas Menang (260px)
+    const PULL_STEP = 60;
+    const WIN_THRESHOLD = 260; 
 
     let lastIndexLeft = -1;
     let lastIndexRight = -1;
@@ -624,7 +625,7 @@
     }
 
     function pressKey(side, val) {
-      if (isGameOver) return; // Mencegah input jika game sudah selesai
+      if (isGameOver) return;
       
       playBeep(800);
 
@@ -636,7 +637,11 @@
           if (parseInt(inputLeft) === currentQLeft.ans) {
             playBeep(1200);
             scoreLeft += 10;
-            pullPos -= 35; // Tarik ke kiri (Tim Biru)
+            
+            // Tarik ke arah Kiri (Tim Biru)
+            pullPos -= PULL_STEP;
+            if (pullPos < -WIN_THRESHOLD) pullPos = -WIN_THRESHOLD;
+
             document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
             inputLeft = "";
@@ -659,7 +664,11 @@
           if (parseInt(inputRight) === currentQRight.ans) {
             playBeep(1200);
             scoreRight += 10;
-            pullPos += 35; // Tarik ke kanan (Tim Merah)
+            
+            // Tarik ke arah Kanan (Tim Merah)
+            pullPos += PULL_STEP;
+            if (pullPos > WIN_THRESHOLD) pullPos = WIN_THRESHOLD;
+
             document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
             inputRight = "";
@@ -677,7 +686,6 @@
       }
     }
 
-    // Fungsi Cek Kemenangan
     function checkWinner() {
       if (pullPos <= -WIN_THRESHOLD) {
         showWinner("TIM BIRU", "#0284C5");
@@ -694,11 +702,11 @@
 
       title.innerText = `${teamName} MENANG! 🎉`;
       title.style.color = color;
-      desc.innerText = `Selamat! ${teamName} berhasil menyentuh garis finis terlebih dahulu.`;
+      desc.innerText = `Selamat! ${teamName} berhasil menarik tali hingga menyentuh garis finis.`;
 
       setTimeout(() => {
         modal.classList.add('show');
-      }, 400);
+      }, 350);
     }
 
     function restartGame() {
