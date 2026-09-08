@@ -126,7 +126,7 @@
     ===================================================== */
     .game-container {
       width: 100%;
-      max-width: 1140px;
+      max-width: 1280px; /* Diperlebar agar ruang jangkauan pinggir lebih luas */
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -134,11 +134,11 @@
     }
 
     /* =====================================================
-       1. STAGE ANIMASI TARIK TAMBANG (UKURAN DIPERBESAR TINGGINYA)
+       1. STAGE ANIMASI TARIK TAMBANG
     ===================================================== */
     .tug-stage {
       width: 100%;
-      height: clamp(180px, 38vh, 280px); /* TINGGI STAGE DIBUAT LEBIH BESAR & PROMINEN */
+      height: clamp(180px, 38vh, 280px);
       flex-shrink: 0;
       background: linear-gradient(180deg, #38BDF8 0%, #BAE6FD 55%, #86EFAC 55%, #4ADE80 100%);
       border: 3.5px solid #0284C5;
@@ -151,7 +151,7 @@
       box-shadow: 0 8px 24px rgba(2, 132, 197, 0.18);
     }
 
-    /* BENDERA FINISH MENANCAP (KOTAK-KOTAK HITAM PUTIH) */
+    /* BENDERA FINISH MENANCAP */
     .flag-pole {
       position: absolute;
       bottom: 12%;
@@ -209,20 +209,20 @@
     }
 
     /* =====================================================
-       2. ARENA SOAL & KARTU TIM (JARAK DIPERLEBAR JAUH)
+       2. ARENA SOAL & KARTU TIM (KARTU DIPUSH PENUH KE PINGGIR)
     ===================================================== */
     .arena-bottom {
       width: 100%;
       flex: 1;
       min-height: 0;
       display: flex;
-      justify-content: center;
-      gap: clamp(48px, 9vw, 96px); /* JARAK DIPERLEBAR JAUH AGAR SIMETRIS & LEGA */
+      justify-content: space-between; /* DORONG KARTU SEPENUHNYA KE UJUNG KIRI DAN KANAN */
+      gap: 20px;
     }
 
     .player-card {
-      flex: 1;
-      max-width: 380px;
+      width: 100%;
+      max-width: 380px; /* Tetap menjaga ukuran kartu kompak & proporsional */
       background-color: var(--color-surface);
       border-radius: var(--radius-xl);
       border: 2px solid #E2E8F0;
@@ -287,7 +287,7 @@
       font-size: clamp(11px, 1.2vw, 13px);
     }
 
-    /* BODY KARTU Ringkas & Pas */
+    /* BODY KARTU */
     .card-body {
       width: 100%;
       flex: 1;
@@ -300,7 +300,7 @@
       min-height: 0;
     }
 
-    /* KOTAK SOAL CERITA & GAMBAR DIPERBESAR */
+    /* KOTAK SOAL CERITA & GAMBAR */
     .question-box {
       width: 100%;
       flex: 1;
@@ -318,7 +318,6 @@
       gap: 4px;
     }
 
-    /* GAMBAR SOAL DIPERBESAR SUPAYA JELAS */
     .img-frame {
       display: none;
       align-items: center;
@@ -328,7 +327,7 @@
       border: 1.5px solid #CBD5E1;
       border-radius: 10px;
       box-shadow: 0 3px 8px rgba(0,0,0,0.06);
-      max-height: clamp(80px, 14vh, 120px); /* GAMBAR DIPERBESAR SIGNIFIKAN */
+      max-height: clamp(80px, 14vh, 120px);
       width: auto;
     }
 
@@ -498,7 +497,7 @@
 
   <div class="game-container">
     
-    <!-- 1. STAGE ANIMASI TARIK TAMBANG (BENDERA FINISH MENANCAP) -->
+    <!-- 1. STAGE ANIMASI TARIK TAMBANG -->
     <section class="tug-stage">
       <!-- BENDERA FINISH TIM BIRU -->
       <div class="flag-pole flag-pole-left" title="Finis Tim Biru">
@@ -520,7 +519,7 @@
     <!-- 2. ARENA SOAL DAN KALKULATOR -->
     <main class="arena-bottom">
 
-      <!-- TIM BIRU -->
+      <!-- TIM BIRU (POSISI KIRI PAS) -->
       <section class="player-card">
         <div class="card-header-blue">
           <div class="header-left-group">
@@ -564,7 +563,7 @@
         </div>
       </section>
 
-      <!-- TIM MERAH -->
+      <!-- TIM MERAH (POSISI KANAN PAS) -->
       <section class="player-card">
         <div class="card-header-red">
           <div class="header-left-group">
