@@ -1,5 +1,3 @@
-// File: soal.js
-// Bank Soal Cerita Perkalian Kelas 3
 const questionBank = [
   { text: "Ayah menanam 5 baris pohon. Setiap baris ada 4 pohon. Berapa jumlah seluruh pohon?", ans: 20 },
   { text: "Ibu membeli 3 kantong jeruk. Setiap kantong berisi 8 jeruk. Berapa jumlah seluruh jeruk Ibu?", ans: 24 },
