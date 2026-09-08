@@ -2,9 +2,10 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Tarik Tambang Perkalian - Interaktiv-ta'lim</title>
 
+  <!-- Favicon / Ikon Tab Browser -->
   <link rel="icon" type="image/png" href="assets/logo.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,8 +25,8 @@
       --color-border: #CBD5E1;
 
       --radius-md: 10px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
       --radius-full: 9999px;
 
       --font-main: 'Nunito', sans-serif;
@@ -42,19 +43,19 @@
 
     html, body {
       width: 100%;
-      min-height: 100vh;
+      height: 100vh;
+      height: 100dvh; /* Dynamic Viewport Height untuk Tablet/HP */
       font-family: var(--font-main);
       background-color: var(--color-bg-canvas);
       color: var(--color-on-surface);
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      overflow: hidden; /* Menghilangkan scrollbar seluruhnya */
     }
 
     body {
-      overflow-x: hidden;
-      overflow-y: auto;
-      padding: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
     }
 
     /* =====================================================
@@ -62,14 +63,14 @@
     ===================================================== */
     .btn-back {
       position: fixed;
-      top: 12px;
-      left: 12px;
+      top: 10px;
+      left: 10px;
       z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       background-color: rgba(15, 23, 42, 0.85);
       color: #ffffff;
       text-decoration: none;
@@ -87,15 +88,15 @@
     }
 
     /* =====================================================
-       LAYOUT UTAMA PERMAINAN (RESPONSIF FLUID)
+       LAYOUT UTAMA PERMAINAN
     ===================================================== */
     .game-container {
       width: 100%;
       max-width: 1200px;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin: auto;
+      gap: 10px;
     }
 
     /* =====================================================
@@ -103,7 +104,8 @@
     ===================================================== */
     .tug-stage {
       width: 100%;
-      height: clamp(140px, 25vh, 220px);
+      height: clamp(120px, 22vh, 180px);
+      flex-shrink: 0;
       background-color: #E2E8F0;
       border: 2px solid var(--color-border);
       border-radius: var(--radius-xl);
@@ -119,19 +121,19 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 20px;
+      width: 18px;
       z-index: 1;
       background-image: 
         linear-gradient(45deg, #000 25%, transparent 25%), 
         linear-gradient(-45deg, #000 25%, transparent 25%), 
         linear-gradient(45deg, transparent 75%, #000 75%), 
         linear-gradient(-45deg, transparent 75%, #000 75%);
-      background-size: 10px 10px;
-      background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+      background-size: 8px 8px;
+      background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
       background-color: #fff;
     }
-    .finish-left { left: clamp(20px, 5vw, 60px); border-right: 2px solid #000; }
-    .finish-right { right: clamp(20px, 5vw, 60px); border-left: 2px solid #000; }
+    .finish-left { left: clamp(16px, 4vw, 50px); border-right: 2px solid #000; }
+    .finish-right { right: clamp(16px, 4vw, 50px); border-left: 2px solid #000; }
 
     .center-line {
       position: absolute;
@@ -146,7 +148,7 @@
 
     .gif-background {
       position: absolute;
-      height: 90%;
+      height: 85%;
       width: auto;
       object-fit: contain;
       z-index: 2;
@@ -158,46 +160,42 @@
     ===================================================== */
     .arena-bottom {
       width: 100%;
+      flex: 1;
+      min-height: 0; /* Agar child flex item bisa menyusut otomatis di tablet */
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+      gap: 12px;
     }
 
     .player-card {
       background-color: var(--color-surface);
       border-radius: var(--radius-xl);
       border: 2px solid var(--color-border);
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 12px;
+      padding-bottom: 8px;
+      height: 100%;
     }
 
-    .card-header-blue {
+    .card-header-blue, .card-header-red {
       width: 100%;
-      background-color: var(--color-primary);
       color: var(--color-surface);
-      padding: clamp(6px, 1.5vh, 10px) 16px;
+      padding: clamp(6px, 1.2vh, 10px) 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-shrink: 0;
     }
 
-    .card-header-red {
-      width: 100%;
-      background-color: var(--color-error);
-      color: var(--color-surface);
-      padding: clamp(6px, 1.5vh, 10px) 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .card-header-blue { background-color: var(--color-primary); }
+    .card-header-red { background-color: var(--color-error); }
 
     .player-name {
       font-family: var(--font-display);
-      font-size: clamp(16px, 2vw, 20px);
+      font-size: clamp(15px, 2vw, 18px);
       font-weight: 700;
     }
 
@@ -206,13 +204,14 @@
       background-color: rgba(255, 255, 255, 0.25);
       padding: 2px 10px;
       border-radius: var(--radius-full);
-      font-size: clamp(13px, 1.5vw, 16px);
+      font-size: clamp(12px, 1.4vw, 15px);
     }
 
     .question-box {
       width: 90%;
-      margin: 10px 0;
-      padding: clamp(8px, 1.5vh, 16px);
+      flex: 1;
+      margin: 6px 0;
+      padding: 4px 8px;
       background-color: #F8FAFC;
       border: 2px dashed var(--color-border);
       border-radius: var(--radius-md);
@@ -220,18 +219,20 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      min-height: 0;
     }
 
     .question-text {
       font-family: var(--font-display);
-      font-size: clamp(22px, 3.5vw, 32px);
+      font-size: clamp(20px, 3.2vh, 30px);
       font-weight: 700;
       color: var(--color-on-surface);
     }
 
     .answer-box {
-      width: 80%;
-      height: clamp(38px, 5vh, 48px);
+      width: 85%;
+      height: clamp(32px, 4.5vh, 44px);
+      flex-shrink: 0;
       background-color: var(--color-bg-canvas);
       border: 2px solid var(--color-border);
       border-radius: var(--radius-md);
@@ -239,25 +240,26 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: clamp(20px, 3vw, 28px);
+      font-size: clamp(18px, 2.8vh, 26px);
       color: var(--color-on-surface);
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     .keypad-grid {
-      width: 80%;
+      width: 85%;
+      flex-shrink: 0;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
+      gap: 5px;
     }
 
     .key-btn {
-      height: clamp(36px, 5vh, 46px);
+      height: clamp(32px, 4.8vh, 44px);
       background-color: var(--color-bg-canvas);
-      border: 2px solid var(--color-border);
+      border: 1.5px solid var(--color-border);
       border-radius: var(--radius-md);
       font-family: var(--font-display);
-      font-size: clamp(16px, 2vw, 20px);
+      font-size: clamp(15px, 2.2vh, 20px);
       font-weight: 700;
       color: var(--color-on-surface);
       cursor: pointer;
@@ -295,15 +297,15 @@
     .modal-card {
       background: white; border-radius: var(--radius-xl);
       padding: 24px; text-align: center;
-      max-width: 380px; width: 90%;
+      max-width: 360px; width: 90%;
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       transform: scale(0.8);
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .modal-overlay.show .modal-card { transform: scale(1); }
 
-    .modal-title { font-family: var(--font-display); font-size: 24px; margin-bottom: 8px; }
-    .modal-desc { font-size: 15px; color: var(--color-on-surface); margin-bottom: 20px; }
+    .modal-title { font-family: var(--font-display); font-size: 22px; margin-bottom: 8px; }
+    .modal-desc { font-size: 14px; color: var(--color-on-surface); margin-bottom: 18px; }
 
     .btn-restart {
       background-color: var(--color-primary); color: white;
@@ -312,44 +314,23 @@
       cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 197, 0.3);
     }
 
-    /* =====================================================
-       MEDIA QUERIES (DESAIN RESPONSIF MOBILE & TABLET)
-    ===================================================== */
-    @media (max-width: 768px) {
+    /* Penyesuaian Jika Layar Sempit/Vertikal */
+    @media (max-width: 600px) and (orientation: portrait) {
       body {
-        padding: 8px;
-        align-items: flex-start;
+        overflow-y: auto;
       }
-
-      .game-container {
-        gap: 8px;
-      }
-
       .arena-bottom {
-        grid-template-columns: 1fr; /* Tumpuk vertikal jika di HP Portrait */
-        gap: 12px;
+        grid-template-columns: 1fr;
       }
-
-      .keypad-grid, .answer-box {
-        width: 90%;
-      }
-    }
-
-    @media (max-height: 500px) and (orientation: landscape) {
-      /* Khusus HP Landscape */
-      body { padding: 4px; }
-      .tug-stage { height: 110px; }
-      .question-box { margin: 4px 0; padding: 4px; }
-      .answer-box { height: 32px; margin-bottom: 4px; }
-      .key-btn { height: 30px; font-size: 14px; }
     }
   </style>
 </head>
 
 <body>
 
+  <!-- Tombol Kembali -->
   <a href="index.html" class="btn-back" title="Kembali ke Beranda">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
     </svg>
@@ -357,6 +338,7 @@
 
   <div class="game-container">
     
+    <!-- STAGE ANIMASI TARIK TAMBANG -->
     <section class="tug-stage">
       <div class="finish-line finish-left"></div>
       <div class="center-line"></div>
@@ -364,8 +346,10 @@
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
+    <!-- ARENA SOAL DAN KALKULATOR -->
     <main class="arena-bottom">
 
+      <!-- TIM BIRU -->
       <section class="player-card">
         <div class="card-header-blue">
           <h2 class="player-name">TIM BIRU</h2>
@@ -393,6 +377,7 @@
         </div>
       </section>
 
+      <!-- TIM MERAH -->
       <section class="player-card">
         <div class="card-header-red">
           <h2 class="player-name">TIM MERAH</h2>
@@ -423,6 +408,7 @@
     </main>
   </div>
 
+  <!-- POPUP WINNER MODAL -->
   <div class="modal-overlay" id="winnerModal">
     <div class="modal-card">
       <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
@@ -431,6 +417,7 @@
     </div>
   </div>
 
+  <!-- JAVASCRIPT LOGIKA LOKAL -->
   <script>
     const questionBank = [
       { text: "2 x 3", ans: 6 },
@@ -464,15 +451,14 @@
     let pullPos = 0; 
     let isGameOver = false;
 
-    // Menghitung dinamika langkah animasi berdasarkan lebar layar
     function getPullStep() {
       const stageWidth = document.querySelector('.tug-stage').clientWidth;
-      return stageWidth * 0.08; // 8% dari lebar stage
+      return stageWidth * 0.08;
     }
 
     function getWinThreshold() {
       const stageWidth = document.querySelector('.tug-stage').clientWidth;
-      return (stageWidth / 2) - 40; // Batas finis mendekati tepi stage
+      return (stageWidth / 2) - 35;
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -615,7 +601,6 @@
       generateNewQuestion('right');
     }
 
-    // Reset posisi jika ukuran layar diubah
     window.addEventListener('resize', () => {
       pullPos = 0;
       document.getElementById('stageGif').style.transform = `translateX(0px)`;
