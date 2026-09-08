@@ -1,427 +1,974 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tug of War - Matematika</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome untuk Ikon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Animate.css untuk animasi -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700;800&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Tarik Tambang Perkalian - Interaktiv-ta'lim</title>
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            min-height: 100vh;
-            color: #f8fafc;
-        }
+  <!-- Favicon dari folder asset/logo.png -->
+  <link rel="icon" type="image/png" href="asset/logo.png" />
 
-        .font-game {
-            font-family: 'Fredoka One', cursive;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-        /* Area Arena Tarik Tambang */
-        .rope-container {
-            position: relative;
-            width: 100%;
-            height: 160px;
-            background: linear-gradient(to bottom, #334155, #1e293b);
-            border-y: 6px solid #475569;
-            overflow: hidden;
-        }
+  <!-- Library Generator QR Code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-        .rope {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 200%;
-            height: 14px;
-            background: repeating-linear-gradient(45deg, #d97706, #d97706 15px, #b45309 15px, #b45309 30px);
-            transform: translateY(-50%);
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
+  <style>
+    /* =====================================================
+       DESIGN TOKENS & RESPONSIVE BASE
+    ===================================================== */
+    :root {
+      --color-primary: #0284C5;
+      --color-secondary: #60A5FA;
+      --color-tertiary: #F59E0B;
+      --color-bg-canvas: #CBD5E1; 
+      --color-surface: #FFFFFF;
+      --color-on-surface: #0F172A;
+      --color-border: #94A3B8;
+      --color-error: #EF4444;
 
-        .center-marker {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            width: 4px;
-            background-color: #f59e0b;
-            transform: translateX(-50%);
-            z-index: 10;
-        }
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 22px;
+      --radius-full: 9999px;
 
-        .center-marker::before, .center-marker::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-        }
-        .center-marker::before { top: 0; border-top: 14px solid #f59e0b; }
-        .center-marker::after { bottom: 0; border-bottom: 14px solid #f59e0b; }
+      --font-main: 'Nunito', sans-serif;
+      --font-display: 'Fredoka', 'Nunito', sans-serif;
+    }
 
-        .rope-ribbon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 40px;
-            background-color: #ef4444;
-            transform: translate(-50%, -50%);
-            border-radius: 4px;
-            z-index: 12;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
 
-        .team-puller {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3.5rem;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 11;
-            filter: drop-shadow(0 10px 8px rgba(0,0,0,0.4));
-        }
+    html, body {
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      font-family: var(--font-main);
+      background-color: #E2E8F0;
+      color: var(--color-on-surface);
+      overflow: hidden;
+    }
 
-        /* Custom Card styling */
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-    </style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: clamp(8px, 1.2vh, 14px);
+    }
+
+    /* =====================================================
+       TIRAI OPENING
+    ===================================================== */
+    .curtain {
+      position: fixed;
+      top: 0;
+      width: 50vw;
+      height: 100vh;
+      background: repeating-linear-gradient(90deg, #F43F5E 0px, #EF4444 30px, #DC2626 60px, #EF4444 90px);
+      z-index: 100;
+      transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+      box-shadow: inset 0 0 50px rgba(15, 23, 42, 0.25);
+    }
+
+    .curtain-left { left: 0; border-right: 8px solid #B91C1C; }
+    .curtain-right { right: 0; border-left: 8px solid #B91C1C; }
+
+    .curtain-open .curtain-left { transform: translateX(-100%); }
+    .curtain-open .curtain-right { transform: translateX(100%); }
+
+    /* =====================================================
+       TOMBOL KEMBALI & FULLSCREEN
+    ===================================================== */
+    .btn-back, .btn-fullscreen {
+      position: fixed;
+      top: 12px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      background-color: rgba(15, 23, 42, 0.85);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.25s ease-in-out;
+    }
+
+    .btn-back { left: 12px; }
+    .btn-fullscreen { right: 12px; }
+
+    .btn-back:hover, .btn-fullscreen:hover {
+      background-color: rgba(37, 99, 235, 0.95);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: scale(1.08);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-back:active, .btn-fullscreen:active {
+      transform: scale(0.95);
+    }
+
+    /* =====================================================
+       LAYOUT UTAMA PERMAINAN
+    ===================================================== */
+    .game-container {
+      width: 100%;
+      max-width: 1280px; /* Diperlebar agar ruang jangkauan pinggir lebih luas */
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(8px, 1.2vh, 12px);
+    }
+
+    /* =====================================================
+       1. STAGE ANIMASI TARIK TAMBANG
+    ===================================================== */
+    .tug-stage {
+      width: 100%;
+      height: clamp(180px, 38vh, 280px);
+      flex-shrink: 0;
+      background: linear-gradient(180deg, #38BDF8 0%, #BAE6FD 55%, #86EFAC 55%, #4ADE80 100%);
+      border: 3.5px solid #0284C5;
+      border-radius: var(--radius-xl);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(2, 132, 197, 0.18);
+    }
+
+    /* BENDERA FINISH MENANCAP */
+    .flag-pole {
+      position: absolute;
+      bottom: 12%;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .flag-pole-left { left: clamp(24px, 7vw, 80px); }
+    .flag-pole-right { right: clamp(24px, 7vw, 80px); align-items: flex-end; }
+
+    .flag-banner {
+      width: clamp(38px, 4.5vw, 52px);
+      height: clamp(26px, 3vw, 36px);
+      background-color: #ffffff;
+      background-image: 
+        linear-gradient(45deg, #000 25%, transparent 25%), 
+        linear-gradient(-45deg, #000 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #000 75%), 
+        linear-gradient(-45deg, transparent 75%, #000 75%);
+      background-size: 10px 10px;
+      background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+      border: 2px solid #000;
+      border-radius: 2px;
+      box-shadow: 2px 3px 6px rgba(0,0,0,0.25);
+    }
+
+    .flag-stick {
+      width: 5px;
+      height: clamp(80px, 14vh, 120px);
+      background: linear-gradient(180deg, #94A3B8 0%, #475569 100%);
+      border-radius: 4px;
+      box-shadow: 1px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .center-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      background-color: var(--color-error);
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+
+    .gif-background {
+      position: absolute;
+      height: 85%;
+      width: auto;
+      object-fit: contain;
+      z-index: 2;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* =====================================================
+       2. ARENA SOAL & KARTU TIM (KARTU DIPUSH PENUH KE PINGGIR)
+    ===================================================== */
+    .arena-bottom {
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      justify-content: space-between; /* DORONG KARTU SEPENUHNYA KE UJUNG KIRI DAN KANAN */
+      gap: 20px;
+    }
+
+    .player-card {
+      width: 100%;
+      max-width: 380px; /* Tetap menjaga ukuran kartu kompak & proporsional */
+      background-color: var(--color-surface);
+      border-radius: var(--radius-xl);
+      border: 2px solid #E2E8F0;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(15, 23, 42, 0.04);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 6px;
+      height: 100%;
+    }
+
+    .card-header-blue, .card-header-red {
+      width: 100%;
+      color: var(--color-surface);
+      padding: clamp(5px, 1vh, 8px) 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .card-header-blue { background: linear-gradient(180deg, #38BDF8 0%, #0284C5 100%); }
+    .card-header-red { background: linear-gradient(180deg, #F87171 0%, #EF4444 100%); }
+
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-qr {
+      background-color: rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 3px 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .btn-qr:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+      transform: scale(1.05);
+    }
+
+    .player-name {
+      font-family: var(--font-display);
+      font-size: clamp(13px, 1.5vw, 16px);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .score-badge {
+      font-family: var(--font-display);
+      background-color: rgba(255, 255, 255, 0.3);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: clamp(11px, 1.2vw, 13px);
+    }
+
+    /* BODY KARTU */
+    .card-body {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: clamp(4px, 0.8vh, 8px) 10px;
+      gap: clamp(4px, 0.8vh, 6px);
+      min-height: 0;
+    }
+
+    /* KOTAK SOAL CERITA & GAMBAR */
+    .question-box {
+      width: 100%;
+      flex: 1;
+      background-color: #F8FAFC;
+      border: 2px dashed #CBD5E1;
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 8px;
+      text-align: center;
+      min-height: 0;
+      overflow: hidden;
+      gap: 4px;
+    }
+
+    .img-frame {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background-color: #FFFFFF;
+      padding: 6px 10px;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+      max-height: clamp(80px, 14vh, 120px);
+      width: auto;
+    }
+
+    .question-img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .question-text {
+      font-family: var(--font-display);
+      font-size: clamp(12px, 1.7vh, 16px);
+      font-weight: 700;
+      color: #0F172A;
+      line-height: 1.25;
+    }
+
+    /* KOTAK INPUT JAWABAN */
+    .answer-box {
+      width: 100%;
+      height: clamp(32px, 4vh, 38px);
+      flex-shrink: 0;
+      background-color: #FEF08A;
+      border: 2px solid #F59E0B;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: clamp(18px, 2.4vh, 22px);
+      font-weight: 700;
+      color: #78350F;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    /* KEYPAD GRID */
+    .keypad-grid {
+      width: 100%;
+      flex-shrink: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(3px, 0.6vh, 5px);
+    }
+
+    .key-btn {
+      height: clamp(30px, 4vh, 36px);
+      background-color: #F1F5F9;
+      border: 1.5px solid #CBD5E1;
+      border-radius: var(--radius-md);
+      font-family: var(--font-display);
+      font-size: clamp(14px, 1.9vh, 17px);
+      font-weight: 700;
+      color: var(--color-on-surface);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.1s ease;
+      box-shadow: 0 3px 0 #CBD5E1;
+    }
+
+    .key-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #CBD5E1;
+    }
+
+    .key-clear { 
+      background-color: #FFE4E6; 
+      color: var(--color-error); 
+      border-color: #FECDD3; 
+      box-shadow: 0 3px 0 #FECDD3; 
+    }
+
+    .key-submit-blue { 
+      background-color: var(--color-primary); 
+      color: white; 
+      border-color: #0369A1; 
+      box-shadow: 0 3px 0 #0369A1; 
+    }
+
+    .key-submit-red { 
+      background-color: var(--color-error); 
+      color: white; 
+      border-color: #B91C1C; 
+      box-shadow: 0 3px 0 #B91C1C; 
+    }
+
+    /* =====================================================
+       MODAL POPUP
+    ===================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: auto; }
+
+    .modal-card {
+      background: white; border-radius: var(--radius-xl);
+      padding: 24px; text-align: center;
+      max-width: 360px; width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      transform: scale(0.8);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .modal-overlay.show .modal-card { transform: scale(1); }
+
+    .modal-title { font-family: var(--font-display); font-size: 22px; color: var(--color-primary); margin-bottom: 8px; }
+    .modal-desc { font-size: 14px; color: var(--color-on-surface); margin-bottom: 16px; }
+
+    #qrcode-container {
+      padding: 12px; background: white;
+      border: 2px dashed #CBD5E1;
+      border-radius: var(--radius-lg); margin-bottom: 16px;
+    }
+
+    .btn-close-modal {
+      background-color: #F1F5F9; color: var(--color-on-surface);
+      font-family: var(--font-display); font-size: 14px;
+      padding: 8px 20px; border: 1.5px solid #CBD5E1;
+      border-radius: var(--radius-full); cursor: pointer;
+    }
+
+    .btn-restart {
+      background-color: var(--color-primary); color: white;
+      font-family: var(--font-display); font-size: 16px;
+      padding: 10px 26px; border: none; border-radius: var(--radius-full);
+      cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 197, 0.35);
+    }
+
+    @media (max-width: 640px) and (orientation: portrait) {
+      body { overflow-y: auto; }
+      .arena-bottom { flex-direction: column; align-items: center; gap: 16px; }
+      .player-card { width: 100%; max-width: 100%; }
+    }
+  </style>
 </head>
-<body class="flex flex-col min-h-screen justify-between p-2 md:p-4">
 
-    <!-- Header & Status Game -->
-    <header class="w-full max-w-5xl mx-auto text-center mb-2">
-        <h1 class="text-3xl md:text-5xl font-game tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 drop-shadow-lg">
-            TUG OF WAR MATEMATIKA
-        </h1>
-    </header>
+<body>
 
-    <!-- Main Content Area -->
-    <main class="w-full max-w-5xl mx-auto flex-grow flex flex-col justify-center">
+  <div class="curtain curtain-left"></div>
+  <div class="curtain curtain-right"></div>
 
-        <!-- SCOREBOARD & ATURAN SKOR (Dibuat Lebih Rapat Ke Tengah) -->
-        <div class="grid grid-cols-12 gap-2 md:gap-3 items-center mb-4 max-w-4xl mx-auto w-full px-2">
-            
-            <!-- Card Tim Merah (Span 4) -->
-            <div class="col-span-4 glass-card rounded-2xl p-3 md:p-4 text-center border-l-4 border-red-500 shadow-lg transition-transform hover:scale-105">
-                <div class="flex items-center justify-center gap-2 mb-1">
-                    <i class="fa-solid fa-users text-red-500 text-lg md:text-xl"></i>
-                    <span class="font-game text-red-400 text-sm md:text-xl">TIM MERAH</span>
-                </div>
-                <div id="score-red" class="text-3xl md:text-5xl font-game text-white tracking-wider">0</div>
-            </div>
+  <!-- Tombol Kembali -->
+  <a href="index.html" class="btn-back" title="Kembali ke Beranda" aria-label="Kembali ke Beranda">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+  </a>
 
-            <!-- Card Ketentuan Skor & Info Game (Span 4 - Di Tengah Antara Tim) -->
-            <div class="col-span-4 glass-card rounded-2xl p-2 md:p-3 text-center border-y-2 border-amber-500/50 shadow-md">
-                <div class="text-amber-400 font-bold text-xs md:text-sm uppercase tracking-wider mb-1">
-                    <i class="fa-solid fa-scroll mr-1"></i> Ketentuan Skor
-                </div>
-                <div class="text-[10px] md:text-xs text-slate-300 space-y-0.5 leading-tight">
-                    <p class="text-emerald-400 font-semibold"><i class="fa-solid fa-circle-check mr-0.5"></i> Benar: <span class="text-white">+10 Skor</span></p>
-                    <p class="text-rose-400 font-semibold"><i class="fa-solid fa-circle-xmark mr-0.5"></i> Salah: <span class="text-white">-5 Skor</span></p>
-                    <p class="text-amber-300 text-[9px] md:text-[11px] mt-1 pt-1 border-t border-slate-700/60">
-                        Tarik tali hingga ujung lawan untuk menang!
-                    </p>
-                </div>
-            </div>
+  <!-- Tombol Full Screen -->
+  <button class="btn-fullscreen" id="btnFullscreen" onclick="toggleFullscreen()" title="Layar Penuh" aria-label="Layar Penuh">
+    <svg id="iconExpand" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+    </svg>
+    <svg id="iconCompress" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+      <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+    </svg>
+  </button>
 
-            <!-- Card Tim Biru (Span 4) -->
-            <div class="col-span-4 glass-card rounded-2xl p-3 md:p-4 text-center border-r-4 border-blue-500 shadow-lg transition-transform hover:scale-105">
-                <div class="flex items-center justify-center gap-2 mb-1">
-                    <span class="font-game text-blue-400 text-sm md:text-xl">TIM BIRU</span>
-                    <i class="fa-solid fa-users text-blue-500 text-lg md:text-xl"></i>
-                </div>
-                <div id="score-blue" class="text-3xl md:text-5xl font-game text-white tracking-wider">0</div>
-            </div>
+  <div class="game-container">
+    
+    <!-- 1. STAGE ANIMASI TARIK TAMBANG -->
+    <section class="tug-stage">
+      <!-- BENDERA FINISH TIM BIRU -->
+      <div class="flag-pole flag-pole-left" title="Finis Tim Biru">
+        <div class="flag-banner"></div>
+        <div class="flag-stick"></div>
+      </div>
 
+      <div class="center-line" title="Batas Tengah Tali"></div>
+
+      <!-- BENDERA FINISH TIM MERAH -->
+      <div class="flag-pole flag-pole-right" title="Finis Tim Merah">
+        <div class="flag-banner"></div>
+        <div class="flag-stick"></div>
+      </div>
+
+      <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
+    </section>
+
+    <!-- 2. ARENA SOAL DAN KALKULATOR -->
+    <main class="arena-bottom">
+
+      <!-- TIM BIRU (POSISI KIRI PAS) -->
+      <section class="player-card">
+        <div class="card-header-blue">
+          <div class="header-left-group">
+            <button class="btn-qr" onclick="showQRCode('left')" title="Scan Remote HP">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </button>
+            <h2 class="player-name">TIM BIRU</h2>
+          </div>
+          <span class="score-badge" id="score-left">Skor: 0</span>
         </div>
 
-        <!-- ARENA TARIK TAMBANG -->
-        <div class="rope-container rounded-2xl mb-6 shadow-2xl">
-            <div class="center-marker"></div>
-            <!-- Tali Tambang -->
-            <div id="rope" class="rope">
-                <div class="rope-ribbon"></div>
+        <div class="card-body">
+          <div class="question-box">
+            <div class="img-frame" id="frame-left">
+              <img id="img-left" class="question-img" alt="Gambar Soal Tim Biru" />
             </div>
-            <!-- Karakter Tim Merah -->
-            <div id="puller-red" class="team-puller text-red-500" style="left: 20%;">
-                <i class="fa-solid fa-person-pulling"></i>
-            </div>
-            <!-- Karakter Tim Biru -->
-            <div id="puller-blue" class="team-puller text-blue-500" style="right: 20%; transform: translateY(-50%) scaleX(-1);">
-                <i class="fa-solid fa-person-pulling"></i>
-            </div>
+            <p class="question-text" id="q-left">Memuat...</p>
+          </div>
+          
+          <div class="answer-box" id="ans-left"></div>
+
+          <div class="keypad-grid">
+            <button class="key-btn" onclick="pressKey('left', '1')">1</button>
+            <button class="key-btn" onclick="pressKey('left', '2')">2</button>
+            <button class="key-btn" onclick="pressKey('left', '3')">3</button>
+            <button class="key-btn" onclick="pressKey('left', '4')">4</button>
+            <button class="key-btn" onclick="pressKey('left', '5')">5</button>
+            <button class="key-btn" onclick="pressKey('left', '6')">6</button>
+            <button class="key-btn" onclick="pressKey('left', '7')">7</button>
+            <button class="key-btn" onclick="pressKey('left', '8')">8</button>
+            <button class="key-btn" onclick="pressKey('left', '9')">9</button>
+            <button class="key-btn key-clear" onclick="pressKey('left', 'C')">C</button>
+            <button class="key-btn" onclick="pressKey('left', '0')">0</button>
+            <button class="key-btn key-submit-blue" onclick="pressKey('left', 'OK')">OK</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TIM MERAH (POSISI KANAN PAS) -->
+      <section class="player-card">
+        <div class="card-header-red">
+          <div class="header-left-group">
+            <button class="btn-qr" onclick="showQRCode('right')" title="Scan Remote HP">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </button>
+            <h2 class="player-name">TIM MERAH</h2>
+          </div>
+          <span class="score-badge" id="score-right">Skor: 0</span>
         </div>
 
-        <!-- AREA SOAL & INTERAKSI PERMAINAN -->
-        <div id="game-zone" class="glass-card rounded-3xl p-4 md:p-6 shadow-2xl relative overflow-hidden">
-            
-            <!-- Turn Indicator -->
-            <div class="flex justify-between items-center mb-4">
-                <span id="turn-badge" class="px-4 py-1.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider bg-red-500/20 text-red-400 border border-red-500/40 animate-pulse">
-                    Giliran: Tim Merah
-                </span>
-                <div class="text-slate-400 text-xs md:text-sm">
-                    <i class="fa-solid fa-stopwatch text-amber-400 mr-1"></i> Waktu: <span id="timer" class="font-mono text-white font-bold">15</span>s
-                </div>
+        <div class="card-body">
+          <div class="question-box">
+            <div class="img-frame" id="frame-right">
+              <img id="img-right" class="question-img" alt="Gambar Soal Tim Merah" />
             </div>
+            <p class="question-text" id="q-right">Memuat...</p>
+          </div>
+          
+          <div class="answer-box" id="ans-right"></div>
 
-            <!-- Tampilan Soal -->
-            <div class="text-center py-4 bg-slate-900/60 rounded-2xl border border-slate-700/50 mb-6 shadow-inner">
-                <div id="question" class="text-3xl md:text-5xl font-game tracking-wide text-white">
-                    12 + 15 = ?
-                </div>
-            </div>
-
-            <!-- Opsi Jawaban -->
-            <div id="options-container" class="grid grid-cols-2 gap-3 md:gap-4">
-                <!-- Tombol Opsi Jawaban di-generate via JavaScript -->
-            </div>
-
+          <div class="keypad-grid">
+            <button class="key-btn" onclick="pressKey('right', '1')">1</button>
+            <button class="key-btn" onclick="pressKey('right', '2')">2</button>
+            <button class="key-btn" onclick="pressKey('right', '3')">3</button>
+            <button class="key-btn" onclick="pressKey('right', '4')">4</button>
+            <button class="key-btn" onclick="pressKey('right', '5')">5</button>
+            <button class="key-btn" onclick="pressKey('right', '6')">6</button>
+            <button class="key-btn" onclick="pressKey('right', '7')">7</button>
+            <button class="key-btn" onclick="pressKey('right', '8')">8</button>
+            <button class="key-btn" onclick="pressKey('right', '9')">9</button>
+            <button class="key-btn key-clear" onclick="pressKey('right', 'C')">C</button>
+            <button class="key-btn" onclick="pressKey('right', '0')">0</button>
+            <button class="key-btn key-submit-red" onclick="pressKey('right', 'OK')">OK</button>
+          </div>
         </div>
+      </section>
 
     </main>
+  </div>
 
-    <!-- Modal Pemenang (Game Over) -->
-    <div id="winner-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
-        <div class="glass-card max-w-md w-full rounded-3xl p-6 text-center border-2 border-amber-500/50 shadow-2xl animate__animated animate__zoomIn">
-            <div class="text-6xl mb-4" id="winner-icon">🏆</div>
-            <h2 id="winner-title" class="text-3xl font-game text-amber-400 mb-2">TIM MERAH MENANG!</h2>
-            <p id="winner-desc" class="text-slate-300 text-sm mb-6">Selamat! Tim Anda berhasil menarik tali sampai ke batas kemenangan.</p>
-            
-            <button onclick="resetGame()" class="w-full py-3.5 px-6 rounded-xl font-game text-slate-900 bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 transition-all shadow-lg hover:shadow-orange-500/30 text-lg">
-                <i class="fa-solid fa-rotate-right mr-2"></i> MAIN LAGI
-            </button>
-        </div>
+  <!-- POPUP QR CODE MODAL -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-card">
+      <h2 class="modal-title" id="qrModalTitle">Remote Control</h2>
+      <p class="modal-desc">Scan QR Code ini menggunakan kamera HP untuk membuka controller remote.</p>
+      <div id="qrcode-container"></div>
+      <button class="btn-close-modal" onclick="closeQRModal()">Tutup</button>
     </div>
+  </div>
 
-    <!-- Script Logika Permainan -->
-    <script>
-        // State Game
-        let scoreRed = 0;
-        let scoreBlue = 0;
-        let ropePosition = 0; // -100 (Merah Menang) sampai +100 (Biru Menang)
-        let currentTurn = 'red'; // 'red' atau 'blue'
-        let currentAnswer = 0;
-        let timer = 15;
-        let timerInterval = null;
-        const WIN_THRESHOLD = 50; // Posisi tali untuk menang
+  <!-- POPUP WINNER MODAL -->
+  <div class="modal-overlay" id="winnerModal">
+    <div class="modal-card">
+      <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
+      <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menyentuh garis finis terlebih dahulu.</p>
+      <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
 
-        // Inisialisasi Game
-        function initGame() {
-            scoreRed = 0;
-            scoreBlue = 0;
-            ropePosition = 0;
-            currentTurn = 'red';
-            updateUI();
-            nextQuestion();
-            document.getElementById('winner-modal').classList.add('hidden');
+  <!-- Bank Soal Eksternal -->
+  <script src="soal.js"></script>
+
+  <!-- Firebase & Game Engine Realtime -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7qAhQ3LkF6Ey3fiFEPHNEwdy6BHPb548",
+      authDomain: "media-pembelajaran-inter-f5f88.firebaseapp.com",
+      projectId: "media-pembelajaran-inter-f5f88",
+      storageBucket: "media-pembelajaran-inter-f5f88.firebasestorage.app",
+      messagingSenderId: "913703978337",
+      appId: "1:913703978337:web:6a3d3fd07cbe4038c8f120",
+      measurementId: "G-WDSJDMM8RR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    const roomId = "room_" + Math.random().toString(36).substring(2, 8);
+
+    let currentQLeft = {};
+    let currentQRight = {};
+    let inputLeft = "";
+    let inputRight = "";
+    let scoreLeft = 0;
+    let scoreRight = 0;
+    let pullPos = 0; 
+    let isGameOver = false;
+
+    const PULL_STEP = 60;
+    const WIN_THRESHOLD = 380; 
+
+    let lastIndexLeft = -1;
+    let lastIndexRight = -1;
+
+    let qrGenerator = null;
+
+    // --- LOGIKA TOGGLE FULLSCREEN ---
+    function toggleFullscreen() {
+      const doc = window.document;
+      const docEl = doc.documentElement;
+
+      const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestAnimationFrame || docEl.msRequestFullscreen;
+      const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+      if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        if (requestFullScreen) {
+          requestFullScreen.call(docEl);
+        } else if (docEl.webkitRequestFullscreen) {
+          docEl.webkitRequestFullscreen();
         }
+      } else {
+        if (cancelFullScreen) {
+          cancelFullScreen.call(doc);
+        }
+      }
+    }
 
-        // Generate Soal Matematika Acak
-        function generateQuestion() {
-            const operators = ['+', '-', '×'];
-            const op = operators[Math.floor(Math.random() * operators.length)];
-            let a, b, ans;
+    function updateFullscreenIcons() {
+      const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+      document.getElementById('iconExpand').style.display = isFS ? 'none' : 'block';
+      document.getElementById('iconCompress').style.display = isFS ? 'block' : 'none';
+    }
 
-            if (op === '+') {
-                a = Math.floor(Math.random() * 50) + 1;
-                b = Math.floor(Math.random() * 50) + 1;
-                ans = a + b;
-            } else if (op === '-') {
-                a = Math.floor(Math.random() * 50) + 20;
-                b = Math.floor(Math.random() * a) + 1;
-                ans = a - b;
-            } else {
-                a = Math.floor(Math.random() * 12) + 1;
-                b = Math.floor(Math.random() * 10) + 1;
-                ans = a * b;
+    document.addEventListener('fullscreenchange', updateFullscreenIcons);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => {
+        document.body.classList.add("curtain-open");
+      }, 200);
+
+      generateNewQuestion('left');
+      generateNewQuestion('right');
+
+      listenRemoteControl();
+    });
+
+    function getRandomQuestionIndex(exceptIndex = -1) {
+      if (typeof questionBank === 'undefined' || questionBank.length === 0) return 0;
+      
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * questionBank.length);
+      } while (newIndex === exceptIndex && questionBank.length > 1);
+
+      return newIndex;
+    }
+
+    function generateNewQuestion(side) {
+      if (typeof questionBank === 'undefined' || questionBank.length === 0) return;
+      
+      if (side === 'left') {
+        const index = getRandomQuestionIndex(lastIndexRight);
+        lastIndexLeft = index;
+        currentQLeft = questionBank[index];
+        
+        document.getElementById('q-left').innerText = currentQLeft.text;
+        
+        const frameElem = document.getElementById('frame-left');
+        const imgElem = document.getElementById('img-left');
+        if (currentQLeft.image) {
+          imgElem.src = currentQLeft.image;
+          frameElem.style.display = 'flex';
+        } else {
+          frameElem.style.display = 'none';
+        }
+      } else {
+        const index = getRandomQuestionIndex(lastIndexLeft);
+        lastIndexRight = index;
+        currentQRight = questionBank[index];
+        
+        document.getElementById('q-right').innerText = currentQRight.text;
+        
+        const frameElem = document.getElementById('frame-right');
+        const imgElem = document.getElementById('img-right');
+        if (currentQRight.image) {
+          imgElem.src = currentQRight.image;
+          frameElem.style.display = 'flex';
+        } else {
+          frameElem.style.display = 'none';
+        }
+      }
+
+      syncStateToFirestore(side);
+    }
+
+    async function syncStateToFirestore(side) {
+      try {
+        const roomRef = doc(db, "active_rooms", roomId);
+        const dataToUpdate = side === 'left' ? {
+          questionLeft: currentQLeft,
+          scoreLeft: scoreLeft,
+          inputLeftVal: ""
+        } : {
+          questionRight: currentQRight,
+          scoreRight: scoreRight,
+          inputRightVal: ""
+        };
+        
+        await setDoc(roomRef, dataToUpdate, { merge: true });
+      } catch (err) {
+        console.error("Gagal sinkronisasi room: ", err);
+      }
+    }
+
+    function listenRemoteControl() {
+      const roomRef = doc(db, "active_rooms", roomId);
+      onSnapshot(roomRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+
+          if (data.inputLeftVal !== undefined) {
+            inputLeft = data.inputLeftVal;
+            document.getElementById('ans-left').innerText = inputLeft;
+          }
+          if (data.inputRightVal !== undefined) {
+            inputRight = data.inputRightVal;
+            document.getElementById('ans-right').innerText = inputRight;
+          }
+
+          if (data.lastAction) {
+            const { side, key, timestamp } = data.lastAction;
+            if (timestamp && Date.now() - timestamp < 2000) {
+              pressKey(side, key, false);
             }
-
-            return { question: `${a} ${op} ${b}`, answer: ans };
+          }
         }
+      });
+    }
 
-        // Tampilkan Soal Berikutnya
-        function nextQuestion() {
-            resetTimer();
-            const qData = generateQuestion();
-            currentAnswer = qData.answer;
+    function playBeep(freq = 600) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.1);
+    }
 
-            document.getElementById('question').innerText = `${qData.question} = ?`;
+    function pressKey(side, val, isLocal = true) {
+      if (isGameOver) return;
+      
+      playBeep(800);
 
-            // Buat Pilihan Jawaban
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
-
-            let options = [currentAnswer];
-            while (options.length < 4) {
-                let wrongAns = currentAnswer + (Math.floor(Math.random() * 20) - 10);
-                if (wrongAns !== currentAnswer && !options.includes(wrongAns)) {
-                    options.push(wrongAns);
-                }
-            }
-
-            // Acak Opsi
-            options.sort(() => Math.random() - 0.5);
-
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'py-3.5 px-4 rounded-xl font-game text-xl md:text-2xl bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700/80 transition-all transform hover:-translate-y-0.5 active:translate-y-0 shadow-md';
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(opt);
-                optionsContainer.appendChild(btn);
-            });
-
-            startTimer();
-        }
-
-        // Jalankan Timer
-        function startTimer() {
-            timer = 15;
-            document.getElementById('timer').innerText = timer;
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timer--;
-                document.getElementById('timer').innerText = timer;
-                if (timer <= 0) {
-                    clearInterval(timerInterval);
-                    handleTimeout();
-                }
-            }, 1000);
-        }
-
-        function resetTimer() {
-            clearInterval(timerInterval);
-        }
-
-        // Ketika Waktu Habis
-        function handleTimeout() {
-            applyScore(currentTurn, -5);
-            switchTurn();
-            nextQuestion();
-        }
-
-        // Cek Jawaban Pemain
-        function checkAnswer(selectedOpt) {
-            resetTimer();
-            if (selectedOpt === currentAnswer) {
-                // Jawaban Benar
-                applyScore(currentTurn, 10);
-                moveRope(currentTurn === 'red' ? -10 : 10);
-            } else {
-                // Jawaban Salah
-                applyScore(currentTurn, -5);
-            }
-
-            if (!checkWinner()) {
-                switchTurn();
-                nextQuestion();
-            }
-        }
-
-        // Terapkan Perubahan Skor
-        function applyScore(team, points) {
-            if (team === 'red') {
-                scoreRed = Math.max(0, scoreRed + points);
-            } else {
-                scoreBlue = Math.max(0, scoreBlue + points);
-            }
-            updateUI();
-        }
-
-        // Beralih Giliran
-        function switchTurn() {
-            currentTurn = currentTurn === 'red' ? 'blue' : 'red';
-            const badge = document.getElementById('turn-badge');
+      if (side === 'left') {
+        const box = document.getElementById('ans-left');
+        if (val === 'C') {
+          inputLeft = "";
+        } else if (val === 'OK') {
+          if (parseInt(inputLeft) === currentQLeft.ans) {
+            playBeep(1200);
+            scoreLeft += 10;
             
-            if (currentTurn === 'red') {
-                badge.className = 'px-4 py-1.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider bg-red-500/20 text-red-400 border border-red-500/40 animate-pulse';
-                badge.innerText = 'Giliran: Tim Merah';
-            } else {
-                badge.className = 'px-4 py-1.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/40 animate-pulse';
-                badge.innerText = 'Giliran: Tim Biru';
-            }
+            pullPos -= PULL_STEP;
+            document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
+            document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
+            inputLeft = "";
+            
+            checkWinner();
+            if (!isGameOver) generateNewQuestion('left');
+          } else {
+            playBeep(300);
+            inputLeft = "";
+          }
+        } else {
+          if (isLocal && inputLeft.length < 3) inputLeft += val;
         }
-
-        // Gerakkan Tali
-        function moveRope(delta) {
-            ropePosition += delta;
-            // Batasi Rentang Pergerakan
-            ropePosition = Math.max(-WIN_THRESHOLD, Math.min(WIN_THRESHOLD, ropePosition));
-            updateUI();
+        box.innerText = inputLeft;
+      } else {
+        const box = document.getElementById('ans-right');
+        if (val === 'C') {
+          inputRight = "";
+        } else if (val === 'OK') {
+          if (parseInt(inputRight) === currentQRight.ans) {
+            playBeep(1200);
+            scoreRight += 10;
+            
+            pullPos += PULL_STEP;
+            document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
+            document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
+            inputRight = "";
+            
+            checkWinner();
+            if (!isGameOver) generateNewQuestion('right');
+          } else {
+            playBeep(300);
+            inputRight = "";
+          }
+        } else {
+          if (isLocal && inputRight.length < 3) inputRight += val;
         }
+        box.innerText = inputRight;
+      }
+    }
 
-        // Perbarui Tampilan Visual (UI)
-        function updateUI() {
-            document.getElementById('score-red').innerText = scoreRed;
-            document.getElementById('score-blue').innerText = scoreBlue;
+    function checkWinner() {
+      if (pullPos <= -WIN_THRESHOLD) {
+        showWinner("TIM BIRU", "#0284C5");
+      } else if (pullPos >= WIN_THRESHOLD) {
+        showWinner("TIM MERAH", "#EF4444");
+      }
+    }
 
-            // Update posisi tali visual
-            const ropeElem = document.getElementById('rope');
-            const percentOffset = (ropePosition / WIN_THRESHOLD) * 25; // pergerakan maksimal %
-            ropeElem.style.transform = `translate(calc(-25% + ${percentOffset}%), -50%)`;
-        }
+    async function saveGameResult(winner) {
+      try {
+        await addDoc(collection(db, "tarik_tambang"), {
+          winner: winner,
+          scoreBlue: scoreLeft,
+          scoreRed: scoreRight,
+          playedAt: serverTimestamp()
+        });
+      } catch (e) {
+        console.error("Gagal menyimpan hasil permainan: ", e);
+      }
+    }
 
-        // Cek Pemenang
-        function checkWinner() {
-            let winner = null;
-            if (ropePosition <= -WIN_THRESHOLD) {
-                winner = 'Tim Merah';
-            } else if (ropePosition >= WIN_THRESHOLD) {
-                winner = 'Tim Biru';
-            }
+    function showWinner(teamName, color) {
+      isGameOver = true;
+      const modal = document.getElementById('winnerModal');
+      const title = document.getElementById('winnerText');
+      const desc = document.getElementById('winnerDesc');
 
-            if (winner) {
-                resetTimer();
-                showWinnerModal(winner);
-                return true;
-            }
-            return false;
-        }
+      title.innerText = `${teamName} MENANG! 🎉`;
+      title.style.color = color;
+      desc.innerText = `Selamat! ${teamName} berhasil menarik tali hingga menyentuh garis finis.`;
 
-        // Tampilkan Modal Kemenangan
-        function showWinnerModal(winner) {
-            const modal = document.getElementById('winner-modal');
-            const title = document.getElementById('winner-title');
-            const icon = document.getElementById('winner-icon');
-            const desc = document.getElementById('winner-desc');
+      saveGameResult(teamName);
 
-            if (winner === 'Tim Merah') {
-                title.innerText = 'TIM MERAH MENANG!';
-                title.className = 'text-3xl font-game text-red-400 mb-2';
-                icon.innerText = '🔴';
-                desc.innerText = `Tim Merah memenangkan pertandingan dengan skor ${scoreRed}!`;
-            } else {
-                title.innerText = 'TIM BIRU MENANG!';
-                title.className = 'text-3xl font-game text-blue-400 mb-2';
-                icon.innerText = '🔵';
-                desc.innerText = `Tim Biru memenangkan pertandingan dengan skor ${scoreBlue}!`;
-            }
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 350);
+    }
 
-            modal.classList.remove('hidden');
-        }
+    function restartGame() {
+      isGameOver = false;
+      scoreLeft = 0;
+      scoreRight = 0;
+      pullPos = 0;
+      inputLeft = "";
+      inputRight = "";
 
-        // Reset Game
-        function resetGame() {
-            initGame();
-        }
+      document.getElementById('score-left').innerText = `Skor: 0`;
+      document.getElementById('score-right').innerText = `Skor: 0`;
+      document.getElementById('ans-left').innerText = "";
+      document.getElementById('ans-right').innerText = "";
+      document.getElementById('stageGif').style.transform = `translateX(0px)`;
+      document.getElementById('winnerModal').classList.remove('show');
 
-        // Jalankan Game saat Halaman Selesai Dimuat
-        window.onload = initGame;
-    </script>
+      generateNewQuestion('left');
+      generateNewQuestion('right');
+    }
+
+    function showQRCode(side) {
+      const modal = document.getElementById('qrModal');
+      const title = document.getElementById('qrModalTitle');
+      const container = document.getElementById('qrcode-container');
+      
+      container.innerHTML = "";
+      
+      const teamTitle = side === 'left' ? 'Tim Biru' : 'Tim Merah';
+      title.innerText = `Remote ${teamTitle}`;
+
+      const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+      const remoteUrl = `${baseUrl}/remote.html?room=${roomId}&team=${side}`;
+
+      qrGenerator = new QRCode(container, {
+        text: remoteUrl,
+        width: 180,
+        height: 180,
+        colorDark: "#0F172A",
+        colorLight: "#FFFFFF",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      modal.classList.add('show');
+    }
+
+    function closeQRModal() {
+      document.getElementById('qrModal').classList.remove('show');
+    }
+
+    window.toggleFullscreen = toggleFullscreen;
+    window.pressKey = pressKey;
+    window.restartGame = restartGame;
+    window.showQRCode = showQRCode;
+    window.closeQRModal = closeQRModal;
+  </script>
+
 </body>
 </html>
