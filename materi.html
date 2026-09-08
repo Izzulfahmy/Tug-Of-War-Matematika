@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Materi Pembelajaran - Perkalian Bilangan Cacah</title>
   
   <!-- Favicon / Ikon Tab Browser -->
@@ -14,22 +14,27 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
     html, body {
       width: 100%;
-      height: 100%;
+      height: 100vh;
+      height: 100dvh; /* Dynamic Viewport Height untuk Tablet/HP */
       overflow: hidden; /* Menghilangkan scrollbar */
       background-color: #000000;
+      position: relative;
     }
 
-    /* Container Fullscreen Canva */
+    /* Container Fullscreen Canva Embed */
     .fullscreen-canva {
       position: absolute;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       border: none;
       z-index: 1;
     }
@@ -41,51 +46,66 @@
       display: block;
     }
 
-    /* Tombol Kembali Ikon Lingkaran di Pojok Kiri Atas */
-    .btn-back {
+    /* Floating Action Buttons (Tombol Kembali & Fullscreen) */
+    .btn-back, .btn-fullscreen {
       position: fixed;
       top: 16px;
-      left: 16px;
-      z-index: 9999; /* Memastikan tombol selalu berada di paling depan */
+      z-index: 9999; /* Memastikan tombol selalu di paling depan */
       display: flex;
       align-items: center;
       justify-content: center;
       width: 44px;
       height: 44px;
-      background-color: rgba(15, 23, 42, 0.85); /* Warna gelap dengan transparansi */
+      background-color: rgba(15, 23, 42, 0.85); /* Warna gelap transparan */
       color: #ffffff;
       text-decoration: none;
-      border-radius: 50%; /* Bentuk Lingkaran */
+      border-radius: 50%;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(8px); /* Efek blur modern */
+      backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
       transition: all 0.25s ease-in-out;
     }
 
-    /* Efek Hover (Saat kursor diarahkan ke tombol) */
-    .btn-back:hover {
-      background-color: rgba(37, 99, 235, 0.95); /* Berubah menjadi biru */
+    .btn-back {
+      left: 16px;
+    }
+
+    .btn-fullscreen {
+      right: 16px;
+    }
+
+    /* Efek Hover */
+    .btn-back:hover, .btn-fullscreen:hover {
+      background-color: rgba(37, 99, 235, 0.95); /* Warna biru saat kursor mendekat */
       border-color: rgba(255, 255, 255, 0.4);
-      transform: scale(1.08); /* Efek sedikit membesar */
+      transform: scale(1.08);
       box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
     }
 
     /* Efek Klik */
-    .btn-back:active {
+    .btn-back:active, .btn-fullscreen:active {
       transform: scale(0.95);
     }
 
-    /* Responsif untuk Layar HP */
+    /* Responsif untuk Layar HP/Mobile */
     @media (max-width: 640px) {
-      .btn-back {
+      .btn-back, .btn-fullscreen {
         top: 12px;
-        left: 12px;
         width: 38px;
         height: 38px;
       }
+
+      .btn-back {
+        left: 12px;
+      }
+
+      .btn-fullscreen {
+        right: 12px;
+      }
       
-      .btn-back svg {
+      .btn-back svg, .btn-fullscreen svg {
         width: 20px;
         height: 20px;
       }
@@ -102,6 +122,16 @@
     </svg>
   </a>
 
+  <!-- Tombol Full Screen (Pojok Kanan Atas) -->
+  <button class="btn-fullscreen" id="btnFullscreen" onclick="toggleFullscreen()" title="Layar Penuh" aria-label="Layar Penuh">
+    <svg id="iconExpand" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+    </svg>
+    <svg id="iconCompress" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+      <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+    </svg>
+  </button>
+
   <!-- Container Fullscreen Canva Embed -->
   <div class="fullscreen-canva">
     <iframe 
@@ -111,6 +141,39 @@
       allow="fullscreen">
     </iframe>
   </div>
+
+  <!-- JavaScript Logika Fullscreen API -->
+  <script>
+    function toggleFullscreen() {
+      const doc = window.document;
+      const docEl = doc.documentElement;
+
+      const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestAnimationFrame || docEl.msRequestFullscreen;
+      const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+      if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        if (requestFullScreen) {
+          requestFullScreen.call(docEl);
+        } else if (docEl.webkitRequestFullscreen) {
+          docEl.webkitRequestFullscreen();
+        }
+      } else {
+        if (cancelFullScreen) {
+          cancelFullScreen.call(doc);
+        }
+      }
+    }
+
+    // Mengubah Ikon Secara Otomatis Saat Masuk / Keluar Layar Penuh
+    function updateFullscreenIcons() {
+      const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+      document.getElementById('iconExpand').style.display = isFS ? 'none' : 'block';
+      document.getElementById('iconCompress').style.display = isFS ? 'block' : 'none';
+    }
+
+    document.addEventListener('fullscreenchange', updateFullscreenIcons);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
+  </script>
 
 </body>
 </html>
