@@ -156,12 +156,12 @@
     }
 
     .finish-left {
-      left: 100px;
+      left: 60px;
       border-right: 3px solid #000;
     }
 
     .finish-right {
-      right: 100px;
+      right: 60px;
       border-left: 3px solid #000;
     }
 
@@ -452,7 +452,7 @@
 
   <div class="game-container">
     
-    <!-- 1. STAGE ANIMASI TARIK TAMBANG (GARIS FINIS KIRI & KANAN) -->
+    <!-- 1. STAGE ANIMASI TARIK TAMBANG -->
     <section class="tug-stage">
       <div class="finish-line finish-left" title="Garis Finis Tim Biru"></div>
       <div class="center-line" title="Batas Tengah Tali"></div>
@@ -547,9 +547,9 @@
     let pullPos = 0; 
     let isGameOver = false;
 
-    // Jarak pergeseran per jawaban benar (60px) & Batas Menang (260px)
+    // Jarak pergeseran per jawaban (60px) & Batas Menang Disesuaikan (380px)
     const PULL_STEP = 60;
-    const WIN_THRESHOLD = 260; 
+    const WIN_THRESHOLD = 380; 
 
     let lastIndexLeft = -1;
     let lastIndexRight = -1;
@@ -638,10 +638,7 @@
             playBeep(1200);
             scoreLeft += 10;
             
-            // Tarik ke arah Kiri (Tim Biru)
             pullPos -= PULL_STEP;
-            if (pullPos < -WIN_THRESHOLD) pullPos = -WIN_THRESHOLD;
-
             document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
             inputLeft = "";
@@ -665,10 +662,7 @@
             playBeep(1200);
             scoreRight += 10;
             
-            // Tarik ke arah Kanan (Tim Merah)
             pullPos += PULL_STEP;
-            if (pullPos > WIN_THRESHOLD) pullPos = WIN_THRESHOLD;
-
             document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
             inputRight = "";
