@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Tarik Tambang Perkalian - Interaktiv-ta'lim</title>
 
   <link rel="icon" type="image/png" href="asset/logo.png" />
@@ -15,7 +15,7 @@
 
   <style>
     /* =====================================================
-       DESIGN TOKENS (Interaktiv-ta'lim)
+       DESIGN TOKENS & RESPONSIVE BASE
     ===================================================== */
     :root {
       --color-primary: #0284C5;
@@ -28,8 +28,8 @@
       --color-error: #EF4444;
 
       --radius-md: 10px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
       --radius-full: 9999px;
 
       --font-main: 'Nunito', sans-serif;
@@ -41,19 +41,24 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
-    body {
-      width: 100vw;
+    html, body {
+      width: 100%;
       height: 100vh;
+      height: 100dvh; /* Dynamic Viewport Height untuk Tablet/HP */
       font-family: var(--font-main);
       background-color: var(--color-bg-canvas);
       color: var(--color-on-surface);
-      overflow: hidden;
+      overflow: hidden; /* Menghilangkan scrollbar seluruhnya */
+    }
+
+    body {
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      position: relative;
+      padding: 10px;
     }
 
     /* =====================================================
@@ -77,18 +82,17 @@
     .curtain-open .curtain-right { transform: translateX(100%); }
 
     /* =====================================================
-       TOMBOL KEMBALI
+       TOMBOL KEMBALI & FULLSCREEN
     ===================================================== */
-    .btn-back {
+    .btn-back, .btn-fullscreen {
       position: fixed;
-      top: 16px;
-      left: 16px;
+      top: 10px;
       z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       background-color: rgba(15, 23, 42, 0.85);
       color: #ffffff;
       text-decoration: none;
@@ -97,17 +101,21 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
       transition: all 0.25s ease-in-out;
     }
 
-    .btn-back:hover {
+    .btn-back { left: 10px; }
+    .btn-fullscreen { right: 10px; }
+
+    .btn-back:hover, .btn-fullscreen:hover {
       background-color: rgba(37, 99, 235, 0.95);
       border-color: rgba(255, 255, 255, 0.4);
       transform: scale(1.08);
       box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
     }
 
-    .btn-back:active {
+    .btn-back:active, .btn-fullscreen:active {
       transform: scale(0.95);
     }
 
@@ -116,20 +124,20 @@
     ===================================================== */
     .game-container {
       width: 100%;
-      max-width: 1280px;
-      height: 100vh;
+      max-width: 1200px;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      padding: 12px 20px;
-      gap: 12px;
+      gap: 10px;
     }
 
     /* =====================================================
-       1. STAGE ANIMASI & GARIS FINIS
+       1. STAGE ANIMASI TARIK TAMBANG
     ===================================================== */
     .tug-stage {
       width: 100%;
-      height: 220px;
+      height: clamp(120px, 22vh, 180px);
+      flex-shrink: 0;
       background-color: #E2E8F0;
       border: 2px solid var(--color-border);
       border-radius: var(--radius-xl);
@@ -145,28 +153,19 @@
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 24px;
+      width: 18px;
       z-index: 1;
       background-image: 
         linear-gradient(45deg, #000 25%, transparent 25%), 
         linear-gradient(-45deg, #000 25%, transparent 25%), 
         linear-gradient(45deg, transparent 75%, #000 75%), 
         linear-gradient(-45deg, transparent 75%, #000 75%);
-      background-size: 12px 12px;
-      background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
+      background-size: 8px 8px;
+      background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
       background-color: #fff;
-      box-shadow: 0 0 8px rgba(0,0,0,0.15);
     }
-
-    .finish-left {
-      left: 60px;
-      border-right: 3px solid #000;
-    }
-
-    .finish-right {
-      right: 60px;
-      border-left: 3px solid #000;
-    }
+    .finish-left { left: clamp(16px, 4vw, 50px); border-right: 2px solid #000; }
+    .finish-right { right: clamp(16px, 4vw, 50px); border-left: 2px solid #000; }
 
     .center-line {
       position: absolute;
@@ -177,24 +176,11 @@
       background-color: var(--color-error);
       transform: translateX(-50%);
       z-index: 1;
-      box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
-    }
-
-    .center-line::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 14px;
-      height: 14px;
-      background-color: var(--color-error);
-      border-radius: 50%;
     }
 
     .gif-background {
       position: absolute;
-      height: 180px;
+      height: 85%;
       width: auto;
       object-fit: contain;
       z-index: 2;
@@ -207,48 +193,42 @@
     .arena-bottom {
       width: 100%;
       flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
       min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
     }
 
     .player-card {
       background-color: var(--color-surface);
       border-radius: var(--radius-xl);
       border: 2px solid var(--color-border);
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 12px;
+      padding-bottom: 8px;
+      height: 100%;
     }
 
-    .card-header-blue {
+    .card-header-blue, .card-header-red {
       width: 100%;
-      background-color: var(--color-primary);
       color: var(--color-surface);
-      padding: 8px 16px;
+      padding: clamp(6px, 1.2vh, 10px) 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-shrink: 0;
     }
 
-    .card-header-red {
-      width: 100%;
-      background-color: var(--color-error);
-      color: var(--color-surface);
-      padding: 8px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .card-header-blue { background-color: var(--color-primary); }
+    .card-header-red { background-color: var(--color-error); }
 
     .header-left-group {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .btn-qr {
@@ -256,7 +236,7 @@
       border: 1px solid rgba(255, 255, 255, 0.4);
       color: white;
       border-radius: var(--radius-md);
-      padding: 5px 8px;
+      padding: 4px 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -271,25 +251,25 @@
 
     .player-name {
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: clamp(15px, 2vw, 18px);
       font-weight: 700;
     }
 
     .score-badge {
       font-family: var(--font-display);
       background-color: rgba(255, 255, 255, 0.25);
-      padding: 2px 12px;
+      padding: 2px 10px;
       border-radius: var(--radius-full);
-      font-size: 14px;
+      font-size: clamp(12px, 1.4vw, 15px);
     }
 
     .question-box {
-      width: 92%;
+      width: 90%;
       flex: 1;
-      margin: 8px 0;
-      padding: 8px 12px;
+      margin: 6px 0;
+      padding: 4px 8px;
       background-color: #F8FAFC;
-      border: 1.5px dashed var(--color-border);
+      border: 2px dashed var(--color-border);
       border-radius: var(--radius-md);
       display: flex;
       flex-direction: column;
@@ -297,11 +277,12 @@
       justify-content: center;
       text-align: center;
       gap: 4px;
+      min-height: 0;
     }
 
     .question-img {
       max-width: 100%;
-      max-height: 70px;
+      max-height: clamp(35px, 6vh, 60px);
       object-fit: contain;
       border-radius: 6px;
       display: none;
@@ -309,15 +290,16 @@
 
     .question-text {
       font-family: var(--font-main);
-      font-size: 13.5px;
+      font-size: clamp(13px, 1.8vh, 16px);
       font-weight: 700;
       color: var(--color-on-surface);
-      line-height: 1.3;
+      line-height: 1.2;
     }
 
     .answer-box {
-      width: 80%;
-      height: 38px;
+      width: 85%;
+      height: clamp(32px, 4.5vh, 44px);
+      flex-shrink: 0;
       background-color: var(--color-bg-canvas);
       border: 2px solid var(--color-border);
       border-radius: var(--radius-md);
@@ -325,25 +307,26 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: 22px;
+      font-size: clamp(18px, 2.8vh, 26px);
       color: var(--color-on-surface);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .keypad-grid {
-      width: 80%;
+      width: 85%;
+      flex-shrink: 0;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
+      gap: 5px;
     }
 
     .key-btn {
-      height: 38px;
+      height: clamp(32px, 4.8vh, 44px);
       background-color: var(--color-bg-canvas);
       border: 1.5px solid var(--color-border);
       border-radius: var(--radius-md);
       font-family: var(--font-display);
-      font-size: 17px;
+      font-size: clamp(15px, 2.2vh, 20px);
       font-weight: 700;
       color: var(--color-on-surface);
       cursor: pointer;
@@ -359,120 +342,62 @@
       box-shadow: 0 1px 0 var(--color-border);
     }
 
-    .key-clear {
-      background-color: #FFE4E6;
-      color: var(--color-error);
-      border-color: #FECDD3;
-    }
+    .key-clear { background-color: #FFE4E6; color: var(--color-error); border-color: #FECDD3; }
+    .key-submit-blue { background-color: var(--color-primary); color: white; border-color: #0369A1; box-shadow: 0 3px 0 #0369A1; }
+    .key-submit-red { background-color: var(--color-error); color: white; border-color: #B91C1C; box-shadow: 0 3px 0 #B91C1C; }
 
-    .key-submit-blue {
-      background-color: var(--color-primary);
-      color: var(--color-surface);
-      border-color: #0369A1;
-      box-shadow: 0 3px 0 #0369A1;
-    }
-
-    .key-submit-red {
-      background-color: var(--color-error);
-      color: var(--color-surface);
-      border-color: #B91C1C;
-      box-shadow: 0 3px 0 #B91C1C;
-    }
-
-    /* MODAL POPUP */
+    /* =====================================================
+       MODAL POPUP
+    ===================================================== */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(6px);
       z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
       transition: opacity 0.3s ease;
     }
-
-    .modal-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .modal-overlay.show { opacity: 1; pointer-events: auto; }
 
     .modal-card {
-      background: white;
-      border-radius: var(--radius-xl);
-      padding: 24px;
-      text-align: center;
-      max-width: 380px;
-      width: 90%;
+      background: white; border-radius: var(--radius-xl);
+      padding: 24px; text-align: center;
+      max-width: 360px; width: 90%;
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       transform: scale(0.8);
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: flex; flex-direction: column; align-items: center;
     }
+    .modal-overlay.show .modal-card { transform: scale(1); }
 
-    .modal-overlay.show .modal-card {
-      transform: scale(1);
-    }
-
-    .modal-title {
-      font-family: var(--font-display);
-      font-size: 22px;
-      color: var(--color-primary);
-      margin-bottom: 8px;
-    }
-
-    .modal-desc {
-      font-size: 14px;
-      color: var(--color-on-surface);
-      margin-bottom: 16px;
-    }
+    .modal-title { font-family: var(--font-display); font-size: 22px; color: var(--color-primary); margin-bottom: 8px; }
+    .modal-desc { font-size: 14px; color: var(--color-on-surface); margin-bottom: 16px; }
 
     #qrcode-container {
-      padding: 12px;
-      background: white;
+      padding: 12px; background: white;
       border: 2px dashed var(--color-border);
-      border-radius: var(--radius-lg);
-      margin-bottom: 16px;
+      border-radius: var(--radius-lg); margin-bottom: 16px;
     }
 
     .btn-close-modal {
-      background-color: var(--color-bg-canvas);
-      color: var(--color-on-surface);
-      font-family: var(--font-display);
-      font-size: 15px;
-      padding: 8px 20px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-full);
-      cursor: pointer;
+      background-color: var(--color-bg-canvas); color: var(--color-on-surface);
+      font-family: var(--font-display); font-size: 15px;
+      padding: 8px 20px; border: 1px solid var(--color-border);
+      border-radius: var(--radius-full); cursor: pointer;
     }
 
     .btn-restart {
-      background-color: var(--color-primary);
-      color: white;
-      font-family: var(--font-display);
-      font-size: 16px;
-      padding: 10px 24px;
-      border: none;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(2, 132, 197, 0.3);
+      background-color: var(--color-primary); color: white;
+      font-family: var(--font-display); font-size: 16px;
+      padding: 10px 24px; border: none; border-radius: var(--radius-full);
+      cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 197, 0.3);
     }
 
-    @media (max-width: 768px) {
-      body { overflow-y: auto; height: auto; }
-      .game-container { height: auto; }
+    @media (max-width: 600px) and (orientation: portrait) {
+      body { overflow-y: auto; }
       .arena-bottom { grid-template-columns: 1fr; }
-      .tug-stage { height: 180px; }
-      .gif-background { height: 140px; }
-      .finish-left { left: 20px; }
-      .finish-right { right: 20px; }
     }
   </style>
 </head>
@@ -483,11 +408,20 @@
   <div class="curtain curtain-right"></div>
 
   <a href="index.html" class="btn-back" title="Kembali ke Beranda" aria-label="Kembali ke Beranda">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
     </svg>
   </a>
+
+  <button class="btn-fullscreen" id="btnFullscreen" onclick="toggleFullscreen()" title="Layar Penuh" aria-label="Layar Penuh">
+    <svg id="iconExpand" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+    </svg>
+    <svg id="iconCompress" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+      <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+    </svg>
+  </button>
 
   <div class="game-container">
     
@@ -504,7 +438,7 @@
         <div class="card-header-blue">
           <div class="header-left-group">
             <button class="btn-qr" onclick="showQRCode('left')" title="Scan Remote HP">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="3" width="7" height="7"></rect>
                 <rect x="14" y="3" width="7" height="7"></rect>
                 <rect x="14" y="14" width="7" height="7"></rect>
@@ -542,7 +476,7 @@
         <div class="card-header-red">
           <div class="header-left-group">
             <button class="btn-qr" onclick="showQRCode('right')" title="Scan Remote HP">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="3" width="7" height="7"></rect>
                 <rect x="14" y="3" width="7" height="7"></rect>
                 <rect x="14" y="14" width="7" height="7"></rect>
@@ -636,6 +570,36 @@
 
     let qrGenerator = null;
 
+    // --- LOGIKA TOGGLE FULLSCREEN ---
+    function toggleFullscreen() {
+      const doc = window.document;
+      const docEl = doc.documentElement;
+
+      const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestAnimationFrame || docEl.msRequestFullscreen;
+      const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+      if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        if (requestFullScreen) {
+          requestFullScreen.call(docEl);
+        } else if (docEl.webkitRequestFullscreen) {
+          docEl.webkitRequestFullscreen();
+        }
+      } else {
+        if (cancelFullScreen) {
+          cancelFullScreen.call(doc);
+        }
+      }
+    }
+
+    function updateFullscreenIcons() {
+      const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+      document.getElementById('iconExpand').style.display = isFS ? 'none' : 'block';
+      document.getElementById('iconCompress').style.display = isFS ? 'block' : 'none';
+    }
+
+    document.addEventListener('fullscreenchange', updateFullscreenIcons);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
+
     document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         document.body.classList.add("curtain-open");
@@ -719,7 +683,6 @@
         if (snapshot.exists()) {
           const data = snapshot.data();
 
-          // Tampilkan teks input realtime dari HP ke desktop
           if (data.inputLeftVal !== undefined) {
             inputLeft = data.inputLeftVal;
             document.getElementById('ans-left').innerText = inputLeft;
@@ -729,7 +692,6 @@
             document.getElementById('ans-right').innerText = inputRight;
           }
 
-          // Tanggapi penekanan tombol action dari HP
           if (data.lastAction) {
             const { side, key, timestamp } = data.lastAction;
             if (timestamp && Date.now() - timestamp < 2000) {
@@ -898,6 +860,7 @@
       document.getElementById('qrModal').classList.remove('show');
     }
 
+    window.toggleFullscreen = toggleFullscreen;
     window.pressKey = pressKey;
     window.restartGame = restartGame;
     window.showQRCode = showQRCode;
