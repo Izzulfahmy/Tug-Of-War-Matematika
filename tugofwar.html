@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
+  <!-- Library Generator QR Code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
   <style>
     /* =====================================================
        DESIGN TOKENS (Interaktiv-ta'lim)
@@ -137,7 +140,6 @@
       box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    /* Motif Catur Garis Finis Kiri & Kanan */
     .finish-line {
       position: absolute;
       top: 0;
@@ -165,7 +167,6 @@
       border-left: 3px solid #000;
     }
 
-    /* Garis Batas Tengah Tali */
     .center-line {
       position: absolute;
       top: 0;
@@ -243,6 +244,31 @@
       align-items: center;
     }
 
+    .header-left-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Tombol QR Code */
+    .btn-qr {
+      background-color: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 5px 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .btn-qr:hover {
+      background-color: rgba(255, 255, 255, 0.35);
+      transform: scale(1.05);
+    }
+
     .player-name {
       font-family: var(--font-display);
       font-size: 18px;
@@ -257,7 +283,6 @@
       font-size: 14px;
     }
 
-    /* Box Soal Cerita */
     .question-box {
       width: 92%;
       flex: 1;
@@ -355,9 +380,9 @@
     }
 
     /* =====================================================
-       3. MODAL POPUP KEMENANGAN
+       3. MODAL POPUP & QR CODE
     ===================================================== */
-    .winner-modal-overlay {
+    .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -374,38 +399,65 @@
       transition: opacity 0.3s ease;
     }
 
-    .winner-modal-overlay.show {
+    .modal-overlay.show {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .winner-card {
+    .modal-card {
       background: white;
       border-radius: var(--radius-xl);
-      padding: 30px;
+      padding: 24px;
       text-align: center;
-      max-width: 400px;
+      max-width: 380px;
       width: 90%;
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       transform: scale(0.8);
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .winner-modal-overlay.show .winner-card {
+    .modal-overlay.show .modal-card {
       transform: scale(1);
     }
 
-    .winner-title {
+    .modal-title {
       font-family: var(--font-display);
-      font-size: 26px;
+      font-size: 22px;
       color: var(--color-primary);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
-    .winner-desc {
-      font-size: 16px;
+    .modal-desc {
+      font-size: 14px;
       color: var(--color-on-surface);
-      margin-bottom: 20px;
+      margin-bottom: 16px;
+    }
+
+    #qrcode-container {
+      padding: 12px;
+      background: white;
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 16px;
+    }
+
+    .btn-close-modal {
+      background-color: var(--color-bg-canvas);
+      color: var(--color-on-surface);
+      font-family: var(--font-display);
+      font-size: 15px;
+      padding: 8px 20px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-close-modal:hover {
+      background-color: var(--color-border);
     }
 
     .btn-restart {
@@ -466,7 +518,17 @@
       <!-- TIM BIRU -->
       <section class="player-card">
         <div class="card-header-blue">
-          <h2 class="player-name">TIM BIRU</h2>
+          <div class="header-left-group">
+            <button class="btn-qr" onclick="showQRCode('left')" title="Scan Remote HP">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </button>
+            <h2 class="player-name">TIM BIRU</h2>
+          </div>
           <span class="score-badge" id="score-left">Skor: 0</span>
         </div>
         
@@ -495,7 +557,17 @@
       <!-- TIM MERAH -->
       <section class="player-card">
         <div class="card-header-red">
-          <h2 class="player-name">TIM MERAH</h2>
+          <div class="header-left-group">
+            <button class="btn-qr" onclick="showQRCode('right')" title="Scan Remote HP">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </button>
+            <h2 class="player-name">TIM MERAH</h2>
+          </div>
           <span class="score-badge" id="score-right">Skor: 0</span>
         </div>
         
@@ -524,11 +596,21 @@
     </main>
   </div>
 
+  <!-- POPUP QR CODE MODAL -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-card">
+      <h2 class="modal-title" id="qrModalTitle">Remote Control</h2>
+      <p class="modal-desc">Scan QR Code ini menggunakan kamera HP untuk membuka controller remote.</p>
+      <div id="qrcode-container"></div>
+      <button class="btn-close-modal" onclick="closeQRModal()">Tutup</button>
+    </div>
+  </div>
+
   <!-- POPUP WINNER MODAL -->
-  <div class="winner-modal-overlay" id="winnerModal">
-    <div class="winner-card">
-      <h2 class="winner-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
-      <p class="winner-desc" id="winnerDesc">Selamat! Tim Biru berhasil menyentuh garis finis terlebih dahulu.</p>
+  <div class="modal-overlay" id="winnerModal">
+    <div class="modal-card">
+      <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
+      <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menyentuh garis finis terlebih dahulu.</p>
       <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
     </div>
   </div>
@@ -536,13 +618,13 @@
   <!-- Panggil File Bank Soal Eksternal -->
   <script src="soal.js"></script>
 
-  <!-- Integrasi Firebase SDK & Logika Permainan -->
+  <!-- Integrasi Firebase SDK & Logika Permainan Realtime -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Konfigurasi Firebase Anda
+    // Konfigurasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyA7qAhQ3LkF6Ey3fiFEPHNEwdy6BHPb548",
       authDomain: "media-pembelajaran-inter-f5f88.firebaseapp.com",
@@ -553,12 +635,13 @@
       measurementId: "G-WDSJDMM8RR"
     };
 
-    // Inisialisasi Firebase & Firestore
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
-    // Variabel Permainan
+    // ID Room Unik untuk Sesi Permainan Ini
+    const roomId = "room_" + Math.random().toString(36).substring(2, 8);
+
     let currentQLeft = {};
     let currentQRight = {};
     let inputLeft = "";
@@ -574,6 +657,8 @@
     let lastIndexLeft = -1;
     let lastIndexRight = -1;
 
+    let qrGenerator = null;
+
     document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         document.body.classList.add("curtain-open");
@@ -581,6 +666,9 @@
 
       generateNewQuestion('left');
       generateNewQuestion('right');
+
+      // Dengarkan perintah input dari remote HP via Firestore Realtime Listener
+      listenRemoteControl();
     });
 
     function getRandomQuestionIndex(exceptIndex = -1) {
@@ -626,6 +714,44 @@
           imgElem.style.display = 'none';
         }
       }
+
+      // Sinkronkan soal terbaru ke Firestore agar remote HP membaca soal yang sama
+      syncStateToFirestore(side);
+    }
+
+    // Fungsi Update State Soal ke Firestore
+    async function syncStateToFirestore(side) {
+      try {
+        const roomRef = doc(db, "active_rooms", roomId);
+        const dataToUpdate = side === 'left' ? {
+          questionLeft: currentQLeft,
+          scoreLeft: scoreLeft
+        } : {
+          questionRight: currentQRight,
+          scoreRight: scoreRight
+        };
+        
+        await setDoc(roomRef, dataToUpdate, { merge: true });
+      } catch (err) {
+        console.error("Gagal sinkronisasi room: ", err);
+      }
+    }
+
+    // Mendengarkan Sinyal Input dari Remote HP
+    function listenRemoteControl() {
+      const roomRef = doc(db, "active_rooms", roomId);
+      onSnapshot(roomRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          if (data.lastAction) {
+            const { side, key, timestamp } = data.lastAction;
+            // Jalankan tombol keypad berdasarkan aksi remote
+            if (timestamp && Date.now() - timestamp < 2000) {
+              pressKey(side, key, false);
+            }
+          }
+        }
+      });
     }
 
     function playBeep(freq = 600) {
@@ -644,7 +770,7 @@
       osc.stop(ctx.currentTime + 0.1);
     }
 
-    function pressKey(side, val) {
+    function pressKey(side, val, isLocal = true) {
       if (isGameOver) return;
       
       playBeep(800);
@@ -708,7 +834,6 @@
       }
     }
 
-    // SIMPAN HASIL KE FIRESTORE KETIKA GAME OVER
     async function saveGameResult(winner) {
       try {
         await addDoc(collection(db, "tarik_tambang"), {
@@ -717,7 +842,6 @@
           scoreRed: scoreRight,
           playedAt: serverTimestamp()
         });
-        console.log("Hasil permainan berhasil disimpan ke Firestore!");
       } catch (e) {
         console.error("Gagal menyimpan hasil permainan: ", e);
       }
@@ -733,7 +857,6 @@
       title.style.color = color;
       desc.innerText = `Selamat! ${teamName} berhasil menarik tali hingga menyentuh garis finis.`;
 
-      // Simpan riwayat ke folder/koleksi 'tarik_tambang'
       saveGameResult(teamName);
 
       setTimeout(() => {
@@ -760,9 +883,42 @@
       generateNewQuestion('right');
     }
 
-    // Expose fungsi ke window agar tombol HTML onclick bisa memanggilnya
+    // Fungsi Menampilkan QR Code Remote
+    function showQRCode(side) {
+      const modal = document.getElementById('qrModal');
+      const title = document.getElementById('qrModalTitle');
+      const container = document.getElementById('qrcode-container');
+      
+      container.innerHTML = ""; // Clear QR sebelumnya
+      
+      const teamTitle = side === 'left' ? 'Tim Biru' : 'Tim Merah';
+      title.innerText = `Remote ${teamTitle}`;
+
+      // Buat URL Remote HP (misal remote.html?room=xxx&team=left)
+      const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+      const remoteUrl = `${baseUrl}/remote.html?room=${roomId}&team=${side}`;
+
+      qrGenerator = new QRCode(container, {
+        text: remoteUrl,
+        width: 180,
+        height: 180,
+        colorDark: "#0F172A",
+        colorLight: "#FFFFFF",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      modal.classList.add('show');
+    }
+
+    function closeQRModal() {
+      document.getElementById('qrModal').classList.remove('show');
+    }
+
+    // Expose fungsi ke window global
     window.pressKey = pressKey;
     window.restartGame = restartGame;
+    window.showQRCode = showQRCode;
+    window.closeQRModal = closeQRModal;
   </script>
 
 </body>
