@@ -1,6 +1,6 @@
 const questionBank = [
   { 
-    image: "Izzulfahmy/Tug-Of-War-Matematika/soal/1.png",
+    image: "soal/1.png",
     text: "Ayah menanam 5 baris pohon. Setiap baris ada 4 pohon. Berapa jumlah seluruh pohon?", 
     ans: 20 
   },
