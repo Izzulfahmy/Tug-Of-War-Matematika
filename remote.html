@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
+  <!-- Canvas Confetti Library untuk Efek Pesta Jawaban Benar -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
   <style>
     :root {
       --color-primary: #0284C5;
@@ -18,6 +21,7 @@
       --color-on-surface: #0F172A;
       --color-border: #CBD5E1;
       --color-error: #EF4444;
+      --color-success: #22C55E;
 
       --radius-md: 12px;
       --radius-lg: 18px;
@@ -46,6 +50,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 16px;
+      position: relative;
+      overflow: hidden;
     }
 
     /* HEADER NAMA TIM & SKOR */
@@ -59,6 +65,7 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      z-index: 10;
     }
 
     .bg-blue { background-color: var(--color-primary); }
@@ -95,11 +102,13 @@
       text-align: center;
       gap: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      z-index: 10;
+      overflow: hidden;
     }
 
     .question-img {
       max-width: 100%;
-      max-height: 100px;
+      max-height: 110px;
       object-fit: contain;
       border-radius: 8px;
       display: none;
@@ -111,11 +120,47 @@
       line-height: 1.4;
     }
 
+    /* NOTIFIKASI FEEDBACK JAWABAN */
+    .feedback-banner {
+      width: 100%;
+      max-width: 420px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      margin-bottom: 6px;
+      opacity: 0;
+      transform: translateY(-5px);
+      transition: all 0.25s ease;
+      z-index: 10;
+    }
+
+    .feedback-banner.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .feedback-success {
+      background-color: #DCFCE7;
+      color: #15803D;
+      border: 1.5px solid #86EFAC;
+    }
+
+    .feedback-error {
+      background-color: #FEE2E2;
+      color: #B91C1C;
+      border: 1.5px solid #FCA5A5;
+    }
+
     /* INPUT & KEYPAD JAWABAN */
     .answer-display {
       width: 100%;
       max-width: 420px;
-      height: 50px;
+      height: 48px;
       background-color: var(--color-surface);
       border: 2px solid var(--color-border);
       border-radius: var(--radius-md);
@@ -126,6 +171,7 @@
       font-size: 26px;
       margin-bottom: 12px;
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      z-index: 10;
     }
 
     .keypad-grid {
@@ -134,6 +180,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
+      z-index: 10;
     }
 
     .key-btn {
@@ -197,6 +244,9 @@
     <p class="question-text" id="qText">Menghubungkan ke permainan...</p>
   </main>
 
+  <!-- BANNER NOTIFIKASI BENAR / SALAH -->
+  <div class="feedback-banner" id="feedbackBanner"></div>
+
   <!-- DISPLAY JAWABAN INPUT -->
   <div class="answer-display" id="ansDisplay"></div>
 
@@ -216,12 +266,11 @@
     <button class="key-btn key-submit submit-blue" id="btnSubmit" onclick="sendKey('OK')">OK</button>
   </div>
 
-  <!-- FIREBASE INTEGRATION -->
+  <!-- FIREBASE INTEGRATION & EFFECT LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Konfigurasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyA7qAhQ3LkF6Ey3fiFEPHNEwdy6BHPb548",
       authDomain: "media-pembelajaran-inter-f5f88.firebaseapp.com",
@@ -234,14 +283,13 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Ambil parameter URL (?room=xxx&team=left/right)
     const urlParams = new URLSearchParams(window.location.search);
     const roomId = urlParams.get('room');
-    const side = urlParams.get('team') || 'left'; // 'left' = Tim Biru, 'right' = Tim Merah
+    const side = urlParams.get('team') || 'left';
 
     let inputVal = "";
+    let currentAns = null;
 
-    // Sesuaikan Tampilan UI Berdasarkan Tim
     const header = document.getElementById('remoteHeader');
     const title = document.getElementById('teamTitle');
     const btnSubmit = document.getElementById('btnSubmit');
@@ -256,7 +304,6 @@
       btnSubmit.className = "key-btn key-submit submit-red";
     }
 
-    // Dengarkan Perubahan Soal & Skor secara Realtime dari Firestore
     if (roomId) {
       const roomRef = doc(db, "active_rooms", roomId);
       onSnapshot(roomRef, (snapshot) => {
@@ -264,10 +311,16 @@
           const data = snapshot.data();
           
           if (side === 'left') {
-            if (data.questionLeft) updateQuestionUI(data.questionLeft);
+            if (data.questionLeft) {
+              updateQuestionUI(data.questionLeft);
+              currentAns = data.questionLeft.ans;
+            }
             if (data.scoreLeft !== undefined) document.getElementById('scoreBadge').innerText = `Skor: ${data.scoreLeft}`;
           } else {
-            if (data.questionRight) updateQuestionUI(data.questionRight);
+            if (data.questionRight) {
+              updateQuestionUI(data.questionRight);
+              currentAns = data.questionRight.ans;
+            }
             if (data.scoreRight !== undefined) document.getElementById('scoreBadge').innerText = `Skor: ${data.scoreRight}`;
           }
         }
@@ -279,28 +332,93 @@
       const imgElem = document.getElementById('qImg');
       
       if (question.image) {
-        imgElem.src = question.image;
+        // Konversi path gambar relatif agar selalu bisa dibuka dengan benar di URL HP
+        let imgUrl = question.image;
+        if (!imgUrl.startsWith('http://') && !imgUrl.startsWith('https://')) {
+          const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+          imgUrl = `${baseUrl}/${imgUrl}`;
+        }
+        
+        imgElem.src = imgUrl;
         imgElem.style.display = 'block';
       } else {
         imgElem.style.display = 'none';
       }
     }
 
-    // Kirim Perintah Tombol Keypad ke Firestore
+    // Suara Efek
+    function playBeep(freq = 600, duration = 0.1) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    }
+
+    // Tampilkan Notifikasi & Efek Perayaan
+    function triggerFeedback(isCorrect) {
+      const banner = document.getElementById('feedbackBanner');
+      
+      if (isCorrect) {
+        banner.className = "feedback-banner feedback-success show";
+        banner.innerText = "BENAR! 🎉 SIAP TARIK!";
+        
+        playBeep(1000, 0.15);
+        setTimeout(() => playBeep(1400, 0.2), 100);
+
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+        confetti({
+          particleCount: 70,
+          spread: 60,
+          origin: { y: 0.7 }
+        });
+      } else {
+        banner.className = "feedback-banner feedback-error show";
+        banner.innerText = "SALAH, COBA LAGI! ❌";
+
+        playBeep(300, 0.25);
+
+        if (navigator.vibrate) navigator.vibrate(250);
+      }
+
+      setTimeout(() => {
+        banner.classList.remove('show');
+      }, 1500);
+    }
+
+    // Kirim Perintah Tombol Keypad
     async function sendKey(val) {
       const box = document.getElementById('ansDisplay');
 
       if (val === 'C') {
+        playBeep(700, 0.08);
         inputVal = "";
       } else if (val === 'OK') {
+        if (inputVal !== "") {
+          const userAns = parseInt(inputVal);
+          if (currentAns !== null && userAns === currentAns) {
+            triggerFeedback(true);
+          } else {
+            triggerFeedback(false);
+          }
+        }
         inputVal = "";
       } else {
+        playBeep(800, 0.08);
         if (inputVal.length < 3) inputVal += val;
       }
 
       box.innerText = inputVal;
 
-      // Kirim sinyal aksi ke Firestore agar layar utama merespons
       if (roomId) {
         try {
           const roomRef = doc(db, "active_rooms", roomId);
