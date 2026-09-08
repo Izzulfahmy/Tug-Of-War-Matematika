@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Media Pembelajaran Matematika - Perkalian Kelas 3</title>
   
-  <!-- Favicon dari folder assets/logo.png -->
+  <!-- Favicon dari folder asset/logo.png -->
   <link rel="icon" type="image/png" href="asset/logo.png" />
 
   <!-- Google Fonts: Fredoka & Nunito -->
@@ -42,7 +42,7 @@
     body {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       padding: clamp(12px, 2.5vh, 24px) 1rem;
       position: relative;
@@ -95,36 +95,34 @@
       align-items: center;
     }
 
-    .badge-top {
+    /* CONTAINER DERAJAN LOGO */
+    .logo-group {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: center;
+      gap: clamp(0.6rem, 1.8vw, 1.2rem);
       background-color: #ffffff;
-      color: #0284c7;
-      font-family: 'Fredoka', sans-serif;
-      font-weight: 600;
-      font-size: clamp(0.8rem, 1.8vw, 1rem);
-      padding: 0.35rem 1.2rem;
+      padding: 0.4rem 1.4rem;
       border-radius: 50px;
       border: 3px solid #38bdf8;
       box-shadow: 0 4px 0 #0284c7;
-      margin-bottom: clamp(0.4rem, 1.2vh, 0.8rem);
+      margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
     }
 
-    .univ-logo {
-      height: clamp(20px, 3vh, 26px);
+    .header-logo {
+      height: clamp(26px, 4.5vh, 38px);
       width: auto;
       object-fit: contain;
     }
 
     .main-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1.5rem, 4.2vw, 2.8rem);
+      font-size: clamp(1.6rem, 4.5vw, 3rem);
       font-weight: 700;
       color: #0284c7;
       text-shadow: 2px 2px 0px #ffffff, 4px 4px 0px #bae6fd;
       line-height: 1.15;
-      margin-bottom: clamp(0.3rem, 1vh, 0.5rem);
+      margin-bottom: clamp(0.3rem, 1vh, 0.6rem);
       letter-spacing: 0.5px;
     }
 
@@ -140,22 +138,22 @@
     }
 
     /* ===================================================
-       4. MENU CONTAINER (3 TOMBOL SUPER CERIA 3D)
+       4. MENU CONTAINER (2 TOMBOL SUPER CERIA 3D)
        =================================================== */
     .menu-container {
       width: 100%;
-      max-width: 900px;
+      max-width: 650px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: clamp(0.8rem, 2vw, 1.5rem);
-      margin: auto 0;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(1rem, 2.5vw, 1.8rem);
+      margin: clamp(1rem, 3vh, 2rem) 0;
       padding: 0.5rem 0;
     }
 
     .menu-card {
       text-decoration: none;
       border-radius: clamp(20px, 3vw, 28px);
-      padding: clamp(1.2rem, 3vh, 2rem) 1rem;
+      padding: clamp(1.4rem, 3.5vh, 2.2rem) 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -204,15 +202,9 @@
       box-shadow: 0 8px 0 #b45309, 0 12px 18px rgba(245, 158, 11, 0.25);
     }
 
-    .card-setting {
-      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
-      border: 3.5px solid #0369a1;
-      box-shadow: 0 8px 0 #075985, 0 12px 18px rgba(2, 132, 199, 0.25);
-    }
-
     .card-icon-wrapper {
-      width: clamp(58px, 9vh, 80px);
-      height: clamp(58px, 9vh, 80px);
+      width: clamp(62px, 10vh, 85px);
+      height: clamp(62px, 10vh, 85px);
       background-color: #ffffff;
       border: 3.5px solid rgba(255, 255, 255, 0.9);
       box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.12);
@@ -220,7 +212,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(1.8rem, 4vh, 2.5rem);
+      font-size: clamp(2rem, 4.5vh, 2.8rem);
       line-height: 1;
       z-index: 2;
       transition: transform 0.2s ease;
@@ -232,7 +224,7 @@
 
     .card-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1rem, 2vw, 1.45rem);
+      font-size: clamp(1.1rem, 2.2vw, 1.55rem);
       font-weight: 700;
       line-height: 1.2;
       color: #ffffff;
@@ -242,22 +234,7 @@
     }
 
     /* ===================================================
-       5. FOOTER
-       =================================================== */
-    .footer-text {
-      font-size: clamp(0.75rem, 1.5vw, 0.88rem);
-      font-weight: 800;
-      color: #0369a1;
-      text-align: center;
-      background-color: #ffffff;
-      padding: 0.4rem 1.1rem;
-      border-radius: 18px;
-      border: 2px solid #bae6fd;
-      box-shadow: 0 3px 0 #bae6fd;
-    }
-
-    /* ===================================================
-       6. RESPONSIF MOBILE & TAMPILAN KECIL
+       5. RESPONSIF MOBILE & TAMPILAN KECIL
        =================================================== */
     @media (max-width: 640px) {
       .btn-fullscreen {
@@ -272,14 +249,23 @@
         height: 18px;
       }
 
+      .logo-group {
+        padding: 0.35rem 1rem;
+        gap: 0.5rem;
+      }
+
+      .header-logo {
+        height: 24px;
+      }
+
       .menu-container {
         grid-template-columns: 1fr;
-        max-width: 340px;
-        gap: 0.75rem;
+        max-width: 320px;
+        gap: 0.85rem;
       }
 
       .menu-card {
-        padding: 0.85rem 1.2rem;
+        padding: 0.9rem 1.2rem;
         flex-direction: row;
         justify-content: flex-start;
         text-align: left;
@@ -292,12 +278,11 @@
 
       .card-materi { box-shadow: 0 5px 0 #047857; }
       .card-game { box-shadow: 0 5px 0 #b45309; }
-      .card-setting { box-shadow: 0 5px 0 #075985; }
 
       .card-icon-wrapper {
-        width: 50px;
-        height: 50px;
-        font-size: 1.8rem;
+        width: 52px;
+        height: 52px;
+        font-size: 1.9rem;
       }
     }
   </style>
@@ -316,15 +301,17 @@
 
   <!-- Header Utama -->
   <header class="header-container">
-    <div class="badge-top">
-      <img src="assets/unej.png" alt="Logo Universitas Jember" class="univ-logo" />
-      <span>Universitas Jember</span>
+    <div class="logo-group">
+      <img src="asset/unej.png" alt="Logo UNEJ" class="header-logo" />
+      <img src="asset/tutwuri.png" alt="Logo Tut Wuri Handayani" class="header-logo" />
+      <img src="asset/ppg.png" alt="Logo PPG" class="header-logo" />
+      <img src="asset/fkip.jpg" alt="Logo FKIP" class="header-logo" />
     </div>
     <h1 class="main-title">Media Pembelajaran Interaktif</h1>
     <div class="subtitle">Perkalian Bilangan Cacah sampai 100</div>
   </header>
 
-  <!-- Container 3 Tombol Menu Utama -->
+  <!-- Container 2 Tombol Menu Utama -->
   <main class="menu-container">
     
     <!-- Tombol 1: Materi Pembelajaran -->
@@ -343,20 +330,7 @@
       <h2 class="card-title">Permainan Tug Of War</h2>
     </a>
 
-    <!-- Tombol 3: Pengaturan -->
-    <a href="pengaturan.html" class="menu-card card-setting">
-      <div class="card-icon-wrapper">
-        ⚙️
-      </div>
-      <h2 class="card-title">Pengaturan</h2>
-    </a>
-
   </main>
-
-  <!-- Footer -->
-  <footer class="footer-text">
-    Buku Siswa Matematika Kelas III SD/MI &copy; Kemendikbudristek
-  </footer>
 
   <!-- JAVASCRIPT: LOGIKA FULLSCREEN & EFEK AUDIO -->
   <script>
