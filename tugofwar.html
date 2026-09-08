@@ -17,7 +17,6 @@
       --color-primary: #0284C5;
       --color-secondary: #60A5FA;
       --color-tertiary: #F59E0B;
-      /* Background Disamakan Dengan Latar GIF Canvas */
       --color-bg-canvas: #EDEDED; 
       --color-surface: #FFFFFF;
       --color-on-surface: #0F172A;
@@ -44,7 +43,6 @@
       width: 100vw;
       height: 100vh;
       font-family: var(--font-main);
-      /* Menyelaraskan Latar Belakang Web Dengan Background GIF */
       background-color: var(--color-bg-canvas);
       color: var(--color-on-surface);
       overflow: hidden;
@@ -76,7 +74,7 @@
     .curtain-open .curtain-right { transform: translateX(100%); }
 
     /* =====================================================
-       HEADER & TOMBOL KEMBALI SAMAKAN DENGAN MATERI
+       HEADER & TOMBOL KEMBALI
     ===================================================== */
     header {
       width: 100%;
@@ -89,7 +87,6 @@
       position: relative;
     }
 
-    /* Tombol Kembali (Disamakan dengan tombol di materi) */
     .btn-back {
       position: fixed;
       top: 16px;
@@ -135,22 +132,22 @@
     }
 
     /* =====================================================
-       GAME ARENA LAYOUT (KEYPAD FRONT, GIF BACK)
+       GAME ARENA LAYOUT
     ===================================================== */
     .game-arena {
       width: 100%;
       max-width: 1250px;
       height: calc(100vh - 80px);
       display: grid;
-      grid-template-columns: 320px 1fr 320px;
-      gap: 1.5rem;
-      padding: 0 1.5rem 1rem 1.5rem;
+      grid-template-columns: 340px 1fr 340px;
+      gap: 1.2rem;
+      padding: 0 1.2rem 1rem 1.2rem;
       align-items: center;
       position: relative;
     }
 
     /* =====================================================
-       PLAYER CARD & KEYPAD (Z-INDEX TINGGI = DI DEPAN GIF)
+       PLAYER CARD & SOAL CERITA
     ===================================================== */
     .player-card {
       background-color: var(--color-surface);
@@ -161,7 +158,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      z-index: 10; /* Berada di depan GIF */
+      z-index: 10;
     }
 
     .card-header-blue {
@@ -198,17 +195,32 @@
       font-size: 14px;
     }
 
-    .question-display {
-      font-family: var(--font-display);
-      font-size: 30px;
+    /* Area Teks Soal Cerita */
+    .question-box {
+      width: 90%;
+      min-height: 75px;
+      margin: 10px 0;
+      padding: 8px 12px;
+      background-color: #F8FAFC;
+      border: 1.5px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .question-text {
+      font-family: var(--font-main);
+      font-size: 14px;
       font-weight: 700;
-      margin: 8px 0;
       color: var(--color-on-surface);
+      line-height: 1.35;
     }
 
     .answer-box {
       width: 85%;
-      height: 44px;
+      height: 42px;
       background-color: var(--color-bg-canvas);
       border: 2px solid var(--color-border);
       border-radius: var(--radius-md);
@@ -216,9 +228,9 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: 24px;
+      font-size: 22px;
       color: var(--color-on-surface);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .keypad-grid {
@@ -226,11 +238,11 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      padding-bottom: 16px;
+      padding-bottom: 14px;
     }
 
     .key-btn {
-      height: 42px;
+      height: 40px;
       background-color: var(--color-bg-canvas);
       border: 1.5px solid var(--color-border);
       border-radius: var(--radius-md);
@@ -272,7 +284,7 @@
     }
 
     /* =====================================================
-       STAGE TENGAH (GIF BERADA DI PALING BELAKANG z-index: 1)
+       STAGE TENGAH (GIF ARENA)
     ===================================================== */
     .tug-stage {
       width: 100%;
@@ -287,10 +299,10 @@
     .gif-background {
       position: absolute;
       width: 100%;
-      max-width: 550px;
+      max-width: 500px;
       height: auto;
       object-fit: contain;
-      z-index: 1; /* Paling belakang */
+      z-index: 1;
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -301,7 +313,6 @@
         width: 38px;
         height: 38px;
       }
-      
       .btn-back svg {
         width: 20px;
         height: 20px;
@@ -321,6 +332,7 @@
   <div class="curtain curtain-left"></div>
   <div class="curtain curtain-right"></div>
 
+  <!-- Tombol Kembali -->
   <a href="index.html" class="btn-back" title="Kembali ke Beranda" aria-label="Kembali ke Beranda">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -334,12 +346,17 @@
 
   <main class="game-arena">
 
+    <!-- PLAYER TIM BIRU -->
     <section class="player-card">
       <div class="card-header-blue">
         <h2 class="player-name">TIM BIRU</h2>
         <span class="score-badge" id="score-left">Skor: 0</span>
       </div>
-      <div class="question-display" id="q-left">? × ?</div>
+      
+      <!-- Tampilan Soal Cerita -->
+      <div class="question-box">
+        <p class="question-text" id="q-left">Memuat soal...</p>
+      </div>
       <div class="answer-box" id="ans-left"></div>
 
       <div class="keypad-grid">
@@ -358,16 +375,22 @@
       </div>
     </section>
 
+    <!-- STAGE TENGAH -->
     <section class="tug-stage">
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
+    <!-- PLAYER TIM MERAH -->
     <section class="player-card">
       <div class="card-header-red">
         <h2 class="player-name">TIM MERAH</h2>
         <span class="score-badge" id="score-right">Skor: 0</span>
       </div>
-      <div class="question-display" id="q-right">? × ?</div>
+      
+      <!-- Tampilan Soal Cerita -->
+      <div class="question-box">
+        <p class="question-text" id="q-right">Memuat soal...</p>
+      </div>
       <div class="answer-box" id="ans-right"></div>
 
       <div class="keypad-grid">
@@ -389,23 +412,18 @@
   </main>
 
   <script>
-    // Bank Soal Perkalian Kelas 3 (Halaman 58–63)
+    // Bank Soal Cerita Perkalian Kelas 3
     const questionBank = [
-      { num1: 5, num2: 2, ans: 10 },
-      { num1: 4, num2: 5, ans: 20 },
-      { num1: 5, num2: 6, ans: 30 },
-      { num1: 6, num2: 5, ans: 30 },
-      { num1: 5, num2: 4, ans: 20 },
-      { num1: 6, num2: 2, ans: 12 },
-      { num1: 6, num2: 5, ans: 30 },
-      { num1: 8, num2: 4, ans: 32 },
-      { num1: 7, num2: 3, ans: 21 },
-      { num1: 9, num2: 4, ans: 36 },
-      { num1: 3, num2: 8, ans: 24 },
-      { num1: 7, num2: 5, ans: 35 },
-      { num1: 8, num2: 5, ans: 40 },
-      { num1: 4, num2: 7, ans: 28 },
-      { num1: 6, num2: 6, ans: 36 }
+      { text: "Ayah menanam 5 baris pohon. Setiap baris ada 4 pohon. Berapa jumlah seluruh pohon?", ans: 20 },
+      { text: "Ibu membeli 3 kantong jeruk. Setiap kantong berisi 8 jeruk. Berapa jumlah seluruh jeruk Ibu?", ans: 24 },
+      { text: "Ada 6 meja di kelas. Setiap meja ada 5 buku. Berapa jumlah seluruh buku di kelas?", ans: 30 },
+      { text: "Budi mempunyai 4 kotak pensil. Tiap kotak berisi 6 pensil. Berapa total pensil Budi?", ans: 24 },
+      { text: "Lani membeli 5 bungkus kue. Setiap bungkus berisi 6 kue. Berapa jumlah seluruh kue Lani?", ans: 30 },
+      { text: "Di halaman terdapat 7 sepeda. Setiap sepeda memiliki 2 roda. Berapa jumlah seluruh roda?", ans: 14 },
+      { text: "Siti membeli 4 piring donat. Setiap piring berisi 5 donat. Berapa jumlah seluruh donat?", ans: 20 },
+      { text: "Toko memiliki 8 kardus mi. Setiap kardus berisi 5 bungkus. Berapa jumlah bungkus mi?", ans: 40 },
+      { text: "Eko membeli 3 kotak kelereng. Setiap kotak berisi 9 kelereng. Berapa total kelereng Eko?", ans: 27 },
+      { text: "Petani memanen 6 keranjang apel. Setiap keranjang berisi 6 apel. Berapa jumlah seluruh apel?", ans: 36 }
     ];
 
     let currentQLeft = {};
@@ -414,31 +432,28 @@
     let inputRight = "";
     let scoreLeft = 0;
     let scoreRight = 0;
-    let pullPos = 0; // Posisi pergeseran GIF
+    let pullPos = 0;
 
     document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         document.body.classList.add("curtain-open");
       }, 200);
 
-      // Inisialisasi Soal Awal
       generateNewQuestion('left');
       generateNewQuestion('right');
     });
 
-    // Acak & Tampilkan Soal Baru
     function generateNewQuestion(side) {
       const randomQ = questionBank[Math.floor(Math.random() * questionBank.length)];
       if (side === 'left') {
         currentQLeft = randomQ;
-        document.getElementById('q-left').innerText = `${randomQ.num1} × ${randomQ.num2} = ?`;
+        document.getElementById('q-left').innerText = randomQ.text;
       } else {
         currentQRight = randomQ;
-        document.getElementById('q-right').innerText = `${randomQ.num1} × ${randomQ.num2} = ?`;
+        document.getElementById('q-right').innerText = randomQ.text;
       }
     }
 
-    // Suara Efek Klik / Jawab
     function playBeep(freq = 600) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
@@ -455,7 +470,6 @@
       osc.stop(ctx.currentTime + 0.1);
     }
 
-    // Logika Keypad Input
     function pressKey(side, val) {
       playBeep(800);
 
@@ -467,11 +481,11 @@
           if (parseInt(inputLeft) === currentQLeft.ans) {
             playBeep(1200);
             scoreLeft += 10;
-            pullPos -= 35; // Tarik ke kiri
+            pullPos -= 35;
             document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
             inputLeft = "";
-            generateNewQuestion('left'); // GANTI SOAL BARU
+            generateNewQuestion('left');
           } else {
             playBeep(300);
             inputLeft = "";
@@ -488,11 +502,11 @@
           if (parseInt(inputRight) === currentQRight.ans) {
             playBeep(1200);
             scoreRight += 10;
-            pullPos += 35; // Tarik ke kanan
+            pullPos += 35;
             document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
             inputRight = "";
-            generateNewQuestion('right'); // GANTI SOAL BARU
+            generateNewQuestion('right');
           } else {
             playBeep(300);
             inputRight = "";
