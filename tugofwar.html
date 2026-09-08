@@ -121,7 +121,7 @@
     }
 
     /* =====================================================
-       1. STAGE ANIMASI PENARIK TAMBANG (DI ATAS)
+       1. STAGE ANIMASI & GARIS FINIS (KOTAK HITAM PUTIH)
     ===================================================== */
     .tug-stage {
       width: 100%;
@@ -135,6 +135,34 @@
       justify-content: center;
       overflow: hidden;
       box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    /* Motif Catur Garis Finis Kiri & Kanan */
+    .finish-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 24px;
+      z-index: 2;
+      background-image: 
+        linear-gradient(45deg, #000 25%, transparent 25%), 
+        linear-gradient(-45deg, #000 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #000 75%), 
+        linear-gradient(-45deg, transparent 75%, #000 75%);
+      background-size: 12px 12px;
+      background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
+      background-color: #fff;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    }
+
+    .finish-left {
+      left: 60px;
+      border-right: 3px solid #000;
+    }
+
+    .finish-right {
+      right: 60px;
+      border-left: 3px solid #000;
     }
 
     /* Garis Batas Tengah Tali */
@@ -172,7 +200,7 @@
     }
 
     /* =====================================================
-       2. ARENA SOAL & KEYPAD KALKULATOR (DI BAWAH)
+       2. ARENA SOAL & KEYPAD KALKULATOR
     ===================================================== */
     .arena-bottom {
       width: 100%;
@@ -180,7 +208,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
-      min-height: 0; /* Mencegah overflow */
+      min-height: 0;
     }
 
     .player-card {
@@ -326,12 +354,85 @@
       box-shadow: 0 3px 0 #B91C1C;
     }
 
+    /* =====================================================
+       3. MODAL POPUP KEMENANGAN
+    ===================================================== */
+    .winner-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .winner-modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .winner-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 30px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      transform: scale(0.8);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .winner-modal-overlay.show .winner-card {
+      transform: scale(1);
+    }
+
+    .winner-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      color: var(--color-primary);
+      margin-bottom: 10px;
+    }
+
+    .winner-desc {
+      font-size: 16px;
+      color: var(--color-on-surface);
+      margin-bottom: 20px;
+    }
+
+    .btn-restart {
+      background-color: var(--color-primary);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 16px;
+      padding: 10px 24px;
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(2, 132, 197, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .btn-restart:hover {
+      transform: scale(1.05);
+    }
+
     @media (max-width: 768px) {
       body { overflow-y: auto; height: auto; }
       .game-container { height: auto; }
       .arena-bottom { grid-template-columns: 1fr; }
       .tug-stage { height: 180px; }
       .gif-background { height: 140px; }
+      .finish-left { left: 20px; }
+      .finish-right { right: 20px; }
     }
   </style>
 </head>
@@ -351,9 +452,11 @@
 
   <div class="game-container">
     
-    <!-- 1. STAGE ANIMASI TARIK TAMBANG DI ATAS (DILENGKAPI BATAS TENGAH) -->
+    <!-- 1. STAGE ANIMASI TARIK TAMBANG (DENGAN GARIS FINIS KIRI & KANAN) -->
     <section class="tug-stage">
+      <div class="finish-line finish-left" title="Garis Finis Tim Biru"></div>
       <div class="center-line" title="Batas Tengah Tali"></div>
+      <div class="finish-line finish-right" title="Garis Finis Tim Merah"></div>
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
@@ -421,6 +524,15 @@
     </main>
   </div>
 
+  <!-- POPUP WINNER MODAL -->
+  <div class="winner-modal-overlay" id="winnerModal">
+    <div class="winner-card">
+      <h2 class="winner-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
+      <p class="winner-desc" id="winnerDesc">Selamat! Tim Biru berhasil menyentuh garis finis terlebih dahulu.</p>
+      <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
+    </div>
+  </div>
+
   <!-- Panggil File Bank Soal Eksternal -->
   <script src="soal.js"></script>
 
@@ -432,7 +544,11 @@
     let inputRight = "";
     let scoreLeft = 0;
     let scoreRight = 0;
-    let pullPos = 0;
+    let pullPos = 0; 
+    let isGameOver = false;
+
+    // Batas pergeseran piksel untuk menyentuh garis finis
+    const WIN_THRESHOLD = 140; 
 
     let lastIndexLeft = -1;
     let lastIndexRight = -1;
@@ -508,6 +624,8 @@
     }
 
     function pressKey(side, val) {
+      if (isGameOver) return; // Mencegah input jika game sudah selesai
+      
       playBeep(800);
 
       if (side === 'left') {
@@ -518,11 +636,13 @@
           if (parseInt(inputLeft) === currentQLeft.ans) {
             playBeep(1200);
             scoreLeft += 10;
-            pullPos -= 35;
+            pullPos -= 35; // Tarik ke kiri (Tim Biru)
             document.getElementById('score-left').innerText = `Skor: ${scoreLeft}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
             inputLeft = "";
-            generateNewQuestion('left');
+            
+            checkWinner();
+            if (!isGameOver) generateNewQuestion('left');
           } else {
             playBeep(300);
             inputLeft = "";
@@ -539,11 +659,13 @@
           if (parseInt(inputRight) === currentQRight.ans) {
             playBeep(1200);
             scoreRight += 10;
-            pullPos += 35;
+            pullPos += 35; // Tarik ke kanan (Tim Merah)
             document.getElementById('score-right').innerText = `Skor: ${scoreRight}`;
             document.getElementById('stageGif').style.transform = `translateX(${pullPos}px)`;
             inputRight = "";
-            generateNewQuestion('right');
+            
+            checkWinner();
+            if (!isGameOver) generateNewQuestion('right');
           } else {
             playBeep(300);
             inputRight = "";
@@ -553,6 +675,49 @@
         }
         box.innerText = inputRight;
       }
+    }
+
+    // Fungsi Cek Kemenangan
+    function checkWinner() {
+      if (pullPos <= -WIN_THRESHOLD) {
+        showWinner("TIM BIRU", "#0284C5");
+      } else if (pullPos >= WIN_THRESHOLD) {
+        showWinner("TIM MERAH", "#EF4444");
+      }
+    }
+
+    function showWinner(teamName, color) {
+      isGameOver = true;
+      const modal = document.getElementById('winnerModal');
+      const title = document.getElementById('winnerText');
+      const desc = document.getElementById('winnerDesc');
+
+      title.innerText = `${teamName} MENANG! 🎉`;
+      title.style.color = color;
+      desc.innerText = `Selamat! ${teamName} berhasil menyentuh garis finis terlebih dahulu.`;
+
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 400);
+    }
+
+    function restartGame() {
+      isGameOver = false;
+      scoreLeft = 0;
+      scoreRight = 0;
+      pullPos = 0;
+      inputLeft = "";
+      inputRight = "";
+
+      document.getElementById('score-left').innerText = `Skor: 0`;
+      document.getElementById('score-right').innerText = `Skor: 0`;
+      document.getElementById('ans-left').innerText = "";
+      document.getElementById('ans-right').innerText = "";
+      document.getElementById('stageGif').style.transform = `translateX(0px)`;
+      document.getElementById('winnerModal').classList.remove('show');
+
+      generateNewQuestion('left');
+      generateNewQuestion('right');
     }
   </script>
 
