@@ -59,18 +59,17 @@
     }
 
     /* =====================================================
-       TOMBOL KEMBALI
+       TOMBOL KEMBALI & FULLSCREEN
     ===================================================== */
-    .btn-back {
+    .btn-back, .btn-fullscreen {
       position: fixed;
       top: 10px;
-      left: 10px;
       z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 38px;
-      height: 38px;
+      width: 42px;
+      height: 42px;
       background-color: rgba(15, 23, 42, 0.85);
       color: #ffffff;
       text-decoration: none;
@@ -79,10 +78,19 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
       transition: all 0.25s ease-in-out;
     }
 
-    .btn-back:hover {
+    .btn-back {
+      left: 10px;
+    }
+
+    .btn-fullscreen {
+      right: 10px;
+    }
+
+    .btn-back:hover, .btn-fullscreen:hover {
       background-color: rgba(37, 99, 235, 0.95);
       transform: scale(1.08);
     }
@@ -161,7 +169,7 @@
     .arena-bottom {
       width: 100%;
       flex: 1;
-      min-height: 0; /* Agar child flex item bisa menyusut otomatis di tablet */
+      min-height: 0;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
@@ -314,14 +322,9 @@
       cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 197, 0.3);
     }
 
-    /* Penyesuaian Jika Layar Sempit/Vertikal */
     @media (max-width: 600px) and (orientation: portrait) {
-      body {
-        overflow-y: auto;
-      }
-      .arena-bottom {
-        grid-template-columns: 1fr;
-      }
+      body { overflow-y: auto; }
+      .arena-bottom { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -335,6 +338,16 @@
       <polyline points="12 19 5 12 12 5"></polyline>
     </svg>
   </a>
+
+  <!-- Tombol Full Screen (Pojok Kanan Atas) -->
+  <button class="btn-fullscreen" id="btnFullscreen" onclick="toggleFullscreen()" title="Layar Penuh">
+    <svg id="iconExpand" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+    </svg>
+    <svg id="iconCompress" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+      <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+    </svg>
+  </button>
 
   <div class="game-container">
     
@@ -412,12 +425,12 @@
   <div class="modal-overlay" id="winnerModal">
     <div class="modal-card">
       <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
-      <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menyentuh garis finis terlebih dahulu.</p>
+      <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menarik tali hingga menyentuh garis finis.</p>
       <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
     </div>
   </div>
 
-  <!-- JAVASCRIPT LOGIKA LOKAL -->
+  <!-- JAVASCRIPT LOGIKA PERMAINAN & FULLSCREEN -->
   <script>
     const questionBank = [
       { text: "2 x 3", ans: 6 },
@@ -451,6 +464,38 @@
     let pullPos = 0; 
     let isGameOver = false;
 
+    // --- LOGIKA FULLSCREEN ---
+    function toggleFullscreen() {
+      const doc = window.document;
+      const docEl = doc.documentElement;
+
+      const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestAnimationFrame || docEl.msRequestFullscreen;
+      const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+      if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        if (requestFullScreen) {
+          requestFullScreen.call(docEl);
+        } else if (docEl.webkitRequestFullscreen) {
+          docEl.webkitRequestFullscreen();
+        }
+      } else {
+        if (cancelFullScreen) {
+          cancelFullScreen.call(doc);
+        }
+      }
+    }
+
+    // Ubah Ikon Fullscreen Otomatis
+    function updateFullscreenIcons() {
+      const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+      document.getElementById('iconExpand').style.display = isFS ? 'none' : 'block';
+      document.getElementById('iconCompress').style.display = isFS ? 'block' : 'none';
+    }
+
+    document.addEventListener('fullscreenchange', updateFullscreenIcons);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
+
+    // --- LOGIKA PERMAINAN ---
     function getPullStep() {
       const stageWidth = document.querySelector('.tug-stage').clientWidth;
       return stageWidth * 0.08;
