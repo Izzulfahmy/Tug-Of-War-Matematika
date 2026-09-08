@@ -645,6 +645,12 @@
 
 <body>
 
+  <!-- ELEMENT AUDIO BAGIAN BELAKANG -->
+  <!-- Musik Latar Wii -->
+  <audio id="bgMusic" src="asset/Wii Music - Gaming Background Music HD.mp3" loop preload="auto"></audio>
+  <!-- SFX Perayaan Kemenangan -->
+  <audio id="victorySfx" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
+
   <div class="curtain curtain-left"></div>
   <div class="curtain curtain-right"></div>
 
@@ -885,11 +891,13 @@
 
     let qrGenerator = null;
 
-    // --- LOGIKA AUDIO EFEK & BACKSOUND MUSIK ---
+    // --- MANAJEMEN AUDIO BACKSOUND & SFX ---
     let audioCtx = null;
-    let bgMusicTimer = null;
-    let isMusicPlaying = false;
     let isMusicMuted = false;
+
+    const bgMusicElem = document.getElementById('bgMusic');
+    const victorySfxElem = document.getElementById('victorySfx');
+    bgMusicElem.volume = 0.35; // Atur volume musik latar Wii
 
     function getAudioContext() {
       if (!audioCtx) {
@@ -902,70 +910,15 @@
       return audioCtx;
     }
 
-    // Melodi Chiptune Upbeat untuk Musik Latar
-    const bgMelody = [
-      { note: 261.63, duration: 0.15 }, // C4
-      { note: 329.63, duration: 0.15 }, // E4
-      { note: 392.00, duration: 0.15 }, // G4
-      { note: 523.25, duration: 0.25 }, // C5
-      { note: 392.00, duration: 0.15 }, // G4
-      { note: 523.25, duration: 0.30 }, // C5
-      { note: 349.23, duration: 0.15 }, // F4
-      { note: 440.00, duration: 0.15 }, // A4
-      { note: 523.25, duration: 0.15 }, // C5
-      { note: 659.25, duration: 0.25 }, // E5
-      { note: 523.25, duration: 0.15 }, // C5
-      { note: 659.25, duration: 0.30 }, // E5
-      { note: 392.00, duration: 0.15 }, // G4
-      { note: 493.88, duration: 0.15 }, // B4
-      { note: 587.33, duration: 0.15 }, // D5
-      { note: 698.46, duration: 0.25 }, // F5
-      { note: 587.33, duration: 0.15 }, // D5
-      { note: 523.25, duration: 0.30 }  // C5
-    ];
-
-    let noteIndex = 0;
-
     function startBgMusic() {
-      if (isMusicPlaying || isMusicMuted) return;
-      const ctx = getAudioContext();
-      if (!ctx) return;
-
-      isMusicPlaying = true;
-
-      function playNextNote() {
-        if (!isMusicPlaying || isMusicMuted) return;
-
-        const current = bgMelody[noteIndex];
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = 'square'; // Karakteristik suara game klasik
-        osc.frequency.setValueAtTime(current.note, ctx.currentTime);
-
-        // Volume lembut untuk latar
-        gain.gain.setValueAtTime(0.025, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + current.duration);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + current.duration);
-
-        noteIndex = (noteIndex + 1) % bgMelody.length;
-        bgMusicTimer = setTimeout(playNextNote, current.duration * 1000 + 40);
-      }
-
-      playNextNote();
+      if (isMusicMuted || isGameOver) return;
+      bgMusicElem.play().catch(() => {
+        // Autoplay terblokir sampai ada interaksi
+      });
     }
 
     function stopBgMusic() {
-      isMusicPlaying = false;
-      if (bgMusicTimer) {
-        clearTimeout(bgMusicTimer);
-        bgMusicTimer = null;
-      }
+      bgMusicElem.pause();
     }
 
     function toggleMusic() {
@@ -986,7 +939,7 @@
     }
 
     function playBeep(freq = 600) {
-      startBgMusic(); // Mulai musik saat interaksi pertama
+      startBgMusic();
       const ctx = getAudioContext();
       if (!ctx) return;
       const osc = ctx.createOscillator();
@@ -1006,7 +959,7 @@
       if (!ctx) return;
       
       const now = ctx.currentTime;
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 (Harmoni Ceria)
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // Harmoni Ceria
       
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
@@ -1049,22 +1002,30 @@
       osc.stop(now + 0.3);
     }
 
+    function playVictorySound() {
+      stopBgMusic();
+      if (victorySfxElem) {
+        victorySfxElem.currentTime = 0;
+        victorySfxElem.play().catch(e => console.log(e));
+      }
+    }
+
     // --- ANIMASI BENAR & SALAH ---
     function triggerSuccessEffect(side) {
       playCorrectSound();
 
       const card = document.getElementById(`card-${side}`);
       card.classList.remove('pop-success', 'shake');
-      void card.offsetWidth; // Trigger reflow
+      void card.offsetWidth;
       card.classList.add('pop-success');
 
-      // 1. Munculkan Teks Mengambang "+10"
+      // Teks Mengambang "+10"
       const feedback = document.createElement('div');
       feedback.className = 'floating-feedback correct';
       feedback.innerText = '+10!';
       card.appendChild(feedback);
 
-      // 2. Efek Partikel Letusan Perayaan (Confetti Burst)
+      // Partikel Perayaan (Confetti Burst)
       const colors = ['#10B981', '#3B82F6', '#F59E0B', '#EC4899', '#8B5CF6', '#34D399'];
       const particleCount = 28;
 
@@ -1078,7 +1039,6 @@
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
         particle.style.backgroundColor = color;
-        
         particle.style.left = '50%';
         particle.style.top = '40%';
 
@@ -1106,7 +1066,7 @@
 
       const card = document.getElementById(`card-${side}`);
       card.classList.remove('shake', 'pop-success');
-      void card.offsetWidth; // Trigger reflow
+      void card.offsetWidth;
       card.classList.add('shake');
 
       const feedback = document.createElement('div');
@@ -1155,7 +1115,7 @@
         document.body.classList.add("curtain-open");
       }, 200);
 
-      // Listener global interaksi pertama pengguna untuk memutar musik
+      // Memutar musik pada interaksi awal pengguna
       const startMusicOnUserInteraction = () => {
         startBgMusic();
         document.removeEventListener('click', startMusicOnUserInteraction);
@@ -1344,7 +1304,7 @@
 
     function showWinner(teamName, color) {
       isGameOver = true;
-      stopBgMusic();
+      playVictorySound();
 
       const modal = document.getElementById('winnerModal');
       const title = document.getElementById('winnerText');
@@ -1368,6 +1328,11 @@
       pullPos = 0;
       inputLeft = "";
       inputRight = "";
+
+      if (victorySfxElem) {
+        victorySfxElem.pause();
+        victorySfxElem.currentTime = 0;
+      }
 
       document.getElementById('score-left').innerText = `Skor: 0`;
       document.getElementById('score-right').innerText = `Skor: 0`;
