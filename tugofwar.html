@@ -87,6 +87,7 @@
       position: relative;
     }
 
+    /* Tombol Kembali Ikon Lingkaran Mengambang */
     .btn-back {
       position: fixed;
       top: 16px;
@@ -409,7 +410,7 @@
 
   </main>
 
-  <!-- Panggil File Bank Soal Eksternal di Sini -->
+  <!-- Panggil File Bank Soal Eksternal -->
   <script src="soal.js"></script>
 
   <!-- Logika Permainan -->
@@ -422,6 +423,10 @@
     let scoreRight = 0;
     let pullPos = 0;
 
+    // Pelacak indeks soal agar soal tim kiri & kanan tidak pernah sama
+    let lastIndexLeft = -1;
+    let lastIndexRight = -1;
+
     document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         document.body.classList.add("curtain-open");
@@ -431,16 +436,30 @@
       generateNewQuestion('right');
     });
 
+    function getRandomQuestionIndex(exceptIndex = -1) {
+      if (typeof questionBank === 'undefined' || questionBank.length === 0) return 0;
+      
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * questionBank.length);
+      } while (newIndex === exceptIndex && questionBank.length > 1);
+
+      return newIndex;
+    }
+
     function generateNewQuestion(side) {
       if (typeof questionBank === 'undefined' || questionBank.length === 0) return;
       
-      const randomQ = questionBank[Math.floor(Math.random() * questionBank.length)];
       if (side === 'left') {
-        currentQLeft = randomQ;
-        document.getElementById('q-left').innerText = randomQ.text;
+        const index = getRandomQuestionIndex(lastIndexRight);
+        lastIndexLeft = index;
+        currentQLeft = questionBank[index];
+        document.getElementById('q-left').innerText = currentQLeft.text;
       } else {
-        currentQRight = randomQ;
-        document.getElementById('q-right').innerText = randomQ.text;
+        const index = getRandomQuestionIndex(lastIndexLeft);
+        lastIndexRight = index;
+        currentQRight = questionBank[index];
+        document.getElementById('q-right').innerText = currentQRight.text;
       }
     }
 

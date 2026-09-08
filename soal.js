@@ -8,5 +8,7 @@ const questionBank = [
   { text: "Siti membeli 4 piring donat. Setiap piring berisi 5 donat. Berapa jumlah seluruh donat?", ans: 20 },
   { text: "Toko memiliki 8 kardus mi. Setiap kardus berisi 5 bungkus. Berapa jumlah bungkus mi?", ans: 40 },
   { text: "Eko membeli 3 kotak kelereng. Setiap kotak berisi 9 kelereng. Berapa total kelereng Eko?", ans: 27 },
-  { text: "Petani memanen 6 keranjang apel. Setiap keranjang berisi 6 apel. Berapa jumlah seluruh apel?", ans: 36 }
+  { text: "Petani memanen 6 keranjang apel. Setiap keranjang berisi 6 apel. Berapa jumlah seluruh apel?", ans: 36 },
+  { text: "Pak Guru membawa 4 kotak kapur. Setiap kotak berisi 10 kapur. Berapa jumlah seluruh kapur?", ans: 40 },
+  { text: "Di perpustakaan ada 8 rak buku. Setiap rak ada 3 buku cerita. Berapa total buku cerita?", ans: 24 }
 ];
