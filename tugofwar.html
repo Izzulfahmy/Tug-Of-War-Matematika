@@ -48,7 +48,6 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       align-items: center;
       position: relative;
     }
@@ -74,19 +73,8 @@
     .curtain-open .curtain-right { transform: translateX(100%); }
 
     /* =====================================================
-       HEADER & TOMBOL KEMBALI
+       TOMBOL KEMBALI
     ===================================================== */
-    header {
-      width: 100%;
-      max-width: 1200px;
-      padding: 0.8rem 1.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 20;
-      position: relative;
-    }
-
     .btn-back {
       position: fixed;
       top: 16px;
@@ -119,53 +107,99 @@
       transform: scale(0.95);
     }
 
-    .game-title {
-      font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--color-primary);
-      background-color: var(--color-surface);
-      padding: 6px 20px;
-      border-radius: var(--radius-full);
-      border: 2px solid var(--color-border);
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
-    }
-
     /* =====================================================
-       GAME ARENA LAYOUT
+       LAYOUT UTAMA PERMAINAN
     ===================================================== */
-    .game-arena {
+    .game-container {
       width: 100%;
-      max-width: 1250px;
-      height: calc(100vh - 80px);
-      display: grid;
-      grid-template-columns: 340px 1fr 340px;
-      gap: 1.2rem;
-      padding: 0 1.2rem 1rem 1.2rem;
-      align-items: center;
-      position: relative;
+      max-width: 1280px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 20px;
+      gap: 12px;
     }
 
     /* =====================================================
-       PLAYER CARD & SOAL CERITA
+       1. STAGE ANIMASI PENARIK TAMBANG (DI ATAS)
     ===================================================== */
+    .tug-stage {
+      width: 100%;
+      height: 220px;
+      background-color: #E2E8F0;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    /* Garis Batas Tengah Tali */
+    .center-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      background-color: var(--color-error);
+      transform: translateX(-50%);
+      z-index: 2;
+      box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
+    }
+
+    .center-line::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 14px;
+      background-color: var(--color-error);
+      border-radius: 50%;
+    }
+
+    .gif-background {
+      position: absolute;
+      height: 180px;
+      width: auto;
+      object-fit: contain;
+      z-index: 1;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* =====================================================
+       2. ARENA SOAL & KEYPAD KALKULATOR (DI BAWAH)
+    ===================================================== */
+    .arena-bottom {
+      width: 100%;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      min-height: 0; /* Mencegah overflow */
+    }
+
     .player-card {
       background-color: var(--color-surface);
       border-radius: var(--radius-xl);
       border: 2px solid var(--color-border);
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
       overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      z-index: 10;
+      padding-bottom: 12px;
     }
 
     .card-header-blue {
       width: 100%;
       background-color: var(--color-primary);
       color: var(--color-surface);
-      padding: 10px 15px;
+      padding: 8px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -175,7 +209,7 @@
       width: 100%;
       background-color: var(--color-error);
       color: var(--color-surface);
-      padding: 10px 15px;
+      padding: 8px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -190,15 +224,15 @@
     .score-badge {
       font-family: var(--font-display);
       background-color: rgba(255, 255, 255, 0.25);
-      padding: 2px 10px;
+      padding: 2px 12px;
       border-radius: var(--radius-full);
       font-size: 14px;
     }
 
-    /* Area Teks Soal Cerita & Gambar */
+    /* Box Soal Cerita */
     .question-box {
-      width: 90%;
-      min-height: 80px;
+      width: 92%;
+      flex: 1;
       margin: 8px 0;
       padding: 8px 12px;
       background-color: #F8FAFC;
@@ -209,15 +243,15 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: 6px;
+      gap: 4px;
     }
 
     .question-img {
       max-width: 100%;
-      max-height: 80px;
+      max-height: 70px;
       object-fit: contain;
       border-radius: 6px;
-      display: none; /* Default sembunyi jika tidak ada gambar */
+      display: none;
     }
 
     .question-text {
@@ -229,8 +263,8 @@
     }
 
     .answer-box {
-      width: 85%;
-      height: 40px;
+      width: 80%;
+      height: 38px;
       background-color: var(--color-bg-canvas);
       border: 2px solid var(--color-border);
       border-radius: var(--radius-md);
@@ -244,20 +278,19 @@
     }
 
     .keypad-grid {
-      width: 85%;
+      width: 80%;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      padding-bottom: 14px;
+      gap: 6px;
     }
 
     .key-btn {
-      height: 40px;
+      height: 38px;
       background-color: var(--color-bg-canvas);
       border: 1.5px solid var(--color-border);
       border-radius: var(--radius-md);
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--color-on-surface);
       cursor: pointer;
@@ -293,46 +326,12 @@
       box-shadow: 0 3px 0 #B91C1C;
     }
 
-    /* =====================================================
-       STAGE TENGAH (GIF ARENA)
-    ===================================================== */
-    .tug-stage {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .gif-background {
-      position: absolute;
-      width: 100%;
-      max-width: 500px;
-      height: auto;
-      object-fit: contain;
-      z-index: 1;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @media (max-width: 640px) {
-      .btn-back {
-        top: 12px;
-        left: 12px;
-        width: 38px;
-        height: 38px;
-      }
-      .btn-back svg {
-        width: 20px;
-        height: 20px;
-      }
-    }
-
-    @media (max-width: 900px) {
+    @media (max-width: 768px) {
       body { overflow-y: auto; height: auto; }
-      .game-arena { grid-template-columns: 1fr; height: auto; }
-      .tug-stage { height: 260px; }
+      .game-container { height: auto; }
+      .arena-bottom { grid-template-columns: 1fr; }
+      .tug-stage { height: 180px; }
+      .gif-background { height: 140px; }
     }
   </style>
 </head>
@@ -350,76 +349,77 @@
     </svg>
   </a>
 
-  <header>
-    <h1 class="game-title">Tarik Tambang Perkalian</h1>
-  </header>
-
-  <main class="game-arena">
-
-    <!-- PLAYER TIM BIRU -->
-    <section class="player-card">
-      <div class="card-header-blue">
-        <h2 class="player-name">TIM BIRU</h2>
-        <span class="score-badge" id="score-left">Skor: 0</span>
-      </div>
-      
-      <div class="question-box">
-        <img id="img-left" class="question-img" alt="Gambar Soal Tim Biru" />
-        <p class="question-text" id="q-left">Memuat soal...</p>
-      </div>
-      <div class="answer-box" id="ans-left"></div>
-
-      <div class="keypad-grid">
-        <button class="key-btn" onclick="pressKey('left', '1')">1</button>
-        <button class="key-btn" onclick="pressKey('left', '2')">2</button>
-        <button class="key-btn" onclick="pressKey('left', '3')">3</button>
-        <button class="key-btn" onclick="pressKey('left', '4')">4</button>
-        <button class="key-btn" onclick="pressKey('left', '5')">5</button>
-        <button class="key-btn" onclick="pressKey('left', '6')">6</button>
-        <button class="key-btn" onclick="pressKey('left', '7')">7</button>
-        <button class="key-btn" onclick="pressKey('left', '8')">8</button>
-        <button class="key-btn" onclick="pressKey('left', '9')">9</button>
-        <button class="key-btn key-clear" onclick="pressKey('left', 'C')">C</button>
-        <button class="key-btn" onclick="pressKey('left', '0')">0</button>
-        <button class="key-btn key-submit-blue" onclick="pressKey('left', 'OK')">OK</button>
-      </div>
-    </section>
-
-    <!-- STAGE TENGAH -->
+  <div class="game-container">
+    
+    <!-- 1. STAGE ANIMASI TARIK TAMBANG DI ATAS (DILENGKAPI BATAS TENGAH) -->
     <section class="tug-stage">
+      <div class="center-line" title="Batas Tengah Tali"></div>
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
-    <!-- PLAYER TIM MERAH -->
-    <section class="player-card">
-      <div class="card-header-red">
-        <h2 class="player-name">TIM MERAH</h2>
-        <span class="score-badge" id="score-right">Skor: 0</span>
-      </div>
-      
-      <div class="question-box">
-        <img id="img-right" class="question-img" alt="Gambar Soal Tim Merah" />
-        <p class="question-text" id="q-right">Memuat soal...</p>
-      </div>
-      <div class="answer-box" id="ans-right"></div>
+    <!-- 2. ARENA SOAL DAN KALKULATOR DI BAWAH -->
+    <main class="arena-bottom">
 
-      <div class="keypad-grid">
-        <button class="key-btn" onclick="pressKey('right', '1')">1</button>
-        <button class="key-btn" onclick="pressKey('right', '2')">2</button>
-        <button class="key-btn" onclick="pressKey('right', '3')">3</button>
-        <button class="key-btn" onclick="pressKey('right', '4')">4</button>
-        <button class="key-btn" onclick="pressKey('right', '5')">5</button>
-        <button class="key-btn" onclick="pressKey('right', '6')">6</button>
-        <button class="key-btn" onclick="pressKey('right', '7')">7</button>
-        <button class="key-btn" onclick="pressKey('right', '8')">8</button>
-        <button class="key-btn" onclick="pressKey('right', '9')">9</button>
-        <button class="key-btn key-clear" onclick="pressKey('right', 'C')">C</button>
-        <button class="key-btn" onclick="pressKey('right', '0')">0</button>
-        <button class="key-btn key-submit-red" onclick="pressKey('right', 'OK')">OK</button>
-      </div>
-    </section>
+      <!-- TIM BIRU -->
+      <section class="player-card">
+        <div class="card-header-blue">
+          <h2 class="player-name">TIM BIRU</h2>
+          <span class="score-badge" id="score-left">Skor: 0</span>
+        </div>
+        
+        <div class="question-box">
+          <img id="img-left" class="question-img" alt="Gambar Soal Tim Biru" />
+          <p class="question-text" id="q-left">Memuat soal...</p>
+        </div>
+        <div class="answer-box" id="ans-left"></div>
 
-  </main>
+        <div class="keypad-grid">
+          <button class="key-btn" onclick="pressKey('left', '1')">1</button>
+          <button class="key-btn" onclick="pressKey('left', '2')">2</button>
+          <button class="key-btn" onclick="pressKey('left', '3')">3</button>
+          <button class="key-btn" onclick="pressKey('left', '4')">4</button>
+          <button class="key-btn" onclick="pressKey('left', '5')">5</button>
+          <button class="key-btn" onclick="pressKey('left', '6')">6</button>
+          <button class="key-btn" onclick="pressKey('left', '7')">7</button>
+          <button class="key-btn" onclick="pressKey('left', '8')">8</button>
+          <button class="key-btn" onclick="pressKey('left', '9')">9</button>
+          <button class="key-btn key-clear" onclick="pressKey('left', 'C')">C</button>
+          <button class="key-btn" onclick="pressKey('left', '0')">0</button>
+          <button class="key-btn key-submit-blue" onclick="pressKey('left', 'OK')">OK</button>
+        </div>
+      </section>
+
+      <!-- TIM MERAH -->
+      <section class="player-card">
+        <div class="card-header-red">
+          <h2 class="player-name">TIM MERAH</h2>
+          <span class="score-badge" id="score-right">Skor: 0</span>
+        </div>
+        
+        <div class="question-box">
+          <img id="img-right" class="question-img" alt="Gambar Soal Tim Merah" />
+          <p class="question-text" id="q-right">Memuat soal...</p>
+        </div>
+        <div class="answer-box" id="ans-right"></div>
+
+        <div class="keypad-grid">
+          <button class="key-btn" onclick="pressKey('right', '1')">1</button>
+          <button class="key-btn" onclick="pressKey('right', '2')">2</button>
+          <button class="key-btn" onclick="pressKey('right', '3')">3</button>
+          <button class="key-btn" onclick="pressKey('right', '4')">4</button>
+          <button class="key-btn" onclick="pressKey('right', '5')">5</button>
+          <button class="key-btn" onclick="pressKey('right', '6')">6</button>
+          <button class="key-btn" onclick="pressKey('right', '7')">7</button>
+          <button class="key-btn" onclick="pressKey('right', '8')">8</button>
+          <button class="key-btn" onclick="pressKey('right', '9')">9</button>
+          <button class="key-btn key-clear" onclick="pressKey('right', 'C')">C</button>
+          <button class="key-btn" onclick="pressKey('right', '0')">0</button>
+          <button class="key-btn key-submit-red" onclick="pressKey('right', 'OK')">OK</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
 
   <!-- Panggil File Bank Soal Eksternal -->
   <script src="soal.js"></script>
@@ -465,10 +465,8 @@
         lastIndexLeft = index;
         currentQLeft = questionBank[index];
         
-        // Tampilkan teks soal
         document.getElementById('q-left').innerText = currentQLeft.text;
         
-        // Cek dan tampilkan gambar jika ada
         const imgElem = document.getElementById('img-left');
         if (currentQLeft.image) {
           imgElem.src = currentQLeft.image;
@@ -481,10 +479,8 @@
         lastIndexRight = index;
         currentQRight = questionBank[index];
         
-        // Tampilkan teks soal
         document.getElementById('q-right').innerText = currentQRight.text;
         
-        // Cek dan tampilkan gambar jika ada
         const imgElem = document.getElementById('img-right');
         if (currentQRight.image) {
           imgElem.src = currentQRight.image;
