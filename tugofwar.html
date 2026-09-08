@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tarik Tambang Perkalian - Interaktiv-ta'lim</title>
 
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Library Generator QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
@@ -481,7 +482,6 @@
   <div class="curtain curtain-left"></div>
   <div class="curtain curtain-right"></div>
 
-  <!-- Tombol Kembali -->
   <a href="index.html" class="btn-back" title="Kembali ke Beranda" aria-label="Kembali ke Beranda">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -491,7 +491,6 @@
 
   <div class="game-container">
     
-    <!-- 1. STAGE ANIMASI TARIK TAMBANG -->
     <section class="tug-stage">
       <div class="finish-line finish-left" title="Garis Finis Tim Biru"></div>
       <div class="center-line" title="Batas Tengah Tali"></div>
@@ -499,10 +498,8 @@
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
-    <!-- 2. ARENA SOAL DAN KALKULATOR DI BAWAH -->
     <main class="arena-bottom">
 
-      <!-- TIM BIRU -->
       <section class="player-card">
         <div class="card-header-blue">
           <div class="header-left-group">
@@ -541,7 +538,6 @@
         </div>
       </section>
 
-      <!-- TIM MERAH -->
       <section class="player-card">
         <div class="card-header-red">
           <div class="header-left-group">
@@ -583,7 +579,6 @@
     </main>
   </div>
 
-  <!-- POPUP QR CODE MODAL -->
   <div class="modal-overlay" id="qrModal">
     <div class="modal-card">
       <h2 class="modal-title" id="qrModalTitle">Remote Control</h2>
@@ -593,7 +588,6 @@
     </div>
   </div>
 
-  <!-- POPUP WINNER MODAL -->
   <div class="modal-overlay" id="winnerModal">
     <div class="modal-card">
       <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
@@ -602,10 +596,8 @@
     </div>
   </div>
 
-  <!-- Panggil File Bank Soal Eksternal -->
   <script src="soal.js"></script>
 
-  <!-- Integrasi Firebase SDK & Logika Permainan Realtime -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
