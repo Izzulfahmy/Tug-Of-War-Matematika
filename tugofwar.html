@@ -121,7 +121,7 @@
     }
 
     /* =====================================================
-       1. STAGE ANIMASI & GARIS FINIS (LAYER BELAKANG)
+       1. STAGE ANIMASI & GARIS FINIS
     ===================================================== */
     .tug-stage {
       width: 100%;
@@ -137,13 +137,13 @@
       box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
     }
 
-    /* Motif Catur Garis Finis Kiri & Kanan (Di set z-index: 1 agar di belakang) */
+    /* Motif Catur Garis Finis Kiri & Kanan */
     .finish-line {
       position: absolute;
       top: 0;
       bottom: 0;
       width: 24px;
-      z-index: 1; /* Layer Belakang */
+      z-index: 1;
       background-image: 
         linear-gradient(45deg, #000 25%, transparent 25%), 
         linear-gradient(-45deg, #000 25%, transparent 25%), 
@@ -174,7 +174,7 @@
       width: 4px;
       background-color: var(--color-error);
       transform: translateX(-50%);
-      z-index: 1; /* Layer Belakang */
+      z-index: 1;
       box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
     }
 
@@ -190,13 +190,12 @@
       border-radius: 50%;
     }
 
-    /* Gambar Karakter Penarik (Di set z-index: 2 agar di depan garis finis) */
     .gif-background {
       position: absolute;
       height: 180px;
       width: auto;
       object-fit: contain;
-      z-index: 2; /* Layer Depan */
+      z-index: 2;
       transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -537,8 +536,29 @@
   <!-- Panggil File Bank Soal Eksternal -->
   <script src="soal.js"></script>
 
-  <!-- Logika Permainan -->
-  <script>
+  <!-- Integrasi Firebase SDK & Logika Permainan -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Konfigurasi Firebase Anda
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7qAhQ3LkF6Ey3fiFEPHNEwdy6BHPb548",
+      authDomain: "media-pembelajaran-inter-f5f88.firebaseapp.com",
+      projectId: "media-pembelajaran-inter-f5f88",
+      storageBucket: "media-pembelajaran-inter-f5f88.firebasestorage.app",
+      messagingSenderId: "913703978337",
+      appId: "1:913703978337:web:6a3d3fd07cbe4038c8f120",
+      measurementId: "G-WDSJDMM8RR"
+    };
+
+    // Inisialisasi Firebase & Firestore
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // Variabel Permainan
     let currentQLeft = {};
     let currentQRight = {};
     let inputLeft = "";
@@ -548,7 +568,6 @@
     let pullPos = 0; 
     let isGameOver = false;
 
-    // Jarak pergeseran per jawaban (60px) & Batas Menang Disesuaikan (380px)
     const PULL_STEP = 60;
     const WIN_THRESHOLD = 380; 
 
@@ -689,6 +708,21 @@
       }
     }
 
+    // SIMPAN HASIL KE FIRESTORE KETIKA GAME OVER
+    async function saveGameResult(winner) {
+      try {
+        await addDoc(collection(db, "tarik_tambang"), {
+          winner: winner,
+          scoreBlue: scoreLeft,
+          scoreRed: scoreRight,
+          playedAt: serverTimestamp()
+        });
+        console.log("Hasil permainan berhasil disimpan ke Firestore!");
+      } catch (e) {
+        console.error("Gagal menyimpan hasil permainan: ", e);
+      }
+    }
+
     function showWinner(teamName, color) {
       isGameOver = true;
       const modal = document.getElementById('winnerModal');
@@ -698,6 +732,9 @@
       title.innerText = `${teamName} MENANG! 🎉`;
       title.style.color = color;
       desc.innerText = `Selamat! ${teamName} berhasil menarik tali hingga menyentuh garis finis.`;
+
+      // Simpan riwayat ke folder/koleksi 'tarik_tambang'
+      saveGameResult(teamName);
 
       setTimeout(() => {
         modal.classList.add('show');
@@ -722,6 +759,10 @@
       generateNewQuestion('left');
       generateNewQuestion('right');
     }
+
+    // Expose fungsi ke window agar tombol HTML onclick bisa memanggilnya
+    window.pressKey = pressKey;
+    window.restartGame = restartGame;
   </script>
 
 </body>
