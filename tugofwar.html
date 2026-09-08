@@ -76,39 +76,50 @@
     .curtain-open .curtain-right { transform: translateX(100%); }
 
     /* =====================================================
-       HEADER
+       HEADER & TOMBOL KEMBALI SAMAKAN DENGAN MATERI
     ===================================================== */
     header {
       width: 100%;
       max-width: 1200px;
       padding: 0.8rem 1.5rem;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       z-index: 20;
+      position: relative;
     }
 
+    /* Tombol Kembali (Disamakan dengan tombol di materi) */
     .btn-back {
-      text-decoration: none;
-      background-color: var(--color-surface);
-      color: var(--color-primary);
-      font-family: var(--font-main);
-      font-weight: 700;
-      font-size: 15px;
-      padding: 8px 20px;
-      border-radius: var(--radius-lg);
-      border: 2px solid var(--color-border);
-      box-shadow: 0 4px 10px rgba(2, 132, 197, 0.12);
-      display: inline-flex;
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 9999;
+      display: flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s ease;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background-color: rgba(15, 23, 42, 0.85);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.25s ease-in-out;
     }
 
     .btn-back:hover {
-      background-color: var(--color-primary);
-      color: var(--color-surface);
-      border-color: var(--color-primary);
+      background-color: rgba(37, 99, 235, 0.95);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: scale(1.08);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-back:active {
+      transform: scale(0.95);
     }
 
     .game-title {
@@ -120,6 +131,7 @@
       padding: 6px 20px;
       border-radius: var(--radius-full);
       border: 2px solid var(--color-border);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
     }
 
     /* =====================================================
@@ -282,6 +294,20 @@
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
+    @media (max-width: 640px) {
+      .btn-back {
+        top: 12px;
+        left: 12px;
+        width: 38px;
+        height: 38px;
+      }
+      
+      .btn-back svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
     @media (max-width: 900px) {
       body { overflow-y: auto; height: auto; }
       .game-arena { grid-template-columns: 1fr; height: auto; }
@@ -295,12 +321,15 @@
   <div class="curtain curtain-left"></div>
   <div class="curtain curtain-right"></div>
 
+  <a href="index.html" class="btn-back" title="Kembali ke Beranda" aria-label="Kembali ke Beranda">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+  </a>
+
   <header>
-    <a href="index.html" class="btn-back">
-      <span>⬅️</span> Kembali
-    </a>
     <h1 class="game-title">Tarik Tambang Perkalian</h1>
-    <div style="width: 100px;"></div>
   </header>
 
   <main class="game-arena">
