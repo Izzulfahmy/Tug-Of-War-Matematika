@@ -2,11 +2,11 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Remote Control - Tarik Tambang Perkalian</title>
 
   <!-- Favicon / Ikon Tab Browser -->
-  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="icon" type="image/png" href="asset/logo.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,8 +26,8 @@
       --color-error: #EF4444;
       --color-success: #22C55E;
 
-      --radius-md: 12px;
-      --radius-lg: 18px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
       --radius-full: 9999px;
 
       --font-main: 'Nunito', sans-serif;
@@ -42,57 +42,65 @@
       user-select: none;
     }
 
-    body {
-      width: 100vw;
+    html, body {
+      width: 100%;
       height: 100vh;
+      height: 100dvh;
       font-family: var(--font-main);
       background-color: var(--color-bg);
       color: var(--color-on-surface);
+      overflow: hidden;
+    }
+
+    body {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 16px;
+      padding: clamp(8px, 1.5vh, 12px);
       position: relative;
-      overflow: hidden;
     }
 
+    /* HEADER REMOTE */
     .remote-header {
       width: 100%;
       max-width: 420px;
-      padding: 12px 18px;
+      padding: clamp(6px, 1.2vh, 10px) 14px;
       border-radius: var(--radius-lg);
       color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       z-index: 10;
+      flex-shrink: 0;
     }
 
-    .bg-blue { background-color: var(--color-primary); }
-    .bg-red { background-color: var(--color-error); }
+    .bg-blue { background: linear-gradient(180deg, #38BDF8 0%, #0284C5 100%); }
+    .bg-red { background: linear-gradient(180deg, #F87171 0%, #EF4444 100%); }
 
     .team-title {
       font-family: var(--font-display);
-      font-size: 20px;
+      font-size: clamp(16px, 2.5vh, 18px);
       font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
     .score-badge {
       font-family: var(--font-display);
       background: rgba(255, 255, 255, 0.25);
-      padding: 4px 14px;
+      padding: 2px 10px;
       border-radius: var(--radius-full);
-      font-size: 15px;
+      font-size: clamp(12px, 1.8vh, 14px);
     }
 
+    /* KARTU SOAL CERITA & GAMBAR */
     .question-card {
       width: 100%;
       max-width: 420px;
       flex: 1;
-      margin: 12px 0;
-      padding: 14px;
+      margin: 6px 0;
+      padding: 8px 12px;
       background: var(--color-surface);
       border: 2px dashed var(--color-border);
       border-radius: var(--radius-lg);
@@ -101,42 +109,58 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: 8px;
+      gap: 4px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.03);
       z-index: 10;
       overflow: hidden;
+      min-height: 0;
+    }
+
+    .img-frame {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background-color: #FFFFFF;
+      padding: 4px 8px;
+      border: 1.5px solid var(--color-border);
+      border-radius: 8px;
+      max-height: clamp(65px, 13vh, 100px);
+      width: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
     .question-img {
       max-width: 100%;
-      max-height: 110px;
+      max-height: 100%;
       object-fit: contain;
-      border-radius: 8px;
-      display: none;
     }
 
     .question-text {
-      font-size: 15px;
+      font-family: var(--font-display);
+      font-size: clamp(12px, 1.8vh, 15px);
       font-weight: 700;
-      line-height: 1.4;
+      color: var(--color-on-surface);
+      line-height: 1.25;
     }
 
+    /* BANNER FEEDBACK REALTIME */
     .feedback-banner {
       width: 100%;
       max-width: 420px;
-      height: 36px;
+      height: clamp(26px, 3.5vh, 32px);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: 15px;
+      font-size: clamp(12px, 1.6vh, 14px);
       font-weight: 700;
       border-radius: var(--radius-md);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       opacity: 0;
-      transform: translateY(-5px);
-      transition: all 0.25s ease;
+      transform: translateY(-4px);
+      transition: all 0.2s ease;
       z-index: 10;
+      flex-shrink: 0;
     }
 
     .feedback-banner.show {
@@ -156,51 +180,57 @@
       border: 1.5px solid #FCA5A5;
     }
 
+    /* TAMPILAN ANGKAMU / ANSWER DISPLAY */
     .answer-display {
       width: 100%;
       max-width: 420px;
-      height: 48px;
-      background-color: var(--color-surface);
-      border: 2px solid var(--color-border);
+      height: clamp(34px, 4.5vh, 42px);
+      background-color: #FEF08A;
+      border: 2px solid #F59E0B;
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: 26px;
-      margin-bottom: 12px;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      font-size: clamp(20px, 2.6vh, 24px);
+      font-weight: 700;
+      color: #78350F;
+      margin-bottom: 8px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
       z-index: 10;
+      flex-shrink: 0;
     }
 
+    /* KEYPAD GRID RESPONSIF */
     .keypad-grid {
       width: 100%;
       max-width: 420px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: clamp(4px, 1vh, 8px);
       z-index: 10;
+      flex-shrink: 0;
     }
 
     .key-btn {
-      height: 52px;
+      height: clamp(38px, 5.2vh, 48px);
       background-color: var(--color-surface);
-      border: 2px solid var(--color-border);
+      border: 1.5px solid var(--color-border);
       border-radius: var(--radius-md);
       font-family: var(--font-display);
-      font-size: 22px;
+      font-size: clamp(16px, 2.2vh, 20px);
       font-weight: 700;
       color: var(--color-on-surface);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 0 var(--color-border);
+      box-shadow: 0 3px 0 var(--color-border);
       transition: all 0.1s ease;
     }
 
     .key-btn:active {
-      transform: translateY(3px);
+      transform: translateY(2px);
       box-shadow: 0 1px 0 var(--color-border);
     }
 
@@ -208,7 +238,7 @@
       background-color: #FFE4E6;
       color: var(--color-error);
       border-color: #FECDD3;
-      box-shadow: 0 4px 0 #FECDD3;
+      box-shadow: 0 3px 0 #FECDD3;
     }
 
     .key-submit {
@@ -218,13 +248,13 @@
     .submit-blue {
       background-color: var(--color-primary);
       border-color: #0369A1;
-      box-shadow: 0 4px 0 #0369A1;
+      box-shadow: 0 3px 0 #0369A1;
     }
 
     .submit-red {
       background-color: var(--color-error);
       border-color: #B91C1C;
-      box-shadow: 0 4px 0 #B91C1C;
+      box-shadow: 0 3px 0 #B91C1C;
     }
   </style>
 </head>
@@ -237,7 +267,9 @@
   </header>
 
   <main class="question-card">
-    <img id="qImg" class="question-img" alt="Gambar Soal" />
+    <div class="img-frame" id="qImgFrame">
+      <img id="qImg" class="question-img" alt="Gambar Soal" />
+    </div>
     <p class="question-text" id="qText">Menghubungkan ke permainan...</p>
   </main>
 
@@ -323,6 +355,7 @@
     function updateQuestionUI(question) {
       document.getElementById('qText').innerText = question.text;
       const imgElem = document.getElementById('qImg');
+      const frameElem = document.getElementById('qImgFrame');
       
       if (question.image) {
         let imgUrl = question.image;
@@ -332,9 +365,9 @@
         }
         
         imgElem.src = imgUrl;
-        imgElem.style.display = 'block';
+        frameElem.style.display = 'flex';
       } else {
-        imgElem.style.display = 'none';
+        frameElem.style.display = 'none';
       }
     }
 
@@ -366,11 +399,13 @@
 
         if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
 
-        confetti({
-          particleCount: 70,
-          spread: 60,
-          origin: { y: 0.7 }
-        });
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 60,
+            spread: 50,
+            origin: { y: 0.7 }
+          });
+        }
       } else {
         banner.className = "feedback-banner feedback-error show";
         banner.innerText = "SALAH, COBA LAGI! ❌";
@@ -382,7 +417,7 @@
 
       setTimeout(() => {
         banner.classList.remove('show');
-      }, 1500);
+      }, 1400);
     }
 
     async function sendKey(val) {
