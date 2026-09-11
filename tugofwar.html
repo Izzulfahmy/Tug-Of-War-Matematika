@@ -933,7 +933,7 @@
   <div class="modal-overlay" id="winnerModal">
     <div class="modal-card">
       <h2 class="modal-title" id="winnerText">TIM BIRU MENANG!</h2>
-      <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menyentuh garis finis terlebih dahulu.</p>
+      <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menarik tali hingga menyentuh garis finis.</p>
       <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
     </div>
   </div>
@@ -1365,7 +1365,10 @@
             inputLeft = "";
             
             checkWinner();
-            if (!isGameOver) generateNewQuestion('left');
+            if (!isGameOver) {
+              // Jeda singkat agar feedback selesai sebelum soal berganti
+              setTimeout(() => generateNewQuestion('left'), 600);
+            }
           } else {
             triggerWrongEffect('left');
             inputLeft = "";
@@ -1391,7 +1394,10 @@
             inputRight = "";
             
             checkWinner();
-            if (!isGameOver) generateNewQuestion('right');
+            if (!isGameOver) {
+              // Jeda singkat agar feedback selesai sebelum soal berganti
+              setTimeout(() => generateNewQuestion('right'), 600);
+            }
           } else {
             triggerWrongEffect('right');
             inputRight = "";

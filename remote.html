@@ -410,7 +410,7 @@
 
       setTimeout(() => {
         banner.classList.remove('show');
-      }, 1400);
+      }, 1200);
     }
 
     async function sendKey(val) {
@@ -419,21 +419,18 @@
       if (val === 'C') {
         playBeep(700, 0.08);
         inputVal = "";
+        box.innerText = inputVal;
       } else if (val === 'OK') {
         if (inputVal !== "") {
           const userAns = parseInt(inputVal);
-          if (currentAns !== null && userAns === currentAns) {
-            triggerFeedback(true);
-          } else {
-            triggerFeedback(false);
-          }
+          const isCorrect = (currentAns !== null && userAns === currentAns);
+          triggerFeedback(isCorrect);
         }
       } else {
         playBeep(800, 0.08);
         if (inputVal.length < 3) inputVal += val;
+        box.innerText = inputVal;
       }
-
-      box.innerText = inputVal;
 
       if (roomId) {
         try {
@@ -447,14 +444,13 @@
           };
 
           if (side === 'left') {
-            updateData.inputLeftVal = inputVal;
+            updateData.inputLeftVal = (val === 'OK') ? "" : inputVal;
           } else {
-            updateData.inputRightVal = inputVal;
+            updateData.inputRightVal = (val === 'OK') ? "" : inputVal;
           }
 
           await updateDoc(roomRef, updateData);
 
-          // Kosongkan nilai input lokal setelah pengiriman tombol OK selesai
           if (val === 'OK') {
             inputVal = "";
             box.innerText = "";
