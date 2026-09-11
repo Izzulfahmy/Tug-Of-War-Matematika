@@ -48,5 +48,57 @@ const questionBank = [
     image: "soal/10.png",
     text: "Di sebuah kebun kopi terdapat 3 baris tanaman kopi. Setiap baris memiliki 9 tanaman kopi. Berapa jumlah tanaman kopi seluruhnya?", 
     ans: 27 
+  },
+
+  // --- SOAL 11-20 (Tambahan dari PDF) ---
+  { 
+    image: "soal/11.png",
+    text: "Rina mempunyai 4 kotak pensil. Setiap kotak berisi 7 pensil. Berapa jumlah pensil Rina seluruhnya?", 
+    ans: 28 
+  },
+  { 
+    image: "soal/12.png",
+    text: "Di kebun ayah ada 6 pohon mangga. Setiap pohon menghasilkan 8 buah mangga. Berapa jumlah mangga semuanya?", 
+    ans: 48 
+  },
+  { 
+    image: "soal/13.png",
+    text: "Ibu membuat 5 nampan kue. Setiap nampan berisi 12 kue. Berapa jumlah kue semuanya?", 
+    ans: 60 
+  },
+  { 
+    image: "soal/14.png",
+    text: "Pak Budi mempunyai 7 kantong beras. Setiap kantong berisi 9 kilogram beras. Berapa kilogram beras Pak Budi seluruhnya?", 
+    ans: 63 
+  },
+  { 
+    image: "soal/15.png",
+    text: "Dian mempunyai 3 rak buku. Setiap rak berisi 10 buku. Berapa jumlah buku Dian semuanya?", 
+    ans: 30 
+  },
+  { 
+    image: "soal/16.png",
+    text: "Siti membeli 4 bungkus permen. Setiap bungkus berisi 9 permen. Berapa jumlah permen Siti seluruhnya?", 
+    ans: 36 
+  },
+  { 
+    image: "soal/17.png",
+    text: "Di kelas terdapat 5 meja. Setiap meja digunakan oleh 2 siswa. Berapa jumlah siswa yang dapat menggunakan meja tersebut?", 
+    ans: 10 
+  },
+  { 
+    image: "soal/18.png",
+    text: "Ayah membeli 8 piring. Setiap piring berisi 5 buah kue. Berapa jumlah kue semuanya?", 
+    ans: 40 
+  },
+  { 
+    image: "soal/19.png",
+    text: "Lani mempunyai 7 kantong kelereng. Setiap kantong berisi 6 kelereng. Berapa jumlah kelereng Lani seluruhnya?", 
+    ans: 42 
+  },
+  { 
+    image: "soal/20.png",
+    text: "Di halaman sekolah terdapat 9 baris tanaman. Setiap baris memiliki 8 tanaman. Berapa jumlah tanaman seluruhnya?", 
+    ans: 72 
   }
 ];
