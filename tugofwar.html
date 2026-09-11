@@ -5,20 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Tarik Tambang Perkalian</title>
 
-  <!-- Favicon dari folder asset/logo.png -->
-  <link rel="icon" type="image/png" href="asset/logo.png" />
+  <link rel="icon" type="image/png" href="asset/unej.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Library Generator QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
-    /* =====================================================
-       DESIGN TOKENS & RESPONSIVE BASE
-    ===================================================== */
     :root {
       --color-primary: #0284C5;
       --color-secondary: #60A5FA;
@@ -63,9 +58,6 @@
       padding: clamp(8px, 1.2vh, 14px);
     }
 
-    /* =====================================================
-       TIRAI OPENING & OVERLAY MULAI / COUNTDOWN
-    ===================================================== */
     .curtain {
       position: fixed;
       top: 0;
@@ -83,7 +75,6 @@
     .curtain-open .curtain-left { transform: translateX(-100%); }
     .curtain-open .curtain-right { transform: translateX(100%); }
 
-    /* OVERLAY TOMBOL MULAI & HITUNG MUNDUR */
     .start-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -144,9 +135,6 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
-    /* =====================================================
-       TOMBOL KEMBALI, MUSIC & FULLSCREEN
-    ===================================================== */
     .btn-back, .btn-fullscreen, .btn-music {
       position: fixed;
       top: 12px;
@@ -183,9 +171,6 @@
       transform: scale(0.95);
     }
 
-    /* =====================================================
-       LAYOUT UTAMA PERMAINAN (DESKTOP)
-    ===================================================== */
     .game-container {
       width: 100%;
       max-width: 1280px;
@@ -195,9 +180,6 @@
       gap: clamp(8px, 1.2vh, 12px);
     }
 
-    /* =====================================================
-       1. STAGE ANIMASI TARIK TAMBANG
-    ===================================================== */
     .tug-stage {
       width: 100%;
       height: clamp(180px, 38vh, 280px);
@@ -213,7 +195,6 @@
       box-shadow: 0 8px 24px rgba(2, 132, 197, 0.18);
     }
 
-    /* BENDERA FINISH MENANCAP */
     .flag-pole {
       position: absolute;
       bottom: 12%;
@@ -270,9 +251,6 @@
       transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* =====================================================
-       2. ARENA SOAL & KARTU TIM
-    ===================================================== */
     .arena-bottom {
       width: 100%;
       flex: 1;
@@ -300,7 +278,6 @@
       transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    /* ANIMASI KARTU BENAR & SALAH */
     .player-card.shake {
       animation: cardShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
       border-color: #EF4444 !important;
@@ -326,7 +303,6 @@
       100% { transform: scale(1); }
     }
 
-    /* PARTIKEL PERAYAAN & FLOATING FEEDBACK */
     .confetti-particle {
       position: absolute;
       pointer-events: none;
@@ -383,7 +359,6 @@
       }
     }
 
-    /* CARD KETERANGAN SKOR & ATURAN DI TENGAH */
     .rules-card {
       width: 100%;
       max-width: 240px;
@@ -515,7 +490,6 @@
       font-size: clamp(11px, 1.2vw, 13px);
     }
 
-    /* BODY KARTU */
     .card-body {
       width: 100%;
       flex: 1;
@@ -528,7 +502,6 @@
       min-height: 0;
     }
 
-    /* KOTAK SOAL CERITA & GAMBAR */
     .question-box {
       width: 100%;
       flex: 1;
@@ -573,7 +546,6 @@
       line-height: 1.25;
     }
 
-    /* KOTAK INPUT JAWABAN */
     .answer-box {
       width: 100%;
       height: clamp(32px, 4vh, 38px);
@@ -591,7 +563,6 @@
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.04);
     }
 
-    /* KEYPAD GRID */
     .keypad-grid {
       width: 100%;
       flex-shrink: 0;
@@ -643,9 +614,6 @@
       box-shadow: 0 3px 0 #B91C1C; 
     }
 
-    /* =====================================================
-       MODAL POPUP
-    ===================================================== */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -696,9 +664,6 @@
       .rules-card { display: none; }
     }
 
-    /* =====================================================
-       3. TAMPILAN KHUSUS MOBILE (DIBALIK & DITENGAHKAN)
-    ===================================================== */
     @media (max-width: 640px) {
       body {
         overflow: hidden;
@@ -723,7 +688,6 @@
         flex: 1;
       }
 
-      /* Card Tim Merah (Di Atas & Dibalik 180 Derajat) */
       #card-right {
         order: 1;
         transform: rotate(180deg);
@@ -732,7 +696,6 @@
         flex: none;
       }
 
-      /* Stage Penarik Tambang (Di Tengah Antara Merah & Biru) */
       .tug-stage {
         order: 2;
         height: 20dvh;
@@ -742,7 +705,6 @@
         flex-shrink: 0;
       }
 
-      /* Card Tim Biru (Di Bawah & Tegak Biasa) */
       #card-left {
         order: 3;
         max-width: 100%;
@@ -750,12 +712,10 @@
         flex: none;
       }
 
-      /* Sembunyikan Card Aturan/Petunjuk di Mobile */
       .rules-card {
         display: none !important;
       }
 
-      /* Penyesuaian Elemen Dalam Card Mobile */
       .card-body {
         padding: 4px 8px;
         gap: 4px;
@@ -784,20 +744,17 @@
 
 <body>
 
-  <!-- OVERLAY MULAI & HITUNG MUNDUR -->
   <div class="start-overlay" id="startOverlay">
-    <button class="btn-start-game" id="btnStartGame" onclick="startCountdown()">MULAI MAIN 🚀</button>
+    <button class="btn-start-game" id="btnStartGame" onclick="startCountdown()">MULAI MAIN</button>
     <div class="countdown-text" id="countdownText">3</div>
   </div>
 
-  <!-- ELEMENT AUDIO BAGIAN BELAKANG -->
   <audio id="bgMusic" src="asset/Wii Music - Gaming Background Music HD.mp3" loop preload="auto"></audio>
   <audio id="victorySfx" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
 
   <div class="curtain curtain-left"></div>
   <div class="curtain curtain-right"></div>
 
-  <!-- Tombol Kembali -->
   <a href="index.html" class="btn-back" title="Kembali ke Beranda" aria-label="Kembali ke Beranda">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -805,7 +762,6 @@
     </svg>
   </a>
 
-  <!-- Tombol Toggle Musik -->
   <button class="btn-music" id="btnMusic" onclick="toggleMusic()" title="Musik Latar" aria-label="Musik Latar">
     <svg id="iconMusicOn" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="M9 18V5l12-2v13"></path>
@@ -821,7 +777,6 @@
     </svg>
   </button>
 
-  <!-- Tombol Full Screen -->
   <button class="btn-fullscreen" id="btnFullscreen" onclick="toggleFullscreen()" title="Layar Penuh" aria-label="Layar Penuh">
     <svg id="iconExpand" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
@@ -833,9 +788,7 @@
 
   <div class="game-container">
     
-    <!-- 1. STAGE ANIMASI TARIK TAMBANG -->
     <section class="tug-stage" id="tugStage">
-      <!-- BENDERA FINISH TIM BIRU -->
       <div class="flag-pole flag-pole-left" title="Finis Tim Biru">
         <div class="flag-banner"></div>
         <div class="flag-stick"></div>
@@ -843,7 +796,6 @@
 
       <div class="center-line" title="Batas Tengah Tali"></div>
 
-      <!-- BENDERA FINISH TIM MERAH -->
       <div class="flag-pole flag-pole-right" title="Finis Tim Merah">
         <div class="flag-banner"></div>
         <div class="flag-stick"></div>
@@ -852,10 +804,8 @@
       <img src="player-pull.gif" alt="Arena Tarik Tambang" class="gif-background" id="stageGif" />
     </section>
 
-    <!-- 2. ARENA SOAL DAN KALKULATOR -->
     <main class="arena-bottom" id="arenaBottom">
 
-      <!-- TIM BIRU -->
       <section class="player-card" id="card-left">
         <div class="card-header-blue">
           <div class="header-left-group">
@@ -899,7 +849,6 @@
         </div>
       </section>
 
-      <!-- CARD KETERANGAN SKOR & ATURAN (DI TENGAH) -->
       <aside class="rules-card">
         <div class="rules-header">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -920,13 +869,12 @@
           </div>
           <div class="rule-item" style="background-color: #FEF3C7; border-color: #FDE68A;">
             <span class="rule-text" style="color: #92400E; text-align: center; width: 100%;">
-              🏆 Tim pertama yang menarik tali sampai garis <strong>FINIS</strong> menang!
+              Tim pertama yang menarik tali sampai garis FINIS menang!
             </span>
           </div>
         </div>
       </aside>
 
-      <!-- TIM MERAH -->
       <section class="player-card" id="card-right">
         <div class="card-header-red">
           <div class="header-left-group">
@@ -973,7 +921,6 @@
     </main>
   </div>
 
-  <!-- POPUP QR CODE MODAL -->
   <div class="modal-overlay" id="qrModal">
     <div class="modal-card">
       <h2 class="modal-title" id="qrModalTitle">Remote Control</h2>
@@ -983,19 +930,16 @@
     </div>
   </div>
 
-  <!-- POPUP WINNER MODAL -->
   <div class="modal-overlay" id="winnerModal">
     <div class="modal-card">
-      <h2 class="modal-title" id="winnerText">TIM BIRU MENANG! 🎉</h2>
+      <h2 class="modal-title" id="winnerText">TIM BIRU MENANG!</h2>
       <p class="modal-desc" id="winnerDesc">Selamat! Tim Biru berhasil menyentuh garis finis terlebih dahulu.</p>
       <button class="btn-restart" onclick="restartGame()">Main Lagi</button>
     </div>
   </div>
 
-  <!-- Bank Soal Eksternal -->
   <script src="soal.js"></script>
 
-  <!-- Firebase & Game Engine Realtime -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
@@ -1025,7 +969,7 @@
     let scoreRight = 0;
     let pullPos = 0; 
     let isGameOver = false;
-    let isGameStarted = false; // Status game dimulai
+    let isGameStarted = false;
 
     const PULL_STEP = 60;
     const WIN_THRESHOLD = 380; 
@@ -1035,7 +979,6 @@
 
     let qrGenerator = null;
 
-    // --- LOGIKA HITUNG MUNDUR (COUNTDOWN) ---
     function startCountdown() {
       const btnStart = document.getElementById('btnStartGame');
       const countElem = document.getElementById('countdownText');
@@ -1054,7 +997,7 @@
           countElem.innerText = count;
           playBeep(800 + (3 - count) * 200, 0.2);
         } else if (count === 0) {
-          countElem.innerText = "MULAI! 🚀";
+          countElem.innerText = "MULAI!";
           countElem.style.color = "#10B981";
           playBeep(1500, 0.4);
         } else {
@@ -1066,7 +1009,6 @@
       }, 1000);
     }
 
-    // --- MANAJEMEN LAYOUT MOBILE / DESKTOP REARRANGE ---
     function rearrangeLayoutForMobile() {
       const isMobile = window.innerWidth <= 640;
       const arena = document.getElementById('arenaBottom');
@@ -1086,7 +1028,6 @@
 
     window.addEventListener('resize', rearrangeLayoutForMobile);
 
-    // --- MANAJEMEN AUDIO BACKSOUND & SFX ---
     let audioCtx = null;
     let isMusicMuted = false;
 
@@ -1202,7 +1143,6 @@
       }
     }
 
-    // --- ANIMASI BENAR & SALAH ---
     function triggerSuccessEffect(side) {
       playCorrectSound();
 
@@ -1211,13 +1151,11 @@
       void card.offsetWidth;
       card.classList.add('pop-success');
 
-      // Teks Mengambang "+10"
       const feedback = document.createElement('div');
       feedback.className = 'floating-feedback correct';
       feedback.innerText = '+10!';
       card.appendChild(feedback);
 
-      // Partikel Perayaan (Confetti Burst)
       const colors = ['#10B981', '#3B82F6', '#F59E0B', '#EC4899', '#8B5CF6', '#34D399'];
       const particleCount = 28;
 
@@ -1272,7 +1210,6 @@
       }, 800);
     }
 
-    // --- LOGIKA TOGGLE FULLSCREEN ---
     function toggleFullscreen() {
       const doc = window.document;
       const docEl = doc.documentElement;
@@ -1495,7 +1432,7 @@
       const title = document.getElementById('winnerText');
       const desc = document.getElementById('winnerDesc');
 
-      title.innerText = `${teamName} MENANG! 🎉`;
+      title.innerText = `${teamName} MENANG!`;
       title.style.color = color;
       desc.innerText = `Selamat! ${teamName} berhasil menarik tali hingga menyentuh garis finis.`;
 
