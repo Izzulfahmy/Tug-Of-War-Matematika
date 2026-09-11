@@ -943,7 +943,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-    import { getFirestore, collection, addDoc, doc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA7qAhQ3LkF6Ey3fiFEPHNEwdy6BHPb548",
@@ -976,6 +976,8 @@
 
     let lastIndexLeft = -1;
     let lastIndexRight = -1;
+
+    let lastHandledActionTime = 0;
 
     let qrGenerator = null;
 
@@ -1323,23 +1325,31 @@
 
     function listenRemoteControl() {
       const roomRef = doc(db, "active_rooms", roomId);
-      onSnapshot(roomRef, (snapshot) => {
+      onSnapshot(roomRef, async (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.data();
 
           if (data.inputLeftVal !== undefined) {
-            inputLeft = data.inputLeftVal;
+            inputLeft = String(data.inputLeftVal);
             document.getElementById('ans-left').innerText = inputLeft;
           }
           if (data.inputRightVal !== undefined) {
-            inputRight = data.inputRightVal;
+            inputRight = String(data.inputRightVal);
             document.getElementById('ans-right').innerText = inputRight;
           }
 
           if (data.lastAction) {
             const { side, key, timestamp } = data.lastAction;
-            if (timestamp && Date.now() - timestamp < 2000) {
+            if (timestamp && timestamp > lastHandledActionTime) {
+              lastHandledActionTime = timestamp;
+              
               pressKey(side, key, false);
+
+              try {
+                await updateDoc(roomRef, { lastAction: null });
+              } catch(e) {
+                console.error("Error clearing lastAction", e);
+              }
             }
           }
         }
@@ -1355,7 +1365,10 @@
           playBeep(400);
           inputLeft = "";
         } else if (val === 'OK') {
-          if (parseInt(inputLeft) === currentQLeft.ans) {
+          const userAns = parseInt(inputLeft, 10);
+          const targetAns = parseInt(currentQLeft.ans, 10);
+
+          if (!isNaN(userAns) && userAns === targetAns) {
             triggerSuccessEffect('left');
             scoreLeft += 10;
             
@@ -1366,7 +1379,6 @@
             
             checkWinner();
             if (!isGameOver) {
-              // Jeda singkat agar feedback selesai sebelum soal berganti
               setTimeout(() => generateNewQuestion('left'), 600);
             }
           } else {
@@ -1375,7 +1387,9 @@
           }
         } else {
           playBeep(800);
-          if (isLocal && inputLeft.length < 3) inputLeft += val;
+          if (isLocal && inputLeft.length < 3) {
+            inputLeft += val;
+          }
         }
         box.innerText = inputLeft;
       } else {
@@ -1384,7 +1398,10 @@
           playBeep(400);
           inputRight = "";
         } else if (val === 'OK') {
-          if (parseInt(inputRight) === currentQRight.ans) {
+          const userAns = parseInt(inputRight, 10);
+          const targetAns = parseInt(currentQRight.ans, 10);
+
+          if (!isNaN(userAns) && userAns === targetAns) {
             triggerSuccessEffect('right');
             scoreRight += 10;
             
@@ -1395,7 +1412,6 @@
             
             checkWinner();
             if (!isGameOver) {
-              // Jeda singkat agar feedback selesai sebelum soal berganti
               setTimeout(() => generateNewQuestion('right'), 600);
             }
           } else {
@@ -1404,7 +1420,9 @@
           }
         } else {
           playBeep(800);
-          if (isLocal && inputRight.length < 3) inputRight += val;
+          if (isLocal && inputRight.length < 3) {
+            inputRight += val;
+          }
         }
         box.innerText = inputRight;
       }
