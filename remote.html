@@ -307,6 +307,7 @@
 
     let inputVal = "";
     let currentAns = null;
+    let isSubmitting = false;
 
     const header = document.getElementById('remoteHeader');
     const title = document.getElementById('teamTitle');
@@ -414,49 +415,78 @@
     }
 
     async function sendKey(val) {
+      if (isSubmitting) return;
+
       const box = document.getElementById('ansDisplay');
 
       if (val === 'C') {
         playBeep(700, 0.08);
         inputVal = "";
         box.innerText = inputVal;
-      } else if (val === 'OK') {
-        if (inputVal !== "") {
-          const userAns = parseInt(inputVal);
-          const isCorrect = (currentAns !== null && userAns === currentAns);
-          triggerFeedback(isCorrect);
+
+        if (roomId) {
+          try {
+            const roomRef = doc(db, "active_rooms", roomId);
+            const updateData = {};
+            updateData[side === 'left' ? 'inputLeftVal' : 'inputRightVal'] = "";
+            await updateDoc(roomRef, updateData);
+          } catch (e) {
+            console.error("Gagal update reset input", e);
+          }
         }
+      } else if (val === 'OK') {
+        if (inputVal === "") return;
+
+        isSubmitting = true;
+        const submittedAnswer = inputVal;
+        const userAns = parseInt(submittedAnswer, 10);
+        const targetAns = parseInt(currentAns, 10);
+        const isCorrect = (!isNaN(targetAns) && userAns === targetAns);
+
+        triggerFeedback(isCorrect);
+
+        if (roomId) {
+          try {
+            const roomRef = doc(db, "active_rooms", roomId);
+            
+            // Step 1: Pastikan nilai input jawaban terisi dengan akurat di Firestore
+            const syncData = {};
+            syncData[side === 'left' ? 'inputLeftVal' : 'inputRightVal'] = submittedAnswer;
+            await updateDoc(roomRef, syncData);
+
+            // Step 2: Memicu lastAction 'OK' ke layar utama
+            await updateDoc(roomRef, {
+              lastAction: {
+                side: side,
+                key: 'OK',
+                timestamp: Date.now()
+              }
+            });
+          } catch (err) {
+            console.error("Gagal mengirim aksi OK remote: ", err);
+          }
+        }
+
+        inputVal = "";
+        box.innerText = "";
+        isSubmitting = false;
+
       } else {
         playBeep(800, 0.08);
-        if (inputVal.length < 3) inputVal += val;
-        box.innerText = inputVal;
-      }
+        if (inputVal.length < 3) {
+          inputVal += val;
+          box.innerText = inputVal;
 
-      if (roomId) {
-        try {
-          const roomRef = doc(db, "active_rooms", roomId);
-          const updateData = {
-            lastAction: {
-              side: side,
-              key: val,
-              timestamp: Date.now()
+          if (roomId) {
+            try {
+              const roomRef = doc(db, "active_rooms", roomId);
+              const updateData = {};
+              updateData[side === 'left' ? 'inputLeftVal' : 'inputRightVal'] = inputVal;
+              await updateDoc(roomRef, updateData);
+            } catch (err) {
+              console.error("Gagal mengirim input angka remote: ", err);
             }
-          };
-
-          if (side === 'left') {
-            updateData.inputLeftVal = (val === 'OK') ? "" : inputVal;
-          } else {
-            updateData.inputRightVal = (val === 'OK') ? "" : inputVal;
           }
-
-          await updateDoc(roomRef, updateData);
-
-          if (val === 'OK') {
-            inputVal = "";
-            box.innerText = "";
-          }
-        } catch (err) {
-          console.error("Gagal mengirim aksi remote: ", err);
         }
       }
     }

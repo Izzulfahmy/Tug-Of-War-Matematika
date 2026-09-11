@@ -1343,13 +1343,16 @@
             if (timestamp && timestamp > lastHandledActionTime) {
               lastHandledActionTime = timestamp;
               
-              pressKey(side, key, false);
+              // Memberikan jeda singkat 50ms agar input data ter-render sempurna
+              setTimeout(async () => {
+                pressKey(side, key, false);
 
-              try {
-                await updateDoc(roomRef, { lastAction: null });
-              } catch(e) {
-                console.error("Error clearing lastAction", e);
-              }
+                try {
+                  await updateDoc(roomRef, { lastAction: null });
+                } catch(e) {
+                  console.error("Error clearing lastAction", e);
+                }
+              }, 50);
             }
           }
         }
