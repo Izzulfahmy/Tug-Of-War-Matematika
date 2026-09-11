@@ -6,7 +6,7 @@
   <title>Tarik Tambang Perkalian</title>
 
   <!-- Favicon dari folder asset/logo.png -->
-  <link rel="icon" type="image/png" href="asset/unej.png" />
+  <link rel="icon" type="image/png" href="asset/logo.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,7 +64,7 @@
     }
 
     /* =====================================================
-       TIRAI OPENING
+       TIRAI OPENING & OVERLAY MULAI / COUNTDOWN
     ===================================================== */
     .curtain {
       position: fixed;
@@ -72,7 +72,7 @@
       width: 50vw;
       height: 100vh;
       background: repeating-linear-gradient(90deg, #F43F5E 0px, #EF4444 30px, #DC2626 60px, #EF4444 90px);
-      z-index: 100;
+      z-index: 1000;
       transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
       box-shadow: inset 0 0 50px rgba(15, 23, 42, 0.25);
     }
@@ -82,6 +82,67 @@
 
     .curtain-open .curtain-left { transform: translateX(-100%); }
     .curtain-open .curtain-right { transform: translateX(100%); }
+
+    /* OVERLAY TOMBOL MULAI & HITUNG MUNDUR */
+    .start-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(6px);
+      z-index: 900;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    .start-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .btn-start-game {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 700;
+      color: #FFFFFF;
+      background: linear-gradient(180deg, #34D399 0%, #10B981 100%);
+      border: 4px solid #059669;
+      border-radius: var(--radius-full);
+      padding: clamp(14px, 2vh, 20px) clamp(36px, 5vw, 60px);
+      box-shadow: 0 10px 0 #047857, 0 15px 30px rgba(16, 185, 129, 0.4);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      letter-spacing: 1px;
+    }
+
+    .btn-start-game:hover {
+      transform: scale(1.08) translateY(-4px);
+      box-shadow: 0 14px 0 #047857, 0 20px 35px rgba(16, 185, 129, 0.5);
+    }
+
+    .btn-start-game:active {
+      transform: scale(0.96) translateY(4px);
+      box-shadow: 0 4px 0 #047857;
+    }
+
+    .countdown-text {
+      font-family: var(--font-display);
+      font-size: clamp(80px, 18vw, 160px);
+      font-weight: 900;
+      color: #F59E0B;
+      text-shadow: 0 8px 0 #B45309, 0 15px 30px rgba(0,0,0,0.4);
+      display: none;
+      animation: countPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
+    }
+
+    @keyframes countPop {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
 
     /* =====================================================
        TOMBOL KEMBALI, MUSIC & FULLSCREEN
@@ -723,6 +784,12 @@
 
 <body>
 
+  <!-- OVERLAY MULAI & HITUNG MUNDUR -->
+  <div class="start-overlay" id="startOverlay">
+    <button class="btn-start-game" id="btnStartGame" onclick="startCountdown()">MULAI MAIN 🚀</button>
+    <div class="countdown-text" id="countdownText">3</div>
+  </div>
+
   <!-- ELEMENT AUDIO BAGIAN BELAKANG -->
   <audio id="bgMusic" src="asset/Wii Music - Gaming Background Music HD.mp3" loop preload="auto"></audio>
   <audio id="victorySfx" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
@@ -958,6 +1025,7 @@
     let scoreRight = 0;
     let pullPos = 0; 
     let isGameOver = false;
+    let isGameStarted = false; // Status game dimulai
 
     const PULL_STEP = 60;
     const WIN_THRESHOLD = 380; 
@@ -966,6 +1034,37 @@
     let lastIndexRight = -1;
 
     let qrGenerator = null;
+
+    // --- LOGIKA HITUNG MUNDUR (COUNTDOWN) ---
+    function startCountdown() {
+      const btnStart = document.getElementById('btnStartGame');
+      const countElem = document.getElementById('countdownText');
+      const overlay = document.getElementById('startOverlay');
+
+      btnStart.style.display = 'none';
+      countElem.style.display = 'block';
+
+      let count = 3;
+      countElem.innerText = count;
+      playBeep(800, 0.2);
+
+      const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countElem.innerText = count;
+          playBeep(800 + (3 - count) * 200, 0.2);
+        } else if (count === 0) {
+          countElem.innerText = "MULAI! 🚀";
+          countElem.style.color = "#10B981";
+          playBeep(1500, 0.4);
+        } else {
+          clearInterval(interval);
+          overlay.classList.add('hidden');
+          isGameStarted = true;
+          startBgMusic();
+        }
+      }, 1000);
+    }
 
     // --- MANAJEMEN LAYOUT MOBILE / DESKTOP REARRANGE ---
     function rearrangeLayoutForMobile() {
@@ -1007,7 +1106,7 @@
     }
 
     function startBgMusic() {
-      if (isMusicMuted || isGameOver) return;
+      if (isMusicMuted || isGameOver || !isGameStarted) return;
       bgMusicElem.play().catch(() => {});
     }
 
@@ -1032,8 +1131,7 @@
       }
     }
 
-    function playBeep(freq = 600) {
-      startBgMusic();
+    function playBeep(freq = 600, duration = 0.1) {
       const ctx = getAudioContext();
       if (!ctx) return;
       const osc = ctx.createOscillator();
@@ -1041,11 +1139,11 @@
       osc.type = 'sine';
       osc.frequency.value = freq;
       gain.gain.setValueAtTime(0.15, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start();
-      osc.stop(ctx.currentTime + 0.1);
+      osc.stop(ctx.currentTime + duration);
     }
 
     function playCorrectSound() {
@@ -1211,14 +1309,6 @@
 
       rearrangeLayoutForMobile();
 
-      const startMusicOnUserInteraction = () => {
-        startBgMusic();
-        document.removeEventListener('click', startMusicOnUserInteraction);
-        document.removeEventListener('keydown', startMusicOnUserInteraction);
-      };
-      document.addEventListener('click', startMusicOnUserInteraction);
-      document.addEventListener('keydown', startMusicOnUserInteraction);
-
       generateNewQuestion('left');
       generateNewQuestion('right');
 
@@ -1319,7 +1409,7 @@
     }
 
     function pressKey(side, val, isLocal = true) {
-      if (isGameOver) return;
+      if (isGameOver || !isGameStarted) return;
 
       if (side === 'left') {
         const box = document.getElementById('ans-left');
@@ -1477,6 +1567,7 @@
     window.restartGame = restartGame;
     window.showQRCode = showQRCode;
     window.closeQRModal = closeQRModal;
+    window.startCountdown = startCountdown;
   </script>
 
 </body>
