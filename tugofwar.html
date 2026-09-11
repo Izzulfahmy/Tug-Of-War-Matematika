@@ -986,6 +986,7 @@
 
       btnStart.style.display = 'none';
       countElem.style.display = 'block';
+      countElem.style.color = "#F59E0B";
 
       let count = 3;
       countElem.innerText = count;
@@ -1445,6 +1446,7 @@
 
     function restartGame() {
       isGameOver = false;
+      isGameStarted = false;
       scoreLeft = 0;
       scoreRight = 0;
       pullPos = 0;
@@ -1463,10 +1465,13 @@
       document.getElementById('stageGif').style.transform = `translateX(0px)`;
       document.getElementById('winnerModal').classList.remove('show');
 
-      startBgMusic();
-
       generateNewQuestion('left');
       generateNewQuestion('right');
+
+      const overlay = document.getElementById('startOverlay');
+      overlay.classList.remove('hidden');
+
+      startCountdown();
     }
 
     function showQRCode(side) {
